@@ -25,13 +25,6 @@ export default defineConfig([
 
   // 忽略文件
   {
-    ignores: [
-      'node_modules/',
-      'pnpm-lock.yaml',
-      'dist/',
-      'build/',
-      '*.config.js',
-      '**/*.md',
-    ],
+    // ignores: ['**/*.md'],
   },
 ])
