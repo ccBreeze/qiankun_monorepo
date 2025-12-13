@@ -14,7 +14,13 @@
       "Bash(pnpm run lint:*)",
       "Bash(pnpm exec husky:*)",
       "Bash(git add:*)",
-      "Bash(pnpm exec lint-staged:*)"
+      "Bash(pnpm exec lint-staged:*)",
+      "Bash(pnpm exec commitlint:*)",
+      "Bash(pnpm exec cz:*)",
+      "Bash(cat:*)",
+      "Bash(pnpm exec git-cz:*)",
+      "Bash(git config:*)",
+      "Bash(node node_modules/.pnpm/commitizen@4.3.1_@types+node@25.0.1_typescript@5.9.3/node_modules/commitizen/bin/git-cz:*)"
     ]
   }
 }
