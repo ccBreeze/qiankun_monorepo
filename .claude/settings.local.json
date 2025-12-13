@@ -11,7 +11,10 @@
       "Bash(pnpm remove:*)",
       "Bash(pnpm eslint:*)",
       "WebSearch",
-      "Bash(pnpm run lint:*)"
+      "Bash(pnpm run lint:*)",
+      "Bash(pnpm exec husky:*)",
+      "Bash(git add:*)",
+      "Bash(pnpm exec lint-staged:*)"
     ]
   }
 }

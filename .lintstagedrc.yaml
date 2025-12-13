@@ -1,0 +1,5 @@
+# lint-staged 配置
+'*.{js,ts,tsx}':
+  - eslint --fix
+'*.md':
+  - prettier --write
