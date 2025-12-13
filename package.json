@@ -5,8 +5,8 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "__eslint__comment__": "查阅eslint文档 https://eslint.org/docs/latest/use/command-line-interface 了解cli工具的options",
-    "lint": "eslint . --max-warnings=0"
+    "lint": "eslint . --max-warnings=0",
+    "format": "prettier '.' --write"
   },
   "author": "",
   "license": "ISC",
@@ -15,6 +15,9 @@
     "@eslint/js": "^9.39.2",
     "@types/node": "^25.0.1",
     "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "prettier": "^3.7.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.49.0"

@@ -10,7 +10,8 @@
       "Bash(node -e:*)",
       "Bash(pnpm remove:*)",
       "Bash(pnpm eslint:*)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(pnpm run lint:*)"
     ]
   }
 }
