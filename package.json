@@ -2,16 +2,21 @@
   "name": "learn_monorepo",
   "version": "1.0.0",
   "description": "monorepo 学习",
+  "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "__eslint__comment__": "查阅eslint文档 https://eslint.org/docs/latest/use/command-line-interface 了解cli工具的options",
+    "lint": "eslint . --max-warnings=0"
   },
   "author": "",
   "license": "ISC",
   "keywords": [],
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
     "@types/node": "^25.0.1",
+    "eslint": "^9.39.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.49.0"
   }
 }

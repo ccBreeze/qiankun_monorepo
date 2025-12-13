@@ -3,7 +3,14 @@
     "allow": [
       "Bash(pnpm add:*)",
       "Bash(pnpm install)",
-      "Bash(pnpm list:*)"
+      "Bash(pnpm list:*)",
+      "Bash(pnpm run lint)",
+      "WebFetch(domain:zh-hans.eslint.org)",
+      "WebFetch(domain:eslint.org)",
+      "Bash(node -e:*)",
+      "Bash(pnpm remove:*)",
+      "Bash(pnpm eslint:*)",
+      "WebSearch"
     ]
   }
 }
