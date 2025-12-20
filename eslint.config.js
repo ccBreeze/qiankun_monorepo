@@ -1,30 +1,43 @@
 // @ts-check
-import { defineConfig } from 'eslint/config'
 import eslint from '@eslint/js'
 import tseslint from 'typescript-eslint'
-import prettier from 'eslint-config-prettier'
+import prettierConfig from 'eslint-config-prettier'
 import prettierPlugin from 'eslint-plugin-prettier'
+import {
+  defineConfigWithVueTs,
+  vueTsConfigs,
+} from '@vue/eslint-config-typescript'
+import pluginVue from 'eslint-plugin-vue'
 
-export default defineConfig([
+export default defineConfigWithVueTs(
+  // 忽略文件
+  {
+    ignores: [
+      '**/dist/**',
+      '**/dist-ssr/**',
+      '**/node_modules/**',
+      '**/coverage/**',
+    ],
+  },
+
   // ESLint 推荐规则
   eslint.configs.recommended,
+
   // TypeScript 推荐规则
   tseslint.configs.recommended,
 
-  // Prettier 配置（关闭与 Prettier 冲突的规则）
-  prettier,
-  // Prettier 插件（将 Prettier 作为 ESLint 规则运行）
+  // Vue 配置（仅适用于 Vue 文件）
   {
-    plugins: {
-      prettier: prettierPlugin,
-    },
-    rules: {
-      'prettier/prettier': 'error',
-    },
+    name: 'vue/files-to-lint',
+    files: ['**/*.{ts,mts,tsx,vue}'],
   },
+  pluginVue.configs['flat/recommended'],
+  vueTsConfigs.recommended,
 
-  // 忽略文件
+  // Prettier 配置
+  prettierConfig,
   {
-    // ignores: ['**/*.md'],
+    plugins: { prettier: prettierPlugin },
+    rules: { 'prettier/prettier': 'error' },
   },
-])
+)
