@@ -15,7 +15,7 @@
 }
 
 h1 {
-  font-size: 3rem;
   color: #42b983;
+  font-size: 3rem;
 }
 </style>

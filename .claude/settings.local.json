@@ -32,7 +32,15 @@
       "mcp__figma__get_screenshot",
       "Bash(pnpm dev)",
       "Bash(pnpm run type-check:*)",
-      "Bash(timeout 5 pnpm dev:*)"
+      "Bash(timeout 5 pnpm dev:*)",
+      "Bash(pnpm run lint:style:*)",
+      "Bash(pnpm run lint:style:fix:*)",
+      "Bash(pnpm exec stylelint:*)",
+      "mcp__chrome-devtools__new_page",
+      "mcp__chrome-devtools__list_console_messages",
+      "mcp__chrome-devtools__take_screenshot",
+      "mcp__chrome-devtools__take_snapshot",
+      "mcp__chrome-devtools__click"
     ]
   },
   "enableAllProjectMcpServers": true,
