@@ -20,7 +20,23 @@
       "Bash(cat:*)",
       "Bash(pnpm exec git-cz:*)",
       "Bash(git config:*)",
-      "Bash(node node_modules/.pnpm/commitizen@4.3.1_@types+node@25.0.1_typescript@5.9.3/node_modules/commitizen/bin/git-cz:*)"
+      "Bash(node node_modules/.pnpm/commitizen@4.3.1_@types+node@25.0.1_typescript@5.9.3/node_modules/commitizen/bin/git-cz:*)",
+      "Bash(tree:*)",
+      "Bash(pnpm create:*)",
+      "Bash(pnpm run format:*)",
+      "mcp__chrome-devtools__list_pages",
+      "mcp__chrome-devtools__navigate_page",
+      "mcp__chrome-devtools__performance_start_trace",
+      "mcp__chrome-devtools__performance_analyze_insight",
+      "mcp__figma__get_design_context",
+      "mcp__figma__get_screenshot",
+      "Bash(pnpm dev)",
+      "Bash(pnpm run type-check:*)",
+      "Bash(timeout 5 pnpm dev:*)"
     ]
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "chrome-devtools"
+  ]
 }
