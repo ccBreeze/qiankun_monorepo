@@ -2,12 +2,20 @@
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.stylelint": "explicit"
   },
 
   "eslint.useFlatConfig": true,
   "prettier.requireConfig": true,
   "typescript.tsdk": "node_modules/typescript/lib",
+
+  // Stylelint 配置
+  "stylelint.enable": true,
+  "stylelint.validate": ["css", "scss", "sass", "vue"],
+  "stylelint.snippet": ["css", "scss", "sass", "vue"],
+  "css.validate": false,
+  "scss.validate": false,
 
   "explorer.fileNesting.enabled": false,
   "explorer.fileNesting.patterns": {

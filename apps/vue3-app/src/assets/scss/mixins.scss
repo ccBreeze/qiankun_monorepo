@@ -1,0 +1,10 @@
+/** 文本溢出时显示省略号 */
+@mixin text-ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+@mixin scroll-bar {
+  scrollbar-width: none;
+}

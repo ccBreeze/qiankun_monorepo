@@ -1,0 +1,71 @@
+/**
+ * Stylelint 配置测试文件
+ * 用于验证所有配置的规则是否正常工作
+ */
+
+// ========== Tailwind CSS 指令测试 ==========
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .btn-primary {
+    @apply bg-blue-500 text-white px-4 py-2 rounded;
+  }
+}
+
+// ========== SCSS 现代语法测试 ==========
+@use 'sass:color';
+@use 'sass:math';
+
+// ========== 变量测试（kebab-case） ==========
+$primary-color: #42b883;
+$secondary-color: #35495e;
+$base-spacing: 1rem;
+$font-size-large: 1.5rem;
+
+// ========== 嵌套和引用测试 ==========
+.test-container {
+  padding: $base-spacing;
+  color: $primary-color;
+
+  // 嵌套选择器
+  .nested-item {
+    margin: math.div($base-spacing, 2);
+    background: color.adjust($primary-color, $lightness: 45%);
+
+    // & 引用父选择器
+    &:hover {
+      background: color.adjust($primary-color, $lightness: -10%);
+    }
+
+    // 多级嵌套
+    .deeply-nested {
+      font-size: $font-size-large;
+    }
+  }
+}
+
+// ========== Mixin 和 Include 测试 ==========
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.centered-box {
+  @include flex-center;
+}
+
+// ========== 响应式设计测试 ==========
+@screen md {
+  .responsive-element {
+    width: 50%;
+  }
+}
+
+// ========== 自定义属性测试 ==========
+:root {
+  --color-primary: #{$primary-color};
+  --spacing-base: #{$base-spacing};
+}

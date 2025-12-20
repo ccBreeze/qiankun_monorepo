@@ -1,0 +1,31 @@
+/* 滚动条样式 S */
+$scrollbar-track-color: 'rgba(22, 35, 61, 0.08)';
+$scrollbar-thumb-color: transparent;
+
+/* 全局滚动条基础样式 */
+::-webkit-scrollbar {
+  width: 20px;
+  height: 20px;
+}
+
+/* 滚动条里面的小方块，能向上向下移动 */
+::-webkit-scrollbar-thumb {
+  background-color: $scrollbar-track-color;
+  border: 6px solid transparent;
+  border-radius: 16px;
+  background-clip: padding-box;
+
+  &:hover {
+    background-color: 'rgba(22, 35, 61, 0.15)';
+  }
+}
+
+/* 滚动条轨道部分 */
+::-webkit-scrollbar-track-piece {
+  background-color: $scrollbar-thumb-color;
+}
+
+/* 当同时有垂直滚动条和水平滚动条时交汇的部分 */
+::-webkit-scrollbar-corner {
+  background-color: $scrollbar-thumb-color;
+}
