@@ -5,28 +5,27 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint . --max-warnings=0",
-    "lint:style": "stylelint '**/*.{css,scss,sass,vue}' --max-warnings=0",
-    "lint:style:fix": "stylelint '**/*.{css,scss,sass,vue}' --fix",
-    "format": "prettier '.' --write",
+    "lint": "eslint . --max-warnings=0 --cache --cache-location .eslintcache",
+    "lint:fix": "eslint . --fix --cache --cache-location .eslintcache",
+    "lint:all": "pnpm -r --parallel run lint",
+    "lint:all:fix": "pnpm -r --parallel run lint:fix",
+    "lint:style": "stylelint '**/*.{css,scss,sass,vue}' --max-warnings=0 --cache --cache-location .stylelintcache",
+    "lint:style:fix": "stylelint '**/*.{css,scss,sass,vue}' --fix --cache --cache-location .stylelintcache",
+    "format": "prettier '.' --write --cache --cache-location .prettiercache",
     "prepare": "husky"
   },
   "author": "",
   "license": "ISC",
   "keywords": [],
   "devDependencies": {
+    "@breeze/eslint-config": "workspace:*",
     "@commitlint/cli": "^20.2.0",
     "@commitlint/config-conventional": "^20.2.0",
-    "@eslint/js": "^9.39.2",
     "@tsconfig/node24": "^24.0.3",
     "@types/node": "^25.0.1",
-    "@vue/eslint-config-typescript": "^14.6.0",
     "commitizen": "^4.3.1",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^9.39.2",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.4",
-    "eslint-plugin-vue": "^10.5.1",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "postcss-html": "^1.8.0",
@@ -38,7 +37,6 @@
     "stylelint-config-standard-scss": "^16.0.0",
     "stylelint-order": "^7.0.0",
     "ts-node": "^10.9.2",
-    "typescript": "~5.9.0",
-    "typescript-eslint": "^8.49.0"
+    "typescript": "~5.9.0"
   }
 }
