@@ -7,8 +7,8 @@ export default {
   plugins: ['stylelint-order'],
   overrides: [
     {
-      files: ['**/*.vue'],
       customSyntax: 'postcss-html',
+      files: ['**/*.vue'],
       rules: {
         // 允许 Vue 的 :deep()、:slotted()、:global() 等伪类
         'selector-pseudo-class-no-unknown': [
@@ -20,8 +20,8 @@ export default {
       },
     },
     {
-      files: ['**/*.scss', '**/*.sass'],
       customSyntax: 'postcss-scss',
+      files: ['**/*.scss', '**/*.sass'],
     },
   ],
   rules: {

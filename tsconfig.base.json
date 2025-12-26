@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    // 基础编译选项
+    "target": "ESNext",
+    "lib": ["ES2020"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+
+    // 模块相关
+    "resolveJsonModule": true,
+
+    // 互操作性
+    "allowSyntheticDefaultImports": true,
+    "isolatedModules": true,
+
+    // 类型检查
+    "strict": true,
+    "skipLibCheck": true
+  }
+}

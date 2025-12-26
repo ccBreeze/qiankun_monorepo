@@ -9,7 +9,7 @@
     <div class="dynamic-color">动态颜色绑定测试</div>
 
     <div class="deep-selector-test">
-      <slot name="content"></slot>
+      <slot name="content" />
     </div>
 
     <div class="global-style-test">全局样式测试</div>

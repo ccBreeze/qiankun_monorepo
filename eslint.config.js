@@ -1,43 +1,12 @@
 // @ts-check
-import eslint from '@eslint/js'
-import tseslint from 'typescript-eslint'
-import prettierConfig from 'eslint-config-prettier'
-import prettierPlugin from 'eslint-plugin-prettier'
-import {
-  defineConfigWithVueTs,
-  vueTsConfigs,
-} from '@vue/eslint-config-typescript'
-import pluginVue from 'eslint-plugin-vue'
+import { base } from '@breeze/eslint-config'
 
-export default defineConfigWithVueTs(
-  // 忽略文件
+// 根目录配置：仅 lint 根目录的配置文件和文档
+// 注意：apps/** 和 packages/** 有各自的 ESLint 配置
+export default [
+  ...base,
   {
-    ignores: [
-      '**/dist/**',
-      '**/dist-ssr/**',
-      '**/node_modules/**',
-      '**/coverage/**',
-    ],
+    // 只 lint 根目录的文件，子项目使用各自的配置
+    ignores: ['apps/**', 'packages/**'],
   },
-
-  // ESLint 推荐规则
-  eslint.configs.recommended,
-
-  // TypeScript 推荐规则
-  tseslint.configs.recommended,
-
-  // Vue 配置（仅适用于 Vue 文件）
-  {
-    name: 'vue/files-to-lint',
-    files: ['**/*.{ts,mts,tsx,vue}'],
-  },
-  pluginVue.configs['flat/recommended'],
-  vueTsConfigs.recommended,
-
-  // Prettier 配置
-  prettierConfig,
-  {
-    plugins: { prettier: prettierPlugin },
-    rules: { 'prettier/prettier': 'error' },
-  },
-)
+]

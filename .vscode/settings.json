@@ -7,6 +7,10 @@
   },
 
   "eslint.useFlatConfig": true,
+  "eslint.workingDirectories": [
+    { "pattern": "apps/*" },
+    { "pattern": "packages/*" }
+  ],
   "prettier.requireConfig": true,
   "typescript.tsdk": "node_modules/typescript/lib",
 

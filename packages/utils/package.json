@@ -1,5 +1,5 @@
 {
-  "name": "@learn-monorepo/utils",
+  "name": "@breeze/utils",
   "version": "1.0.0",
   "description": "",
   "main": "src/index.ts",

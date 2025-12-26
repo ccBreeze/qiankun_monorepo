@@ -1,0 +1,33 @@
+{
+  "name": "@breeze/eslint-config",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Shared ESLint configuration for Breeze monorepo",
+  "scripts": {
+    "type-check": "tsc --noEmit"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./base": "./src/base.ts",
+    "./vue3": "./src/vue3.ts",
+    "./typescript": "./src/typescript.ts",
+    "./prettier": "./src/prettier.ts",
+    "./ignores": "./src/ignores.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "dependencies": {
+    "@eslint/js": "^9.39.2",
+    "@vue/eslint-config-typescript": "^14.6.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-vue": "^10.5.1",
+    "typescript-eslint": "^8.49.0"
+  },
+  "peerDependencies": {
+    "eslint": "^9.0.0",
+    "prettier": "^3.0.0",
+    "typescript": ">=5.0.0"
+  }
+}

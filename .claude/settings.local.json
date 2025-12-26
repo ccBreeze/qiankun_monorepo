@@ -1,50 +1,21 @@
 {
   "permissions": {
     "allow": [
-      "Bash(pnpm add:*)",
-      "Bash(pnpm install)",
-      "Bash(pnpm list:*)",
-      "Bash(pnpm run lint)",
-      "WebFetch(domain:zh-hans.eslint.org)",
-      "WebFetch(domain:eslint.org)",
+      "WebFetch(domain:*)",
+      "WebSearch(domain:*)",
       "Bash(node -e:*)",
-      "Bash(pnpm remove:*)",
-      "Bash(pnpm eslint:*)",
-      "WebSearch",
-      "Bash(pnpm run lint:*)",
-      "Bash(pnpm exec husky:*)",
-      "Bash(git add:*)",
-      "Bash(pnpm exec lint-staged:*)",
-      "Bash(pnpm exec commitlint:*)",
-      "Bash(pnpm exec cz:*)",
       "Bash(cat:*)",
-      "Bash(pnpm exec git-cz:*)",
-      "Bash(git config:*)",
-      "Bash(node node_modules/.pnpm/commitizen@4.3.1_@types+node@25.0.1_typescript@5.9.3/node_modules/commitizen/bin/git-cz:*)",
       "Bash(tree:*)",
-      "Bash(pnpm create:*)",
-      "Bash(pnpm run format:*)",
-      "mcp__chrome-devtools__list_pages",
-      "mcp__chrome-devtools__navigate_page",
-      "mcp__chrome-devtools__performance_start_trace",
-      "mcp__chrome-devtools__performance_analyze_insight",
-      "mcp__figma__get_design_context",
-      "mcp__figma__get_screenshot",
-      "Bash(pnpm dev)",
-      "Bash(pnpm run type-check:*)",
-      "Bash(timeout 5 pnpm dev:*)",
-      "Bash(pnpm run lint:style:*)",
-      "Bash(pnpm run lint:style:fix:*)",
-      "Bash(pnpm exec stylelint:*)",
-      "mcp__chrome-devtools__new_page",
-      "mcp__chrome-devtools__list_console_messages",
-      "mcp__chrome-devtools__take_screenshot",
-      "mcp__chrome-devtools__take_snapshot",
-      "mcp__chrome-devtools__click"
+      "Bash(mkdir:*)",
+      "Bash(mv:*)",
+      "Bash(npx tsc:*)",
+      "Bash(ls:*)",
+      "mcp__chrome-devtools__*",
+      "mcp__figma__*",
+      "Bash(npx eslint:*)",
+      "Bash(pnpm:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": [
-    "chrome-devtools"
-  ]
+  "enabledMcpjsonServers": ["chrome-devtools", "figma"]
 }

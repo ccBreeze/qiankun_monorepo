@@ -1,4 +1,4 @@
-import { add } from '@learn-monorepo/utils'
+import { add } from '@breeze/utils'
 
 function main() {
   const test = add(1, 2)
