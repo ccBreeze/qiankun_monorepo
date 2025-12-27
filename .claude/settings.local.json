@@ -1,8 +1,8 @@
 {
   "permissions": {
     "allow": [
+      "WebSearch",
       "WebFetch(domain:*)",
-      "WebSearch(domain:*)",
       "Bash(node -e:*)",
       "Bash(cat:*)",
       "Bash(tree:*)",
