@@ -4,6 +4,126 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+catalogs:
+  default:
+    '@commitlint/cli':
+      specifier: ^20.2.0
+      version: 20.2.0
+    '@commitlint/config-conventional':
+      specifier: ^20.2.0
+      version: 20.2.0
+    '@eslint/js':
+      specifier: ^9.39.2
+      version: 9.39.2
+    '@tailwindcss/vite':
+      specifier: ^4.1.18
+      version: 4.1.18
+    '@tsconfig/node24':
+      specifier: ^24.0.3
+      version: 24.0.3
+    '@types/node':
+      specifier: ^25.0.1
+      version: 25.0.1
+    '@vitejs/plugin-vue':
+      specifier: ^6.0.2
+      version: 6.0.3
+    '@vitejs/plugin-vue-jsx':
+      specifier: ^5.1.2
+      version: 5.1.2
+    '@vue/eslint-config-typescript':
+      specifier: ^14.6.0
+      version: 14.6.0
+    '@vue/tsconfig':
+      specifier: ^0.8.1
+      version: 0.8.1
+    commitizen:
+      specifier: ^4.3.1
+      version: 4.3.1
+    cz-conventional-changelog:
+      specifier: ^3.3.0
+      version: 3.3.0
+    eslint:
+      specifier: ^9.39.2
+      version: 9.39.2
+    eslint-config-prettier:
+      specifier: ^10.1.8
+      version: 10.1.8
+    eslint-plugin-prettier:
+      specifier: ^5.5.4
+      version: 5.5.4
+    eslint-plugin-vue:
+      specifier: ^10.5.1
+      version: 10.5.1
+    husky:
+      specifier: ^9.1.7
+      version: 9.1.7
+    lint-staged:
+      specifier: ^16.2.7
+      version: 16.2.7
+    npm-run-all2:
+      specifier: ^8.0.4
+      version: 8.0.4
+    pinia:
+      specifier: ^3.0.4
+      version: 3.0.4
+    postcss-html:
+      specifier: ^1.8.0
+      version: 1.8.0
+    postcss-scss:
+      specifier: ^4.0.9
+      version: 4.0.9
+    prettier:
+      specifier: ^3.7.4
+      version: 3.7.4
+    sass:
+      specifier: ^1.97.1
+      version: 1.97.1
+    stylelint:
+      specifier: ^16.26.1
+      version: 16.26.1
+    stylelint-config-recommended-vue:
+      specifier: ^1.6.1
+      version: 1.6.1
+    stylelint-config-standard:
+      specifier: ^39.0.1
+      version: 39.0.1
+    stylelint-config-standard-scss:
+      specifier: ^16.0.0
+      version: 16.0.0
+    stylelint-order:
+      specifier: ^7.0.0
+      version: 7.0.0
+    tailwindcss:
+      specifier: ^4.1.18
+      version: 4.1.18
+    ts-node:
+      specifier: ^10.9.2
+      version: 10.9.2
+    typescript:
+      specifier: ~5.9.0
+      version: 5.9.3
+    typescript-eslint:
+      specifier: ^8.49.0
+      version: 8.49.0
+    unplugin-auto-import:
+      specifier: ^20.3.0
+      version: 20.3.0
+    vite:
+      specifier: ^7.2.4
+      version: 7.3.0
+    vite-plugin-vue-devtools:
+      specifier: ^8.0.5
+      version: 8.0.5
+    vue:
+      specifier: ^3.5.25
+      version: 3.5.25
+    vue-router:
+      specifier: ^4.6.3
+      version: 4.6.4
+    vue-tsc:
+      specifier: ^3.1.5
+      version: 3.1.8
+
 importers:
 
   .:
@@ -12,61 +132,61 @@ importers:
         specifier: workspace:*
         version: link:packages/eslint-config
       '@commitlint/cli':
-        specifier: ^20.2.0
+        specifier: 'catalog:'
         version: 20.2.0(@types/node@25.0.1)(typescript@5.9.3)
       '@commitlint/config-conventional':
-        specifier: ^20.2.0
+        specifier: 'catalog:'
         version: 20.2.0
       '@tsconfig/node24':
-        specifier: ^24.0.3
+        specifier: 'catalog:'
         version: 24.0.3
       '@types/node':
-        specifier: ^25.0.1
+        specifier: 'catalog:'
         version: 25.0.1
       commitizen:
-        specifier: ^4.3.1
+        specifier: 'catalog:'
         version: 4.3.1(@types/node@25.0.1)(typescript@5.9.3)
       cz-conventional-changelog:
-        specifier: ^3.3.0
+        specifier: 'catalog:'
         version: 3.3.0(@types/node@25.0.1)(typescript@5.9.3)
       eslint:
-        specifier: ^9.39.2
+        specifier: 'catalog:'
         version: 9.39.2(jiti@2.6.1)
       husky:
-        specifier: ^9.1.7
+        specifier: 'catalog:'
         version: 9.1.7
       lint-staged:
-        specifier: ^16.2.7
+        specifier: 'catalog:'
         version: 16.2.7
       postcss-html:
-        specifier: ^1.8.0
+        specifier: 'catalog:'
         version: 1.8.0
       postcss-scss:
-        specifier: ^4.0.9
+        specifier: 'catalog:'
         version: 4.0.9(postcss@8.5.6)
       prettier:
-        specifier: ^3.7.4
+        specifier: 'catalog:'
         version: 3.7.4
       stylelint:
-        specifier: ^16.26.1
+        specifier: 'catalog:'
         version: 16.26.1(typescript@5.9.3)
       stylelint-config-recommended-vue:
-        specifier: ^1.6.1
+        specifier: 'catalog:'
         version: 1.6.1(postcss-html@1.8.0)(stylelint@16.26.1(typescript@5.9.3))
       stylelint-config-standard:
-        specifier: ^39.0.1
+        specifier: 'catalog:'
         version: 39.0.1(stylelint@16.26.1(typescript@5.9.3))
       stylelint-config-standard-scss:
-        specifier: ^16.0.0
+        specifier: 'catalog:'
         version: 16.0.0(postcss@8.5.6)(stylelint@16.26.1(typescript@5.9.3))
       stylelint-order:
-        specifier: ^7.0.0
+        specifier: 'catalog:'
         version: 7.0.0(stylelint@16.26.1(typescript@5.9.3))
       ts-node:
-        specifier: ^10.9.2
+        specifier: 'catalog:'
         version: 10.9.2(@types/node@25.0.1)(typescript@5.9.3)
       typescript:
-        specifier: ~5.9.0
+        specifier: 'catalog:'
         version: 5.9.3
 
   apps/ex-app:
@@ -78,86 +198,86 @@ importers:
   apps/vue3-app:
     dependencies:
       pinia:
-        specifier: ^3.0.4
+        specifier: 'catalog:'
         version: 3.0.4(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3))
       vue:
-        specifier: ^3.5.25
+        specifier: 'catalog:'
         version: 3.5.25(typescript@5.9.3)
       vue-router:
-        specifier: ^4.6.3
+        specifier: 'catalog:'
         version: 4.6.4(vue@3.5.25(typescript@5.9.3))
     devDependencies:
       '@breeze/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
       '@tailwindcss/vite':
-        specifier: ^4.1.18
+        specifier: 'catalog:'
         version: 4.1.18(vite@7.3.0(@types/node@25.0.1)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.97.1)(yaml@2.8.2))
       '@tsconfig/node24':
-        specifier: ^24.0.3
+        specifier: 'catalog:'
         version: 24.0.3
       '@types/node':
-        specifier: ^25.0.1
+        specifier: 'catalog:'
         version: 25.0.1
       '@vitejs/plugin-vue':
-        specifier: ^6.0.2
+        specifier: 'catalog:'
         version: 6.0.3(vite@7.3.0(@types/node@25.0.1)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.97.1)(yaml@2.8.2))(vue@3.5.25(typescript@5.9.3))
       '@vitejs/plugin-vue-jsx':
-        specifier: ^5.1.2
+        specifier: 'catalog:'
         version: 5.1.2(vite@7.3.0(@types/node@25.0.1)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.97.1)(yaml@2.8.2))(vue@3.5.25(typescript@5.9.3))
       '@vue/eslint-config-typescript':
-        specifier: ^14.6.0
+        specifier: 'catalog:'
         version: 14.6.0(eslint-plugin-vue@10.5.1(@typescript-eslint/parser@8.49.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))(vue-eslint-parser@10.2.0(eslint@9.39.2(jiti@2.6.1))))(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
       '@vue/tsconfig':
-        specifier: ^0.8.1
+        specifier: 'catalog:'
         version: 0.8.1(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3))
       npm-run-all2:
-        specifier: ^8.0.4
+        specifier: 'catalog:'
         version: 8.0.4
       prettier:
-        specifier: ^3.7.4
+        specifier: 'catalog:'
         version: 3.7.4
       sass:
-        specifier: ^1.97.1
+        specifier: 'catalog:'
         version: 1.97.1
       tailwindcss:
-        specifier: ^4.1.18
+        specifier: 'catalog:'
         version: 4.1.18
       typescript:
-        specifier: ~5.9.0
+        specifier: 'catalog:'
         version: 5.9.3
       unplugin-auto-import:
-        specifier: ^20.3.0
+        specifier: 'catalog:'
         version: 20.3.0
       vite:
-        specifier: ^7.2.4
+        specifier: 'catalog:'
         version: 7.3.0(@types/node@25.0.1)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.97.1)(yaml@2.8.2)
       vite-plugin-vue-devtools:
-        specifier: ^8.0.5
+        specifier: 'catalog:'
         version: 8.0.5(vite@7.3.0(@types/node@25.0.1)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.97.1)(yaml@2.8.2))(vue@3.5.25(typescript@5.9.3))
       vue-tsc:
-        specifier: ^3.1.5
+        specifier: 'catalog:'
         version: 3.1.8(typescript@5.9.3)
 
   packages/eslint-config:
     dependencies:
       '@eslint/js':
-        specifier: ^9.39.2
+        specifier: 'catalog:'
         version: 9.39.2
       '@vue/eslint-config-typescript':
-        specifier: ^14.6.0
+        specifier: 'catalog:'
         version: 14.6.0(eslint-plugin-vue@10.5.1(@typescript-eslint/parser@8.49.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))(vue-eslint-parser@10.2.0(eslint@9.39.2(jiti@2.6.1))))(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
       eslint:
         specifier: ^9.0.0
         version: 9.39.2(jiti@2.6.1)
       eslint-config-prettier:
-        specifier: ^10.1.8
+        specifier: 'catalog:'
         version: 10.1.8(eslint@9.39.2(jiti@2.6.1))
       eslint-plugin-prettier:
-        specifier: ^5.5.4
+        specifier: 'catalog:'
         version: 5.5.4(eslint-config-prettier@10.1.8(eslint@9.39.2(jiti@2.6.1)))(eslint@9.39.2(jiti@2.6.1))(prettier@3.7.4)
       eslint-plugin-vue:
-        specifier: ^10.5.1
+        specifier: 'catalog:'
         version: 10.5.1(@typescript-eslint/parser@8.49.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))(vue-eslint-parser@10.2.0(eslint@9.39.2(jiti@2.6.1)))
       prettier:
         specifier: ^3.0.0
@@ -166,7 +286,7 @@ importers:
         specifier: '>=5.0.0'
         version: 5.9.3
       typescript-eslint:
-        specifier: ^8.49.0
+        specifier: 'catalog:'
         version: 8.49.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
 
   packages/utils: {}
