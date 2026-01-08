@@ -4,3 +4,7 @@ pnpm-lock.yaml
 .eslintcache
 .prettiercache
 .stylelintcache
+
+# 自动生成的类型声明文件
+**/auto-imports.d.ts
+**/components.d.ts

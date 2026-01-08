@@ -1,3 +1,4 @@
+import type { Linter } from 'eslint'
 import { vueTsConfigs } from '@vue/eslint-config-typescript'
 import pluginVue from 'eslint-plugin-vue'
 import { base } from './base.ts'
@@ -43,6 +44,21 @@ export const vue3 = [
       'vue/max-attributes-per-line': 'off',
       'vue/first-attribute-linebreak': 'off',
       'vue/html-closing-bracket-newline': 'off',
-    },
+
+      'vue/multi-word-component-names': [
+        'error',
+        {
+          // 需要忽略的组件名
+          ignores: ['index'],
+        },
+      ],
+      // 检测模板中使用的未定义组件
+      'vue/no-undef-components': [
+        'error',
+        {
+          ignorePatterns: ['router-view', 'router-link', '^a-'],
+        },
+      ],
+    } as NonNullable<Linter.Config['rules']>,
   },
 ]
