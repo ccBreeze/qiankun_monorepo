@@ -62,6 +62,7 @@ export default {
           'variants',
           'responsive',
           'screen',
+          'reference',
         ],
       },
     ],

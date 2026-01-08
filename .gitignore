@@ -24,3 +24,5 @@ coverage
 .eslintcache
 .stylelintcache
 .prettiercache
+
+**/.nitro

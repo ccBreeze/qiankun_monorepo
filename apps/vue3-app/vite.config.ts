@@ -4,7 +4,6 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import vueDevTools from 'vite-plugin-vue-devtools'
-import tailwindcss from '@tailwindcss/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 
 const resolvePath = (relativePath: string) =>
@@ -15,7 +14,6 @@ export default defineConfig({
   plugins: [
     vue(),
     vueJsx(),
-    tailwindcss(),
     vueDevTools(),
     AutoImport({
       imports: ['vue', 'vue-router', 'pinia'],
@@ -31,5 +29,9 @@ export default defineConfig({
     alias: {
       '@': resolvePath('./src'),
     },
+  },
+  server: {
+    port: 3001,
+    cors: true,
   },
 })

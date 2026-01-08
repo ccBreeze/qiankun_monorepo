@@ -19,6 +19,9 @@ export default defineConfigWithVueTs(
     // unplugin-auto-import 生成的全局变量
     languageOptions: {
       globals: autoImportGlobals.globals,
+      parserOptions: {
+        tsconfigRootDir: import.meta.dirname,
+      },
     },
   },
 

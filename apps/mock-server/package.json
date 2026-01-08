@@ -1,0 +1,23 @@
+{
+  "name": "@breeze/mock-server",
+  "version": "1.0.0",
+  "description": "基于 Nitro 的 Mock API 服务",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nitro dev --port 3100",
+    "build": "nitro build",
+    "preview": "nitro preview",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint . --max-warnings=0 --cache --cache-location .eslintcache",
+    "lint:fix": "eslint . --fix --cache --cache-location .eslintcache"
+  },
+  "dependencies": {
+    "h3": "catalog:",
+    "nitropack": "catalog:"
+  },
+  "devDependencies": {
+    "@breeze/eslint-config": "workspace:*",
+    "typescript": "catalog:"
+  }
+}

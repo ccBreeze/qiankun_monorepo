@@ -13,7 +13,16 @@
       "mcp__chrome-devtools__*",
       "mcp__figma__*",
       "Bash(npx eslint:*)",
-      "Bash(pnpm:*)"
+      "Bash(pnpm:*)",
+      "Bash(curl:*)",
+      "Bash(npx msw init ./public --save)",
+      "Bash(pkill:*)",
+      "Bash(timeout 10 pnpm run:*)",
+      "Bash(wc:*)",
+      "Bash(find:*)",
+      "Bash(npx stylelint:*)",
+      "Bash(npx prettier:*)",
+      "Bash(npx eslint-plugin-vue:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
