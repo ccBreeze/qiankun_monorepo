@@ -2,6 +2,9 @@
  * 菜单解析相关类型定义
  */
 
+/** 根路由常量 */
+export const ROOT_CODE = 'ROOT' as const
+
 /**
  * 后端返回的菜单/功能项
  * 对应 ocrmFunctionList / crmReadFunctionList 数据结构
@@ -34,13 +37,25 @@ export interface MenuExtraInfo {
 }
 
 /**
- * 菜单元信息
+ * 菜单元信息（精简版，只保留必要字段）
  */
-export interface MenuMeta extends FunctionListItem, MenuExtraInfo {
+export interface MenuMeta {
+  /** 菜单名称 */
+  name: string
+  /** 菜单编码 */
+  code: string
+  /** 父菜单编码 */
+  parentCode: string
   /** 父菜单路径 */
   parentPath?: string
   /** 组件名称（用于 keep-alive） */
   componentName?: string
+  /** 图标名称 */
+  iconName?: string
+  /** 是否隐藏的菜单 */
+  isHiddenMenu?: boolean
+  /** 手动排序 */
+  manualSort?: number
 }
 
 /**
@@ -49,19 +64,24 @@ export interface MenuMeta extends FunctionListItem, MenuExtraInfo {
 export interface MenuRecord {
   path: string
   name: string
+  meta: MenuMeta
   /** 组件路径 */
   componentPath?: string
   redirect?: string
   children?: MenuRecord[]
-  meta?: MenuMeta
 }
 
 /**
  * 菜单树节点（内部使用）
  */
-export interface MenuTreeNode extends Partial<MenuRecord> {
-  children?: MenuRecord[]
+export interface RootMenuTreeNode {
+  children: MenuRecord[]
+  path?: string
+  redirect?: string
+  componentPath?: string
 }
+
+export type MenuTreeNode = MenuRecord | RootMenuTreeNode
 
 /**
  * 解析后的 URL 信息
@@ -90,6 +110,14 @@ export interface ParseUrlContext {
   /** 完整的配置选项（包含自定义配置） */
   options: MenuParserOptions
 }
+
+/**
+ * 自定义 URL 解析结果转换函数类型
+ */
+export type TransformParsedUrlFn = (
+  parsedInfo: ParsedUrlInfo,
+  context: ParseUrlContext,
+) => ParsedUrlInfo
 
 /**
  * MenuParser 构造函数选项
@@ -124,13 +152,19 @@ export interface MenuParserOptions {
    * }
    * ```
    */
-  transformParsedUrl?: (
-    parsedInfo: ParsedUrlInfo,
-    context: ParseUrlContext,
-  ) => ParsedUrlInfo
+  transformParsedUrl?: TransformParsedUrlFn
   /**
    * 额外的自定义配置
    * 可以在这里传入任意自定义数据，在 transformParsedUrl 中通过 context.options 访问
    */
   [key: string]: unknown
+}
+
+/**
+ * 动态路由匹配器（内部使用）
+ */
+export interface DynamicRouteMatcher {
+  pattern: string
+  matcher: (path: string) => boolean | object
+  route: MenuRecord
 }

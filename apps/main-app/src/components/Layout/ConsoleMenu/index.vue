@@ -1,9 +1,9 @@
 <template>
   <div class="menu-wrap">
     <a-menu
-      v-model:selected-keys="menu.selectedKeys"
-      :open-keys="menu.openKeys"
-      :items="menu.items"
+      v-model:selected-keys="selectedKeys"
+      :open-keys="openKeys"
+      :items="menuItems"
       mode="inline"
       class="menu"
       @click="handleClick"
@@ -14,11 +14,12 @@
 </template>
 
 <script lang="ts" setup>
-import { watch, reactive, h } from 'vue'
+import { watch, ref, computed, h } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useMenuStore } from '@/stores/menu'
 import SvgIcon from '@/components/SvgIcon/SvgIcon.vue'
-import type { MenuRecord } from '@breeze/qiankun-shared'
+import { normalizePath, type MenuRecord } from '@breeze/qiankun-shared'
+import type { MenuInfo } from 'ant-design-vue/es/menu/src/interface'
 
 interface MenuItem {
   key: string
@@ -31,131 +32,82 @@ interface MenuItem {
   path?: string
 }
 
-interface MenuState {
-  items: MenuItem[]
-  openKeys: string[]
-  selectedKeys: string[]
-}
-
 const route = useRoute()
 const router = useRouter()
 const menuStore = useMenuStore()
 
-const menu = reactive<MenuState>({
-  items: [],
-  openKeys: [],
-  selectedKeys: [],
-})
+/** 当前选中的菜单 key */
+const selectedKeys = ref<string[]>([])
 
-/**
- * 规范化路径，移除 query 和 hash 参数
- * @param fullPath - 完整路径（可能包含 query 和 hash）
- * @returns 规范化后的路径
- */
-const normalizePath = (fullPath: string) => {
-  // /xxx?id=1#hash  ->  /xxx
-  return fullPath.replace(/[?#].*$/, '')
-}
+/** 当前展开的菜单 key */
+const openKeys = ref<string[]>([])
 
 /**
  * 获取实际用于匹配菜单的路径
  * 隐藏菜单自动使用父节点的 path
- * @param fullPath - 完整路径
- * @returns 用于匹配菜单的路径
  */
-const getMatchPath = (fullPath: string) => {
+const getMatchPath = (fullPath: string): string => {
   const path = normalizePath(fullPath)
   const routeInfo = menuStore.getMenuByPath(path)
 
   // 如果是隐藏菜单，使用父节点的 path
-  if (routeInfo?.meta?.isHiddenMenu && routeInfo.meta.parentPath) {
+  if (routeInfo?.meta.isHiddenMenu && routeInfo.meta.parentPath) {
     return routeInfo.meta.parentPath
   }
 
   return path
 }
 
-/** 获取父级菜单路径 */
-const getParentKeys = (path: string) => {
-  // 向上递归父级菜单
-  const parentKeys: string[] = []
-  let currentPath: string | undefined = path
-
-  while (currentPath) {
-    const routeInfo = menuStore.getMenuByPath(currentPath)
-    const parentPath = routeInfo?.meta?.parentPath
-
-    if (!parentPath) break
-
-    parentKeys.push(parentPath)
-    currentPath = parentPath
-  }
-
-  return parentKeys.reverse()
+/**
+ * 获取父级菜单路径（利用 store 的 getBreadcrumb 优化）
+ */
+const getParentKeys = (path: string): string[] => {
+  const breadcrumb = menuStore.getBreadcrumb(path)
+  // 返回除最后一项外的所有路径
+  return breadcrumb.slice(0, -1).map((item) => item.path)
 }
 
 /** 自动展开菜单 */
-const autoExpandMenu = (fullPath: string) => {
+const autoExpandMenu = (fullPath: string): void => {
   const path = getMatchPath(fullPath)
   const parentKeys = getParentKeys(path)
-  menu.openKeys = [...parentKeys, path]
+  openKeys.value = [...parentKeys, path]
 }
 
 /** 更新当前选中的菜单项 */
-const updateSelectedMenuPath = (fullPath: string) => {
+const updateSelectedMenuPath = (fullPath: string): void => {
   const path = getMatchPath(fullPath)
-  menu.selectedKeys = [path]
+  selectedKeys.value = [path]
 }
 
-/** 路由改变，自动更新菜单选中 */
-watch(
-  () => route.fullPath,
-  (fullPath) => {
-    updateSelectedMenuPath(fullPath)
-    autoExpandMenu(fullPath)
-  },
-  {
-    immediate: true,
-  },
-)
-
-/** 菜单数据变化时，刷新菜单 */
-watch(
-  () => menuStore.menuRoutes,
-  () => {
-    refreshMenu()
-  },
-  {
-    immediate: true,
-  },
-)
-
-/** 刷新菜单 */
-function refreshMenu() {
-  menu.items = generateMenu(menuStore.menuRoutes)
-  // 自动展开菜单
-  autoExpandMenu(route.fullPath)
-}
+/**
+ * 生成菜单项（使用 computed 缓存）
+ */
+const menuItems = computed<MenuItem[]>(() => {
+  return generateMenu(menuStore.menuRoutes)
+})
 
 /** 生成菜单 */
 function generateMenu(list: MenuRecord[], level = 0): MenuItem[] {
   if (!list.length) return []
 
-  return list
-    .map((item) => {
-      // 隐藏的菜单不显示
-      if (item.meta?.isHiddenMenu === true) return
+  const items: MenuItem[] = []
 
-      const children = generateMenu(item.children || [], level + 1) // 递归
-      return {
-        ...getLevelConfig(level, item.meta?.iconName),
-        label: item.meta?.name || item.name || '',
-        key: item.path || item.name,
-        children: children.length ? children : undefined,
-        path: item.path,
-      } as MenuItem
+  for (const item of list) {
+    // 隐藏的菜单不显示
+    if (item.meta.isHiddenMenu === true) continue
+
+    const children = generateMenu(item.children || [], level + 1)
+    items.push({
+      ...getLevelConfig(level, item.meta.iconName),
+      label: item.meta.name || item.name || '',
+      key: item.path || item.name,
+      children: children.length ? children : undefined,
+      path: item.path,
     })
-    .filter((item) => item !== undefined) // 移除 undefined
+  }
+
+  return items
 }
 
 /** 获取不同层级的配置 */
@@ -185,25 +137,36 @@ function getLevelConfig(level: number, iconName?: string): Partial<MenuItem> {
 }
 
 /** 菜单点击事件 */
-const handleClick = ({ item }: { item: MenuItem }) => {
+const handleClick = (info: MenuInfo): void => {
+  const item = info.item as unknown as { path?: string }
   // 仅叶子节点才会触发点击事件
-  if (!item.path) return
+  if (!item?.path) return
   void router.push(item.path)
 }
 
 /** 只展开当前父级菜单 */
-const onOpenChange = (openKeys: string[]) => {
-  const set = new Set(menu.openKeys)
-  const latestOpenKey = openKeys.find((key) => set.has(key) === false)
+const onOpenChange = (keys: string[]): void => {
+  const set = new Set(openKeys.value)
+  const latestOpenKey = keys.find((key) => !set.has(key))
 
   // 如果没有新的菜单项被打开，则保留当前的打开状态
   if (!latestOpenKey) {
-    menu.openKeys = openKeys
+    openKeys.value = keys
     return
   }
 
   autoExpandMenu(latestOpenKey)
 }
+
+/** 路由改变或菜单数据变化时，自动更新菜单选中和展开状态 */
+watch(
+  [() => route.fullPath, () => menuStore.menuRoutes],
+  ([fullPath]) => {
+    updateSelectedMenuPath(fullPath)
+    autoExpandMenu(fullPath)
+  },
+  { immediate: true },
+)
 </script>
 
 <style lang="scss" scoped>

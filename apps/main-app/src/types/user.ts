@@ -17,7 +17,7 @@ export interface UserData {
   /** CRM 菜单列表 */
   crmReadFunctionList?: FunctionListItem[]
   /** OCRM 菜单列表 */
-  ocrmReadFunctionList?: FunctionListItem[]
+  coms8ReadFunctionList?: FunctionListItem[]
   /** 其他扩展属性 */
   [key: string]: unknown
 }
