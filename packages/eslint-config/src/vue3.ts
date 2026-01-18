@@ -7,15 +7,26 @@ import { base } from './base.ts'
  * Vue3 ESLint 配置数组
  * 包含基础配置 + Vue3 相关规则
  *
- * 用法:
- * ```js
+ * 使用场景：
+ * - Vue 3 + TypeScript 项目
+ * - Vite + Vue 项目
+ *
+ * @example
+ * ```ts
+ * // eslint.config.js
  * import { defineConfigWithVueTs } from '@vue/eslint-config-typescript'
  * import { vue3 } from '@breeze/eslint-config'
  *
- * export default defineConfigWithVueTs(...vue3)
+ * export default defineConfigWithVueTs(...vue3, {
+ *   languageOptions: {
+ *     parserOptions: {
+ *       tsconfigRootDir: import.meta.dirname,
+ *     },
+ *   },
+ * })
  * ```
  */
-export const vue3 = [
+export const vue3: Linter.Config[] = [
   // 基础配置（JS + TS + Prettier）
   ...base,
 
@@ -26,10 +37,10 @@ export const vue3 = [
   },
 
   // Vue 推荐规则
-  pluginVue.configs['flat/recommended'],
+  pluginVue.configs['flat/recommended'] as Linter.Config,
 
   // Vue + TypeScript 集成
-  vueTsConfigs.recommended,
+  vueTsConfigs.recommended as Linter.Config,
 
   // 关闭与 Prettier 冲突的 Vue 规则（Vue 文件和 JSX/TSX）
   {
@@ -45,20 +56,23 @@ export const vue3 = [
       'vue/first-attribute-linebreak': 'off',
       'vue/html-closing-bracket-newline': 'off',
 
+      // 组件名规则
       'vue/multi-word-component-names': [
         'error',
         {
-          // 需要忽略的组件名
+          // 允许 index.vue 作为组件名
           ignores: ['index'],
         },
       ],
+
       // 检测模板中使用的未定义组件
       'vue/no-undef-components': [
         'error',
         {
-          ignorePatterns: ['router-view', 'router-link', '^a-'],
+          // 忽略 router 组件和 ant-design-vue 组件
+          ignorePatterns: ['router-view', 'router-link', '^a-', '^A[A-Z]'],
         },
       ],
-    } as NonNullable<Linter.Config['rules']>,
+    },
   },
 ]
