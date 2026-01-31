@@ -3,9 +3,10 @@ import type { ApiFn, EnhancerArgs, LoadingController } from '../types'
 /** Loading 状态管理器 */
 class LoadingManager {
   private count = 0
-  private controller: LoadingController
+  readonly controller: LoadingController
   private delay: number
 
+  // TODO: 全局 const
   constructor(controller: LoadingController, delay = 500) {
     this.controller = controller
     this.delay = delay
@@ -14,8 +15,8 @@ class LoadingManager {
   /** 显示 loading（引用计数 +1） */
   show(): void {
     this.count++
+    // 只在第一次请求时显示 loading
     if (this.count === 1) {
-      // 只在第一次请求时显示 loading
       this.controller.show({ delay: this.delay })
     }
   }
@@ -40,28 +41,46 @@ class LoadingManager {
   }
 }
 
-/** Loading 管理器缓存（每个 controller 实例一个管理器） */
-const loadingManagers = new WeakMap<LoadingController, LoadingManager>()
+/** 全局唯一的 Loading 管理器 */
+let globalLoadingManager: LoadingManager | null = null
 
-/** 获取或创建 Loading 管理器 */
+/** 获取或创建全局 Loading 管理器，重复注册不同 controller 时发出警告 */
 const getLoadingManager = (
   controller: LoadingController,
   delay?: number,
 ): LoadingManager => {
-  let manager = loadingManagers.get(controller)
-  if (!manager) {
-    manager = new LoadingManager(controller, delay)
-    loadingManagers.set(controller, manager)
+  if (globalLoadingManager) {
+    if (globalLoadingManager.controller !== controller) {
+      console.warn(
+        '[withLoading] 全局 loadingController 已注册，重复注册将被忽略。请确保只注册一个 loadingController。',
+      )
+    }
+    return globalLoadingManager
   }
-  return manager
+  globalLoadingManager = new LoadingManager(controller, delay)
+  return globalLoadingManager
 }
 
-/** 请求添加 loading 显示（需要提供 controller） */
-export const withLoading = <T>({ api, context }: EnhancerArgs<T>): ApiFn<T> => {
-  const { loadingController, loadingDelay } = context
-  if (!loadingController) return api
+/**
+ * Loading 状态管理
+ * @description 默认禁用
+ */
+export const withLoading = <T>({
+  api,
+  config,
+  context,
+}: EnhancerArgs<T>): ApiFn<T> => {
+  // 配置中未启用 loading
+  if (!config.showLoading) return api
 
-  const manager = getLoadingManager(loadingController, loadingDelay)
+  // 有 controller 时注册全局管理器；无 controller 时复用已有的全局管理器
+  const manager = context.loadingController
+    ? getLoadingManager(context.loadingController, context.loadingDelay)
+    : globalLoadingManager
+
+  // 全局管理器尚未注册，跳过 loading 增强
+  if (!manager) return api
+
   return async () => {
     manager.show()
     return api().finally(() => {

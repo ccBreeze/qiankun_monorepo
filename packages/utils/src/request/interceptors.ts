@@ -1,12 +1,18 @@
-import type { AxiosResponse, InternalAxiosRequestConfig } from 'axios'
+import type {
+  AxiosInterceptorManager,
+  AxiosResponse,
+  InternalAxiosRequestConfig,
+} from 'axios'
 import { grayDir as defaultGrayDir, isGray as defaultIsGray } from '../env'
 import { RES_STATUS } from './constants'
-import type {
-  ApiResponse,
-  RequestData,
-  ResponseInterceptorOptions,
-} from './types'
+import type { ApiResponse, RequestData } from './types'
 
+/** 响应拦截器函数类型，与 axios 响应拦截器 use 方法第一个参数类型一致 */
+type ResponseInterceptorFulfilled = Parameters<
+  AxiosInterceptorManager<AxiosResponse>['use']
+>[0]
+
+/** 请求拦截器配置选项 */
 export interface RequestInterceptorOptions {
   getAuthToken: () => string
   /** 获取是否为灰度环境，默认使用 env.ts 中的 isGray */
@@ -14,7 +20,14 @@ export interface RequestInterceptorOptions {
   /** 灰度目录前缀，默认使用 env.ts 中的 grayDir */
   grayDir?: string
   systemCode: string
-  buildUrl?: (url: string, actionName?: string, grayDir?: string) => string
+}
+
+/** 响应拦截器配置选项 */
+export interface ResponseInterceptorOptions {
+  /** 登录过期回调 */
+  onLoginExpired?: (data: ApiResponse) => void
+  /** 成功状态码，默认为 RES_STATUS.SUCCESS */
+  successStatus?: number
 }
 
 export const attachRequestInterceptors = (
@@ -41,11 +54,13 @@ export const attachRequestInterceptors = (
 }
 
 export const attachResponseInterceptors = (
-  options: ResponseInterceptorOptions,
-) => {
+  options: ResponseInterceptorOptions = {},
+): NonNullable<ResponseInterceptorFulfilled> => {
   const successStatus = options.successStatus ?? RES_STATUS.SUCCESS
 
-  return (
+  // 拦截器会将 AxiosResponse 转换为 ApiResponse，类型断言在此处理
+  // 业务层无需再进行类型断言
+  const interceptor = (
     response: AxiosResponse,
   ): AxiosResponse | ApiResponse | Promise<never> => {
     if (response.config.responseType === 'blob') return response
@@ -56,7 +71,7 @@ export const attachResponseInterceptors = (
       data.status === RES_STATUS.NO_LOGIN ||
       data.status === RES_STATUS.LOGIN_EXPIRED
     ) {
-      options.onLoginExpired(data)
+      options.onLoginExpired?.(data)
       return Promise.reject(data)
     }
     // 未知报错
@@ -66,4 +81,6 @@ export const attachResponseInterceptors = (
 
     return data
   }
+
+  return interceptor as NonNullable<ResponseInterceptorFulfilled>
 }

@@ -1,11 +1,14 @@
 import type { ApiResponse, EnhancerArgs } from '../types'
 
 /**
- * 原始响应增强器
- * 默认提取 res.data，当 rawResponse 为 true 时不应用此增强器
+ * 数据提取
+ * @description
+ * - 默认启用
+ * - 提取响应的 data 字段，简化业务层调用
  */
-export const withRawResponse = <T>(args: EnhancerArgs<T>) => {
-  const { api } = args
+export const withRawResponse = <T>({ api, config }: EnhancerArgs<T>) => {
+  // 如果配置中明确获取完整响应
+  if (config.rawResponse === true) return api
 
   return async () => {
     const res = await api()
