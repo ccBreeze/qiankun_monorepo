@@ -1,9 +1,15 @@
-import type { RequestEnhancerConfig } from './enhancerTypes'
+/**
+ * 请求模块公共类型定义
+ * 包含被多处引用、需导出给外部的类型
+ */
 
-export type * from './enhancerTypes'
+import type { RequestEnhancerConfig } from './enhancer'
+
+/** 请求函数类型 */
+export type ApiFn<T> = () => Promise<T>
 
 /** 请求数据结构 */
-export interface RequestData<TContent = Record<string, unknown>> {
+export interface RequestData<TContent extends object = object> {
   /** 接口动作名 */
   actionName: string
   /** 请求体内容 */
@@ -12,7 +18,7 @@ export interface RequestData<TContent = Record<string, unknown>> {
 
 /** 请求配置 */
 export interface RequestConfig<
-  TContent = Record<string, unknown>,
+  TContent extends object = object,
 > extends RequestEnhancerConfig {
   method?: string
   url: string
@@ -29,12 +35,4 @@ export interface ApiResponse<T = unknown> {
   msg: string | null
   /** 响应数据 */
   data: T
-}
-
-/** 响应拦截器配置选项 */
-export interface ResponseInterceptorOptions {
-  /** 登录过期回调 */
-  onLoginExpired: (data: ApiResponse) => void
-  /** 成功状态码，默认为 RES_STATUS.SUCCESS */
-  successStatus?: number
 }
