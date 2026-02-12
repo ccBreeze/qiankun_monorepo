@@ -5,6 +5,16 @@
 import { type CACHE_STRATEGY } from '../constants'
 import type { ApiFn, ApiResponse } from './common'
 
+/** 重试配置选项 */
+export interface RetryConfig {
+  /** 最大重试次数（默认 3） */
+  count?: number
+  /** 重试延迟时间（毫秒，默认 1000） */
+  delay?: number
+  /** 是否使用指数退避（默认 false） */
+  exponential?: boolean
+}
+
 /** 请求配置选项（用于增强器） */
 export interface RequestEnhancerConfig {
   /** 显示 loading 状态 */
@@ -23,6 +33,12 @@ export interface RequestEnhancerConfig {
   useCache?: boolean | CACHE_STRATEGY
   /** 自动提取响应的 data 字段（默认 true，设为 false 返回完整响应） */
   rawResponse?: boolean
+  /**
+   * 请求失败重试配置
+   * - `true`: 使用默认配置（重试 3 次，间隔 1 秒）
+   * - `RetryConfig`: 自定义重试配置
+   */
+  retry?: boolean | RetryConfig
 }
 
 /** 消息提示函数类型 */

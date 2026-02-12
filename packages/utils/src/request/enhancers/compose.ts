@@ -9,6 +9,7 @@ import { withSuccessMessage } from './withSuccessMessage'
 import { withErrorMessage } from './withErrorMessage'
 import { withCache } from './withCache'
 import { withRawResponse } from './withRawResponse'
+import { withRetry } from './withRetry'
 
 /** 增强器函数类型 */
 type EnhancerFn = <T>(args: EnhancerArgs<T>) => ApiFn<T>
@@ -21,7 +22,7 @@ const enhancers: EnhancerFn[] = [
   withSuccessMessage,
   withErrorMessage,
   withCache,
-  // TODO: withRetry
+  withRetry,
   // 数据提取增强器放最后，确保其他增强器能访问完整响应
   withRawResponse,
 ]
