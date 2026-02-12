@@ -2,7 +2,7 @@ import type {
   ApiFn,
   EnhancerArgs,
   EnhancerContext,
-  RequestEnhancerConfig,
+  RequestConfig,
 } from '../types'
 import { withLoading } from './withLoading'
 import { withSuccessMessage } from './withSuccessMessage'
@@ -31,7 +31,7 @@ const enhancers: EnhancerFn[] = [
  * 创建增强请求函数
  */
 export const createEnhanceRequest = (context: EnhancerContext) => {
-  return <T>(api: ApiFn<T>, config: RequestEnhancerConfig = {}): Promise<T> => {
+  return <T>(api: ApiFn<T>, config: RequestConfig): Promise<T> => {
     // 依次应用所有增强器
     // 每个增强器内部自行判断是否应该生效，并管理自己的默认值
     const enhanced = enhancers.reduce(
