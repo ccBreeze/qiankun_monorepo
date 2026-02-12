@@ -3,6 +3,7 @@
  * 包含被多处引用、需导出给外部的类型
  */
 
+import type { AxiosRequestConfig } from 'axios'
 import type { RequestEnhancerConfig } from './enhancer'
 
 /** 请求函数类型 */
@@ -17,15 +18,8 @@ export interface RequestData<TContent extends object = object> {
 }
 
 /** 请求配置 */
-export interface RequestConfig<
-  TContent extends object = object,
-> extends RequestEnhancerConfig {
-  method?: string
-  url: string
-  data: RequestData<TContent>
-  headers?: Record<string, string>
-  responseType?: 'blob' | 'json'
-}
+export type RequestConfig<TContent extends object = object> =
+  AxiosRequestConfig<RequestData<TContent>> & RequestEnhancerConfig
 
 /** 标准 API 响应 */
 export interface ApiResponse<T = unknown> {

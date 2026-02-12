@@ -3,7 +3,7 @@ import type { ApiResponse, EnhancerArgs } from '../types'
 /**
  * 数据提取
  * @description
- * - 默认启用
+ * - 默认禁用
  * - 提取响应的 data 字段，简化业务层调用
  */
 export const withRawResponse = <T>({ api, config }: EnhancerArgs<T>) => {

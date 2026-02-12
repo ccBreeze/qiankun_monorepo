@@ -1,4 +1,5 @@
 import md5 from 'crypto-js/md5'
+import type { RequestConfig } from '../../types'
 import { lruCacheStrategy } from './LRUCacheStrategy'
 import { memoryCacheStrategy } from './MemoryCacheStrategy'
 
@@ -8,13 +9,14 @@ import { memoryCacheStrategy } from './MemoryCacheStrategy'
  * @param config 请求配置对象
  * @returns MD5 哈希字符串
  */
-export const generateCacheKey = (config: unknown): string => {
+export const generateCacheKey = (config: RequestConfig): string | null => {
   try {
     // 不要放时间戳、随机数等变化字段
     return md5(JSON.stringify(config)).toString()
   } catch {
-    // JSON.stringify 可能因循环引用等原因失败，使用备选方案
-    return md5(String(config)).toString()
+    // 放弃缓存
+    // JSON.stringify 可能因循环引用等原因失败
+    return null
   }
 }
 
@@ -30,8 +32,9 @@ export const clearRequestStore = (): void => {
  * 根据配置清除特定缓存（同时清除两种缓存中的对应项）
  * @param config 请求配置
  */
-export const clearRequestStoreByConfig = (config: unknown): void => {
+export const clearRequestStoreByConfig = (config: RequestConfig): void => {
   const key = generateCacheKey(config)
+  if (!key) return
   memoryCacheStrategy.delete(key)
   lruCacheStrategy.delete(key)
 }

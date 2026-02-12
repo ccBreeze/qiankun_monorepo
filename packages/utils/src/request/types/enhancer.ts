@@ -3,15 +3,15 @@
  */
 
 import { type CACHE_STRATEGY } from '../constants'
-import type { ApiFn, ApiResponse } from './common'
+import type { ApiFn, ApiResponse, RequestConfig } from './common'
 
 /** 重试配置选项 */
 export interface RetryConfig {
-  /** 最大重试次数（默认 3） */
+  /** 最大重试次数 */
   count?: number
-  /** 重试延迟时间（毫秒，默认 1000） */
+  /** 重试延迟时间 */
   delay?: number
-  /** 是否使用指数退避（默认 false） */
+  /** 是否使用指数退避 */
   exponential?: boolean
 }
 
@@ -21,7 +21,7 @@ export interface RequestEnhancerConfig {
   showLoading?: boolean
   /** 显示成功提示 */
   showSuccessMessage?: boolean
-  /** 显示错误提示（默认 true，设为 false 可禁用） */
+  /** 显示错误提示 */
   showErrorMessage?: boolean
   /**
    * 缓存策略
@@ -65,6 +65,6 @@ export interface EnhancerContext {
 /** 增强器入参 */
 export interface EnhancerArgs<T> {
   api: ApiFn<T>
-  config: RequestEnhancerConfig
+  config: RequestConfig
   context: EnhancerContext
 }

@@ -13,6 +13,9 @@ export const withCache = <T>({ api, config }: EnhancerArgs<T>): ApiFn<T> => {
   if (!config.useCache) return api
 
   const key = generateCacheKey(config)
+  // 生成缓存键失败（如循环引用），跳过缓存直接请求
+  if (!key) return api
+
   const strategy = resolveCacheStrategy(config.useCache)
   const cachedValue = strategy.get(key)
 
