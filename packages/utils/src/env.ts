@@ -1,29 +1,22 @@
-type ImportMetaEnvShim = {
-  env?: {
-    DEV?: boolean
-  }
-}
-
-const isViteDev = Boolean((import.meta as ImportMetaEnvShim).env?.DEV)
-
 export const GRAY_DIR = '/new'
 
+// 不要使用 enums 会影响日志输出
 export const RUNTIME_ENV = {
   /** 开发 */
   DEV: 'development',
-  QC: 'qc',
-  BETA: 'beta',
+  QC: 'QC',
+  BETA: 'BETA',
   /** 灰度 */
-  GRAY: 'gray',
+  GRAY: 'GRAY',
   /** 生产 */
-  PROD: 'prod',
+  PROD: 'PROD',
 } as const
 
 export type RuntimeEnv = (typeof RUNTIME_ENV)[keyof typeof RUNTIME_ENV]
 
 export const runtimeEnv: RuntimeEnv = (function () {
   const { host, pathname } = window.location
-  if (isViteDev) return RUNTIME_ENV.DEV
+  if (import.meta.env.DEV) return RUNTIME_ENV.DEV
   if (host.includes('-qc-')) return RUNTIME_ENV.QC
   if (host.includes('-beta-')) return RUNTIME_ENV.BETA
   if (pathname.startsWith(GRAY_DIR)) return RUNTIME_ENV.GRAY
