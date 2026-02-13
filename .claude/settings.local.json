@@ -25,6 +25,5 @@
       "Bash(npx eslint-plugin-vue:*)"
     ]
   },
-  "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": ["chrome-devtools", "figma"]
+  "disabledMcpjsonServers": ["chrome-devtools", "figma"]
 }
