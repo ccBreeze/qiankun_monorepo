@@ -1,4 +1,5 @@
 import type { ApiFn, EnhancerArgs, LoadingController } from '../types'
+import { LOADING_DELAY } from '../../constants'
 
 /** Loading 状态管理器 */
 class LoadingManager {
@@ -6,8 +7,7 @@ class LoadingManager {
   readonly controller: LoadingController
   private delay: number
 
-  // TODO: 全局 const
-  constructor(controller: LoadingController, delay = 500) {
+  constructor(controller: LoadingController, delay = LOADING_DELAY) {
     this.controller = controller
     this.delay = delay
   }
