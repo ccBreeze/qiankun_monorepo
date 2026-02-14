@@ -1,0 +1,19 @@
+{
+  "name": "@breeze/docs",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev src",
+    "build": "vitepress build src",
+    "preview": "vitepress preview src"
+  },
+  "dependencies": {
+    "medium-zoom": "^1.1.0",
+    "vitepress": "^1.6.4",
+    "vue": "^3.5.25"
+  },
+  "devDependencies": {
+    "sass": "^1.97.3"
+  }
+}

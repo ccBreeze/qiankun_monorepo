@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560">
+  <defs>
+    <style>
+      .t{font: 20px -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; fill:#111}
+      .s{font: 16px -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; fill:#111}
+      .m{font: 14px -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; fill:#333}
+      .box{fill:#fff;stroke:#333;stroke-width:2;rx:14;ry:14}
+      .soft{fill:#f7f7f7;stroke:#777;stroke-width:1.5;rx:12;ry:12}
+      .arrow{stroke:#333;stroke-width:2.5;fill:none;marker-end:url(#a)}
+    </style>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/>
+    </marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#fff"/>
+
+  <text class="t" x="40" y="54">Monorepo 中的 ESLint 推荐结构（共享配置包 + 子项目薄配置）</text>
+  <text class="m" x="40" y="86">目标：规则一致、可组合；同时保留每个子项目的 tsconfig / 生成文件 / globals 上下文。</text>
+
+  <rect class="box" x="70" y="140" width="420" height="320"/>
+  <text class="s" x="95" y="180">packages/eslint-config（共享配置包）</text>
+  <rect class="soft" x="105" y="205" width="350" height="70"/>
+  <text class="m" x="125" y="235">- 导出多个配置：base / vue3 / typescript / prettier</text>
+  <text class="m" x="125" y="260">- 集中管理 ESLint 相关依赖（减少重复安装）</text>
+  <rect class="soft" x="105" y="295" width="350" height="130"/>
+  <text class="m" x="125" y="325">- 不负责具体子项目上下文：</text>
+  <text class="m" x="145" y="350">• tsconfig 文件路径与 include</text>
+  <text class="m" x="145" y="375">• auto-import 生成文件位置</text>
+  <text class="m" x="145" y="400">• 项目别名 paths / 环境差异</text>
+
+  <rect class="box" x="620" y="140" width="510" height="145"/>
+  <text class="s" x="645" y="180">apps/*（子应用）</text>
+  <rect class="soft" x="650" y="205" width="450" height="60"/>
+  <text class="m" x="670" y="235">eslint.config.js：组合共享配置 + 注入项目上下文</text>
+  <text class="m" x="670" y="260">tsconfig*.json：明确 include / 生成文件 / SFC 支持</text>
+
+  <rect class="box" x="620" y="315" width="510" height="145"/>
+  <text class="s" x="645" y="355">packages/*（业务包 / 工具包）</text>
+  <rect class="soft" x="650" y="380" width="450" height="60"/>
+  <text class="m" x="670" y="410">eslint.config.js：按需继承共享配置 + 覆写少量规则</text>
+  <text class="m" x="670" y="435">tsconfig*.json：包级边界清晰，typed linting 更稳定</text>
+
+  <path class="arrow" d="M 620 210 C 560 210 560 210 500 210"/>
+  <path class="arrow" d="M 620 405 C 560 405 560 405 500 405"/>
+
+  <text class="m" x="525" y="205">依赖/复用</text>
+  <text class="m" x="525" y="400">依赖/复用</text>
+</svg>
