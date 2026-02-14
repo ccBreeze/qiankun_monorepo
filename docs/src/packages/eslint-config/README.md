@@ -15,13 +15,28 @@ Breeze Monorepo 的共享 ESLint 配置包，支持类型感知 linting。
 | `@breeze/eslint-config/prettier`   | Prettier 集成                  |
 | `@breeze/eslint-config/ignores`    | 全局忽略规则                   |
 
+:::tip 选择哪种导出
+
+- `base` 已包含 `typescript` 与 `prettier`，适合大多数非框架项目
+- `vue3` 已包含 `base`，适合 Vue 3 + TS 项目
+- `typescript`/`prettier`/`ignores` 适合按需组合或局部覆盖
+  :::
+
+:::info 版本与依赖要求
+
+- ESLint: `^9.0.0`
+- Prettier: `^3.0.0`
+- TypeScript: `>=5.0.0`
+- Node: 需与 ESLint v9 兼容（以 ESLint 官方要求为准）
+  :::
+
 ## 🚀 快速开始
 
 ### 1. 安装
 
 在 monorepo 中使用 workspace 依赖：
 
-```json
+```json [package.json]
 {
   "devDependencies": {
     "@breeze/eslint-config": "workspace:*",
@@ -34,8 +49,7 @@ Breeze Monorepo 的共享 ESLint 配置包，支持类型感知 linting。
 
 ### 2. 基础项目配置
 
-```javascript
-// eslint.config.js
+```javascript [eslint.config.js]
 import { base } from '@breeze/eslint-config'
 
 export default [...base]
@@ -43,8 +57,7 @@ export default [...base]
 
 ### 3. Vue 3 项目配置
 
-```javascript
-// eslint.config.js
+```javascript [eslint.config.js]
 import { defineConfigWithVueTs } from '@vue/eslint-config-typescript'
 import { vue3 } from '@breeze/eslint-config'
 
@@ -60,33 +73,42 @@ export default defineConfigWithVueTs(
 )
 ```
 
+### 4. 按需组合（typescript / prettier / ignores）
+
+```javascript [eslint.config.js]
+import eslint from '@eslint/js'
+import { typescript, prettier, ignores } from '@breeze/eslint-config'
+
+export default [ignores, eslint.configs.recommended, ...typescript, ...prettier]
+```
+
+### 5. Monorepo 项目上下文（tsconfigRootDir + auto-import）
+
+```javascript [eslint.config.js]
+import { defineConfigWithVueTs } from '@vue/eslint-config-typescript'
+import { vue3 } from '@breeze/eslint-config'
+import autoImportGlobals from './.eslintrc-auto-import.json' with { type: 'json' }
+
+export default defineConfigWithVueTs(...vue3, {
+  name: 'my-app/auto-import',
+  languageOptions: {
+    globals: autoImportGlobals.globals,
+    parserOptions: {
+      tsconfigRootDir: import.meta.dirname,
+    },
+  },
+})
+```
+
 ## 🎯 类型感知 Linting
 
-基础配置已包含类型感知规则，通过 **Project Service API** 自动启用！
-
-### 包含的规则
-
-| 规则                            | 级别  | 描述                     |
-| ------------------------------- | ----- | ------------------------ |
-| `no-floating-promises`          | error | 禁止未处理的 Promise     |
-| `await-thenable`                | error | 禁止 await 非 Promise    |
-| `no-misused-promises`           | error | 禁止错误使用 Promise     |
-| `switch-exhaustiveness-check`   | error | 检查 switch 覆盖所有情况 |
-| `no-unnecessary-condition`      | warn  | 检测不必要的条件判断     |
-| `no-unnecessary-type-assertion` | warn  | 检测不必要的类型断言     |
-
-### Project Service 优势
-
-- ✅ **零配置** - 自动发现项目中的 `tsconfig.json`
-- ✅ **Monorepo 友好** - 无需手动配置多项目路径
-- ✅ **支持 .vue 文件** - 原生支持 Vue 单文件组件
-- ✅ **与编辑器一致** - 使用与 VS Code 相同的类型检查逻辑
+类型感知规则说明与优势见文档：[类型感知 Linting](./typed-linting)。
 
 ## ⚙️ 性能优化
 
 ### 启用 ESLint 缓存
 
-```json
+```json [package.json]
 {
   "scripts": {
     "lint": "eslint . --cache --cache-location .eslintcache"
@@ -102,6 +124,7 @@ export default defineConfigWithVueTs(
 
 ## 📚 相关文档
 
+- [架构与设计理念](./architecture)
 - [Turborepo ESLint Guide](https://turborepo.com/docs/guides/tools/eslint)
 - [TypeScript ESLint - Monorepo Configuration](https://typescript-eslint.io/troubleshooting/typed-linting/monorepos/)
 - [TypeScript ESLint - Project Service](https://typescript-eslint.io/blog/project-service/)
