@@ -3,6 +3,7 @@ import DefaultTheme from 'vitepress/theme'
 import { setupImageZoom } from './plugins/imageZoom'
 import type { Theme } from 'vitepress'
 
+import 'virtual:group-icons.css'
 import './style.css'
 
 export default {
