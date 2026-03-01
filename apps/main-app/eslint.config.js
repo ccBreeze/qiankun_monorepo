@@ -1,4 +1,3 @@
-// @ts-check
 import { defineConfigWithVueTs } from '@vue/eslint-config-typescript'
 import { vue3 } from '@breeze/eslint-config'
 import autoImportGlobals from './.eslintrc-auto-import.json' with { type: 'json' }

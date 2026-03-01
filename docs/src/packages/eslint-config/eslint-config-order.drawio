@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile>
+  <diagram id="eslint-config-order" name="ESLint 配置数组组合顺序">
+    <mxGraphModel dx="1851" dy="1191" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="700" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- 标题 -->
+        <mxCell id="title" value="&lt;b&gt;ESLint 配置数组组合顺序&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=18;fillColor=none;strokeColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="400" y="30" width="500" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="subtitle" value="数组中后面的配置会覆盖前面的同名 rules" style="text;html=1;align=center;verticalAlign=middle;fontStyle=0;fontSize=12;fillColor=none;strokeColor=none;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="430" y="65" width="440" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- ① ignores -->
+        <mxCell id="node-ignores" value="&lt;b&gt;ignores&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F7FA;strokeColor=#90A4AE;strokeWidth=3;fontStyle=1;fontSize=14;fontColor=#333333;shadow=0;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="100" y="150" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="note-ignores" value="排除不需要 lint 的文件" style="text;html=1;align=center;verticalAlign=top;fontStyle=0;fontSize=11;fillColor=none;strokeColor=none;fontColor=#90A4AE;" vertex="1" parent="1">
+          <mxGeometry x="80" y="220" width="180" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- ② ESLint 推荐 -->
+        <mxCell id="node-recommended" value="&lt;b&gt;ESLint 推荐&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565C0;strokeWidth=3;fontStyle=1;fontSize=14;fontColor=#333333;shadow=1;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="330" y="150" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="note-recommended" value="JS 基础正确性规则" style="text;html=1;align=center;verticalAlign=top;fontStyle=0;fontSize=11;fillColor=none;strokeColor=none;fontColor=#1565C0;" vertex="1" parent="1">
+          <mxGeometry x="310" y="220" width="180" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- ③ TypeScript 规则 -->
+        <mxCell id="node-typescript" value="&lt;b&gt;TypeScript 规则&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe0b2;strokeColor=#E65100;strokeWidth=3;fontStyle=1;fontSize=14;fontColor=#333333;shadow=1;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="560" y="150" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="note-typescript" value="覆盖冲突的原生规则&lt;br&gt;+ 类型感知规则" style="text;html=1;align=center;verticalAlign=top;fontStyle=0;fontSize=11;fillColor=none;strokeColor=none;fontColor=#E65100;" vertex="1" parent="1">
+          <mxGeometry x="540" y="220" width="200" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- ④ 自定义配置 -->
+        <mxCell id="node-custom" value="&lt;b&gt;自定义配置&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=3;fontStyle=1;fontSize=14;fontColor=#333333;shadow=1;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="810" y="150" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="note-custom" value="linterOptions、自定义 rules&lt;br&gt;先继承，后覆盖" style="text;html=1;align=center;verticalAlign=top;fontStyle=0;fontSize=11;fillColor=none;strokeColor=none;fontColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="780" y="220" width="200" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- ⑤ Prettier -->
+        <mxCell id="node-prettier" value="&lt;b&gt;Prettier&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=3;fontStyle=1;fontSize=14;fontColor=#333333;shadow=1;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="150" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="note-prettier" value="关闭所有格式化冲突规则" style="text;html=1;align=center;verticalAlign=top;fontStyle=0;fontSize=11;fillColor=none;strokeColor=none;fontColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="1010" y="220" width="200" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- 连接线 ① → ② -->
+        <mxCell id="edge-ignores-to-recommended" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#90A4AE;strokeWidth=3;endArrow=classic;endFill=1;jumpStyle=arc;jumpSize=6;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="node-ignores" target="node-recommended" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 连接线 ② → ③ -->
+        <mxCell id="edge-recommended-to-typescript" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565C0;strokeWidth=4;endArrow=classic;endFill=1;jumpStyle=arc;jumpSize=6;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="node-recommended" target="node-typescript" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 连接线 ③ → ④ -->
+        <mxCell id="edge-typescript-to-custom" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E65100;strokeWidth=4;endArrow=classic;endFill=1;jumpStyle=arc;jumpSize=6;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="node-typescript" target="node-custom" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 连接线 ④ → ⑤ -->
+        <mxCell id="edge-custom-to-prettier" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#82b366;strokeWidth=4;endArrow=classic;endFill=1;jumpStyle=arc;jumpSize=6;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="node-custom" target="node-prettier" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 覆盖关系说明标签：② → ③ -->
+        <mxCell id="label-override-ts" value="&lt;i&gt;覆盖冲突规则&lt;/i&gt;" style="edgeLabel;html=1;align=center;verticalAlign=bottom;fontStyle=2;fontSize=10;fontColor=#E65100;fillColor=none;" vertex="1" connectable="0" parent="edge-recommended-to-typescript">
+          <mxGeometry x="-0.1" relative="1" as="geometry">
+            <mxPoint y="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 覆盖关系说明标签：④ → ⑤ -->
+        <mxCell id="label-override-prettier" value="&lt;i&gt;关闭冲突规则&lt;/i&gt;" style="edgeLabel;html=1;align=center;verticalAlign=bottom;fontStyle=2;fontSize=10;fontColor=#9673a6;fillColor=none;" vertex="1" connectable="0" parent="edge-custom-to-prettier">
+          <mxGeometry x="-0.1" relative="1" as="geometry">
+            <mxPoint y="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 约束标注：TypeScript 必须在 ESLint 推荐之后 -->
+        <mxCell id="constraint-ts" value="&lt;b&gt;必须在 ESLint 推荐之后&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;需禁用冲突的原生规则&lt;br&gt;如 no-unused-vars → @typescript-eslint/no-unused-vars&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontStyle=0;fontSize=11;fontColor=#333333;arcSize=15;dashed=1;dashPattern=8 4;" vertex="1" parent="1">
+          <mxGeometry x="310" y="300" width="310" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- 约束弧线：ESLint 推荐 → 约束标注 -->
+        <mxCell id="edge-constraint-ts-from" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d6b656;strokeWidth=2;dashed=1;dashPattern=8 4;endArrow=none;endFill=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.2;entryY=0;entryDx=0;entryDy=0;" edge="1" source="node-recommended" target="constraint-ts" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 约束弧线：TypeScript 规则 → 约束标注 -->
+        <mxCell id="edge-constraint-ts-to" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#d6b656;strokeWidth=2;dashed=1;dashPattern=8 4;endArrow=none;endFill=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.8;entryY=0;entryDx=0;entryDy=0;" edge="1" source="node-typescript" target="constraint-ts" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 约束标注：Prettier 必须放在最后 -->
+        <mxCell id="constraint-prettier" value="&lt;b&gt;必须放在最后&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot;&gt;eslint-config-prettier 关闭所有&lt;br&gt;与格式化冲突的规则&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=2;fontStyle=0;fontSize=11;fontColor=#333333;arcSize=15;dashed=1;dashPattern=8 4;" vertex="1" parent="1">
+          <mxGeometry x="960" y="300" width="240" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- 约束弧线：Prettier → 约束标注 -->
+        <mxCell id="edge-constraint-prettier" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#b85450;strokeWidth=2;dashed=1;dashPattern=8 4;endArrow=none;endFill=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="node-prettier" target="constraint-prettier" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 底部覆盖方向提示 -->
+        <mxCell id="override-hint" value="&lt;b&gt;覆盖方向 →&lt;/b&gt;　后面的配置覆盖前面的同名 rules" style="text;html=1;align=center;verticalAlign=middle;fontStyle=0;fontSize=12;fillColor=#FFF8E1;strokeColor=#FFB300;strokeWidth=1;rounded=1;arcSize=20;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="370" y="400" width="560" height="36" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

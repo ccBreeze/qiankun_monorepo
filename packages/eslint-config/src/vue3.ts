@@ -2,14 +2,13 @@ import type { Linter } from 'eslint'
 import { vueTsConfigs } from '@vue/eslint-config-typescript'
 import pluginVue from 'eslint-plugin-vue'
 import { base } from './base.ts'
+import { prettier } from './prettier.ts'
 
 /**
  * Vue3 ESLint 配置数组
- * 包含基础配置 + Vue3 相关规则
  *
  * 使用场景：
- * - Vue 3 + TypeScript 项目
- * - Vite + Vue 项目
+ * - Vite + Vue 3 + TypeScript 项目
  *
  * @example
  * ```ts
@@ -30,31 +29,19 @@ export const vue3: Linter.Config[] = [
   // 基础配置（JS + TS + Prettier）
   ...base,
 
-  // Vue 文件范围限定
-  {
-    name: '@breeze/vue3/files-to-lint',
-    files: ['**/*.{ts,mts,tsx,vue}'],
-  },
-
   // Vue 推荐规则
-  pluginVue.configs['flat/recommended'] as Linter.Config,
+  ...pluginVue.configs['flat/recommended'],
 
   // Vue + TypeScript 集成
-  vueTsConfigs.recommended as Linter.Config,
+  vueTsConfigs.recommended,
 
-  // 关闭与 Prettier 冲突的 Vue 规则（Vue 文件和 JSX/TSX）
+  // Vue 自定义规则
   {
-    name: '@breeze/vue3/prettier-compat',
+    name: '@breeze/vue3/custom-rules',
     files: ['**/*.{vue,jsx,tsx}'],
     rules: {
-      // 这些规则与 Prettier 冲突，会导致 circular fixes
-      'vue/singleline-html-element-content-newline': 'off',
-      'vue/multiline-html-element-content-newline': 'off',
-      'vue/html-self-closing': 'off',
-      'vue/html-indent': 'off',
-      'vue/max-attributes-per-line': 'off',
+      // 关闭与 Prettier 冲突但未被 eslint-config-prettier 覆盖的规则
       'vue/first-attribute-linebreak': 'off',
-      'vue/html-closing-bracket-newline': 'off',
 
       // 组件名规则
       'vue/multi-word-component-names': [
@@ -75,4 +62,7 @@ export const vue3: Linter.Config[] = [
       ],
     },
   },
+
+  // Prettier 集成（必须放在最后以关闭所有格式化冲突规则，包括 Vue 插件的）
+  ...prettier,
 ]

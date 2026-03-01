@@ -1,4 +1,3 @@
-// @ts-check
 import { base } from '@breeze/eslint-config'
 
 /**

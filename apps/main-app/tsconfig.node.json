@@ -1,6 +1,6 @@
 {
   "extends": "../../tsconfig.node.base.json",
-  "include": ["vite.config.*", "tailwind.config.*"],
+  "include": ["vite.config.*"],
   "compilerOptions": {
     "composite": true
   }

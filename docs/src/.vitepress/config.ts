@@ -15,8 +15,8 @@ export default defineConfig({
   },
   markdown: {
     theme: {
-      light: 'github-dark',
-      dark: 'github-dark',
+      light: 'one-dark-pro',
+      dark: 'one-dark-pro',
     },
     config(md) {
       md.use(groupIconMdPlugin)
@@ -25,6 +25,10 @@ export default defineConfig({
   themeConfig: {
     nav,
     sidebar,
+    outline: {
+      level: [2, 3],
+      label: '目录',
+    },
   },
   vite: {
     plugins: [groupIconVitePlugin(), llmstxt()],
