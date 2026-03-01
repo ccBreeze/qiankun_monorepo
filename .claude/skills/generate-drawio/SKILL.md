@@ -63,7 +63,24 @@ description: 根据指定目录/模块的代码内容，分析架构与调用链
 - vertex="1" 代表节点，必须包含 mxGeometry 坐标信息
 - edge="1" 代表连接线，需指定 source 和 target
 - style 需严格匹配 DrawIO 规则：rounded=1、edgeStyle=orthogonalEdgeStyle、jumpStyle=arc;jumpSize=6、endArrow=classic 等
-- 弱化元素禁止使用 opacity，必须使用所选配色方案表格中的“弱化元素”颜色，并配合更细边框/虚线实现
+- 弱化元素禁止使用 opacity，必须使用所选配色方案表格中的”弱化元素”颜色，并配合更细边框/虚线实现
+
+### VitePress 集成规范
+
+当流程图用于 `docs/` 目录下的 VitePress 文档时，**必须**将 DrawIO XML 保存为独立的 `.drawio` 文件，然后在 Markdown 中通过 `DrawioViewer` 组件引用，**禁止**将 XML 内联到 Markdown 代码块中。
+
+1. 将生成的 XML 保存为与文档同目录的 `.drawio` 文件（如 `lint-workflow.drawio`）
+2. 在 Markdown 文件中使用以下方式引用：
+
+```vue
+<script setup>
+import drawioXml from './lint-workflow.drawio?raw'
+</script>
+
+<ClientOnly>
+  <DrawioViewer :data=”drawioXml” />
+</ClientOnly>
+```
 
 ### 第一步：要素解析
 
