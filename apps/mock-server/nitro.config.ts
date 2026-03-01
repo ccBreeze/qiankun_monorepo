@@ -1,11 +1,6 @@
 import { defineNitroConfig } from 'nitropack/config'
 
 export default defineNitroConfig({
-  // 开发服务器端口（通过环境变量 NITRO_PORT 或默认 3100）
-  devServer: {
-    port: Number(process.env.NITRO_PORT) || 3100,
-  },
-
   // 路由配置
   routeRules: {
     '/api/**': {
