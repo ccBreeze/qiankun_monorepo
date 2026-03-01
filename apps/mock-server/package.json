@@ -8,9 +8,9 @@
     "dev": "nitro dev --port 3100",
     "build": "nitro build",
     "preview": "nitro preview",
-    "type-check": "tsc --noEmit",
-    "lint": "eslint . --max-warnings=0 --cache --cache-location .eslintcache",
-    "lint:fix": "eslint . --fix --cache --cache-location .eslintcache"
+    "type-check": "tsc",
+    "lint": "eslint . --max-warnings=0 --cache",
+    "lint:fix": "eslint . --fix --cache"
   },
   "dependencies": {
     "h3": "catalog:",

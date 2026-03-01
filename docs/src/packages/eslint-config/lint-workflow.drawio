@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile>
+  <diagram id="lint-workflow" name="Lint 工作流程">
+    <mxGraphModel dx="1100" dy="760" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="800" pageHeight="880" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- 标题 -->
+        <mxCell id="title" value="&lt;b&gt;代码质量保障工作流&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=18;fillColor=none;strokeColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="200" y="30" width="400" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- 阶段标签：编辑器阶段 -->
+        <mxCell id="phase-editor" value="&lt;b&gt;编辑器阶段&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontStyle=1;fontSize=11;fillColor=none;strokeColor=none;fontColor=#90A4AE;" vertex="1" parent="1">
+          <mxGeometry x="120" y="90" width="100" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- 节点1：编写代码 -->
+        <mxCell id="node-write" value="&lt;b&gt;编写代码&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565C0;strokeWidth=3;shadow=1;fontStyle=1;fontSize=14;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="275" y="90" width="250" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- 连线1 -->
+        <mxCell id="edge-write-to-lint" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565C0;strokeWidth=3;endArrow=classic;jumpStyle=arc;jumpSize=6;" edge="1" source="node-write" target="node-lint" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 节点2：VS Code 实时标红 -->
+        <mxCell id="node-lint" value="&lt;b&gt;VS Code 实时标红&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px;color:#666;&quot;&gt;ESLint 插件即时反馈&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=3;fontStyle=1;fontSize=13;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="275" y="180" width="250" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- 连线2 -->
+        <mxCell id="edge-lint-to-save" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565C0;strokeWidth=3;endArrow=classic;jumpStyle=arc;jumpSize=6;" edge="1" source="node-lint" target="node-save" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 节点3：保存自动修复 -->
+        <mxCell id="node-save" value="&lt;b&gt;Ctrl/Cmd + S 保存&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px;color:#666;&quot;&gt;formatOnSave + codeActionsOnSave 自动修复&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=3;fontStyle=1;fontSize=13;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="250" y="275" width="300" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- 分隔线 -->
+        <mxCell id="divider" value="" style="line;strokeWidth=2;strokeColor=#BDBDBD;dashed=1;dashPattern=8 4;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="150" y="370" width="500" height="10" as="geometry" />
+        </mxCell>
+
+        <!-- 阶段标签：提交阶段 -->
+        <mxCell id="phase-commit" value="&lt;b&gt;提交阶段&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontStyle=1;fontSize=11;fillColor=none;strokeColor=none;fontColor=#90A4AE;" vertex="1" parent="1">
+          <mxGeometry x="120" y="395" width="100" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- 连线3 -->
+        <mxCell id="edge-save-to-commit" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565C0;strokeWidth=3;endArrow=classic;jumpStyle=arc;jumpSize=6;" edge="1" source="node-save" target="node-commit" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 节点4：git commit -->
+        <mxCell id="node-commit" value="&lt;b&gt;git commit&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe0b2;strokeColor=#E65100;strokeWidth=3;shadow=1;fontStyle=1;fontSize=14;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="275" y="395" width="250" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- 连线4 -->
+        <mxCell id="edge-commit-to-staged" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565C0;strokeWidth=3;endArrow=classic;jumpStyle=arc;jumpSize=6;" edge="1" source="node-commit" target="node-staged" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 节点5：lint-staged 检查 -->
+        <mxCell id="node-staged" value="&lt;b&gt;lint-staged 检查暂存文件&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px;color:#666;&quot;&gt;最后防线 — 强制校验&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=3;fontStyle=1;fontSize=13;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="250" y="485" width="300" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- 连线5 -->
+        <mxCell id="edge-staged-to-success" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#82b366;strokeWidth=4;endArrow=classic;jumpStyle=arc;jumpSize=6;" edge="1" source="node-staged" target="node-success" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 连线5标签 -->
+        <mxCell id="edge-staged-label" value="&lt;b&gt;全部通过&lt;/b&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=11;fontColor=#82b366;" vertex="1" connectable="0" parent="edge-staged-to-success">
+          <mxGeometry x="-0.1" relative="1" as="geometry">
+            <mxPoint x="25" as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 节点6：提交成功 -->
+        <mxCell id="node-success" value="&lt;b&gt;✅ 提交成功&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=3;shadow=1;fontStyle=1;fontSize=14;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="300" y="585" width="200" height="50" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

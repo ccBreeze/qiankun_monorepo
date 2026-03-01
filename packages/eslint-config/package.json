@@ -4,15 +4,10 @@
   "type": "module",
   "description": "Shared ESLint configuration for Breeze monorepo",
   "scripts": {
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc"
   },
   "exports": {
-    ".": "./src/index.ts",
-    "./base": "./src/base.ts",
-    "./vue3": "./src/vue3.ts",
-    "./typescript": "./src/typescript.ts",
-    "./prettier": "./src/prettier.ts",
-    "./ignores": "./src/ignores.ts"
+    ".": "./src/index.ts"
   },
   "files": [
     "src"

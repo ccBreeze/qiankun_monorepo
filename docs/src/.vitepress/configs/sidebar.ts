@@ -7,12 +7,16 @@ export const sidebar: DefaultTheme.SidebarMulti = {
       items: [
         { text: '概览', link: '/packages/eslint-config/overview' },
         {
-          text: '架构与设计理念',
-          link: '/packages/eslint-config/architecture',
+          text: 'ESLint 项目配置',
+          link: '/packages/eslint-config/eslint-config',
         },
         {
-          text: '类型感知 Linting',
-          link: '/packages/eslint-config/typed-linting',
+          text: 'tsconfig 项目配置',
+          link: '/packages/eslint-config/tsconfig',
+        },
+        {
+          text: 'VS Code 配置',
+          link: '/packages/eslint-config/vscode',
         },
       ],
     },

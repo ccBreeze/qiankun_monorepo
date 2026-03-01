@@ -17,21 +17,21 @@ export const base: Linter.Config[] = [
   // 全局忽略规则
   ignores,
 
-  // Linter 选项
-  {
-    name: '@breeze/base/linter-options',
-    linterOptions: {
-      // 报告无用的 eslint-disable 注释
-      reportUnusedDisableDirectives: 'warn',
-    },
-  },
-
   // ESLint 推荐规则
   eslint.configs.recommended,
 
   // TypeScript 规则
   ...typescript,
 
-  // Prettier 集成（放在最后以覆盖冲突规则）
+  // 自定义配置（放在预设规则集之后，便于覆盖和扩展）
+  {
+    name: '@breeze/base/custom',
+    linterOptions: {
+      // 报告无用的 eslint-disable 注释
+      reportUnusedDisableDirectives: 'warn',
+    },
+  },
+
+  // Prettier 集成（必须放在最后以关闭格式化冲突规则）
   ...prettier,
 ]

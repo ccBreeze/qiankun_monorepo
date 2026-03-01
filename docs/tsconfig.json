@@ -1,9 +1,7 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "noEmit": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "types": ["node"]
   },
-  "include": ["src/.vitepress/**/*.ts", "src/.vitepress/**/*.vue", "env.d.ts"]
+  "include": ["src/.vitepress/**/*", "src/.vitepress/**/*.vue", "env.d.ts"]
 }

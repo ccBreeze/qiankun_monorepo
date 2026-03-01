@@ -1,6 +1,6 @@
 # @breeze/eslint-config
 
-Breeze Monorepo 的共享 ESLint 配置包，支持类型感知 linting。
+Breeze Monorepo 的共享 ESLint 配置包。
 
 > 参考: [Turborepo ESLint Guide](https://turborepo.com/docs/guides/tools/eslint)
 
@@ -100,10 +100,6 @@ export default defineConfigWithVueTs(...vue3, {
 })
 ```
 
-## 🎯 类型感知 Linting
-
-类型感知规则说明与优势见文档：[类型感知 Linting](./typed-linting)。
-
 ## ⚙️ 性能优化
 
 ### 启用 ESLint 缓存
@@ -111,7 +107,7 @@ export default defineConfigWithVueTs(...vue3, {
 ```json [package.json]
 {
   "scripts": {
-    "lint": "eslint . --cache --cache-location .eslintcache"
+    "lint": "eslint . --cache"
   }
 }
 ```
@@ -124,8 +120,6 @@ export default defineConfigWithVueTs(...vue3, {
 
 ## 📚 相关文档
 
-- [架构与设计理念](./architecture)
 - [Turborepo ESLint Guide](https://turborepo.com/docs/guides/tools/eslint)
-- [TypeScript ESLint - Monorepo Configuration](https://typescript-eslint.io/troubleshooting/typed-linting/monorepos/)
 - [TypeScript ESLint - Project Service](https://typescript-eslint.io/blog/project-service/)
 - [ESLint Flat Config](https://eslint.org/docs/latest/use/configure/configuration-files)

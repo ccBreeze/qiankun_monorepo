@@ -9,9 +9,9 @@
     "./request": "./src/request/index.ts"
   },
   "scripts": {
-    "type-check": "tsc --noEmit",
-    "lint": "eslint . --max-warnings=0 --cache --cache-location .eslintcache",
-    "lint:fix": "eslint . --fix --cache --cache-location .eslintcache"
+    "type-check": "tsc",
+    "lint": "eslint . --max-warnings=0 --cache",
+    "lint:fix": "eslint . --fix --cache"
   },
   "dependencies": {
     "axios": "catalog:",

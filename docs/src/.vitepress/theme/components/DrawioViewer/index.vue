@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
+import { ref, toRef, onMounted, onBeforeUnmount } from 'vue'
+import { useDrawioParser } from './useDrawioParser'
 
 const props = defineProps<{
   /** drawio 文件路径（基于 public 目录） */
@@ -8,35 +9,13 @@ const props = defineProps<{
   data?: string
 }>()
 
-const xmlContent = ref('')
-const loading = ref(true)
-const fullscreen = ref(false)
-const iframeReady = ref(false)
-
-/** diagrams.net viewer iframe URL */
-const viewerUrl = computed(() => {
-  if (!xmlContent.value) return ''
-  return `https://viewer.diagrams.net/?lightbox=1&highlight=0000ff&nav=1&ui=light#R${encodeURIComponent(xmlContent.value)}`
+const { loading, aspectRatio, viewerUrl, loadContent } = useDrawioParser({
+  src: toRef(props, 'src'),
+  data: toRef(props, 'data'),
 })
 
-async function loadContent() {
-  if (props.data) {
-    xmlContent.value = props.data
-    loading.value = false
-    return
-  }
-
-  if (props.src) {
-    try {
-      const res = await fetch(props.src)
-      xmlContent.value = await res.text()
-    } catch (e) {
-      console.error('[DrawioViewer] 加载文件失败:', e)
-    } finally {
-      loading.value = false
-    }
-  }
-}
+const fullscreen = ref(false)
+const iframeReady = ref(false)
 
 function openFullscreen() {
   iframeReady.value = false
@@ -66,11 +45,6 @@ onBeforeUnmount(() => {
   document.removeEventListener('keydown', onKeydown)
   document.body.style.overflow = ''
 })
-
-watch(
-  () => [props.src, props.data],
-  () => loadContent(),
-)
 </script>
 
 <template>
@@ -82,6 +56,7 @@ watch(
         <iframe
           :src="viewerUrl"
           class="drawio-iframe"
+          :style="aspectRatio ? { aspectRatio } : undefined"
           frameborder="0"
           tabindex="-1"
         />
@@ -133,7 +108,7 @@ $zoom-easing: cubic-bezier(0.2, 0, 0.2, 1);
 
 .drawio-iframe {
   width: 100%;
-  min-height: 600px;
+  min-height: 200px;
   border: none;
   background: #fff;
   pointer-events: none;
