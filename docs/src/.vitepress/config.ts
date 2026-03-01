@@ -33,7 +33,7 @@ export default defineConfig({
   vite: {
     plugins: [groupIconVitePlugin(), llmstxt()],
     server: {
-      port: 5200,
+      port: 8300,
       strictPort: true,
     },
   },

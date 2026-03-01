@@ -36,12 +36,12 @@ export default defineConfig({
     },
   },
   server: {
-    port: 3000,
+    port: 8100,
     cors: true,
     proxy: {
       // 代理 API 请求到 mock-server
       '/ManageAction': {
-        target: 'http://localhost:3100',
+        target: 'http://localhost:8200',
         changeOrigin: true,
       },
     },

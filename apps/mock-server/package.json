@@ -5,7 +5,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "nitro dev --port 3100",
+    "dev": "nitro dev --port 8200",
     "build": "nitro build",
     "preview": "nitro preview",
     "type-check": "tsc",
