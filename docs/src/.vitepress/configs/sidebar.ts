@@ -3,15 +3,15 @@ import type { DefaultTheme } from 'vitepress'
 export const sidebar: DefaultTheme.SidebarMulti = {
   '/guide/': [
     {
-      text: '指南',
+      text: '工程化配置',
       items: [
+        { text: 'pnpm Workspace', link: '/guide/pnpm-workspace' },
         { text: '项目初始搭建', link: '/guide/setup' },
         { text: 'Git Hooks 与提交规范', link: '/guide/git-hooks' },
         { text: 'vscode 与 EditorConfig', link: '/guide/editor-config' },
-        { text: 'tsconfig 项目配置', link: '/guide/tsconfig' },
-        { text: 'ESLint 项目配置', link: '/guide/eslint-config' },
-        { text: 'Stylelint 项目配置', link: '/guide/stylelint-config' },
-        { text: 'pnpm Workspace 与 Catalog', link: '/guide/pnpm-workspace' },
+        { text: 'tsconfig', link: '/guide/tsconfig' },
+        { text: 'ESLint', link: '/guide/eslint-config' },
+        { text: 'Stylelint', link: '/guide/stylelint-config' },
       ],
     },
   ],
