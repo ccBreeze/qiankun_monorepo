@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile>
+  <diagram id="save-flow" name="保存时自动处理流程">
+    <mxGraphModel dx="1851" dy="1191" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- 触发节点：保存文件 -->
+        <mxCell id="trigger-save" value="&lt;b&gt;Cmd+S / Ctrl+S（保存文件）&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe0b2;strokeColor=#E65100;strokeWidth=3;shadow=1;fontStyle=1;fontSize=14;arcSize=40;" vertex="1" parent="1">
+          <mxGeometry x="430" y="60" width="300" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- 步骤1：EditorConfig -->
+        <mxCell id="step-editorconfig" value="&lt;b&gt;1. EditorConfig 应用基础规范&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565C0;strokeWidth=3;shadow=1;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="430" y="180" width="300" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-editorconfig" value="缩进、换行符、行尾空格、文件末尾空行" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F7FA;strokeColor=#90A4AE;strokeWidth=2;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="800" y="185" width="300" height="36" as="geometry" />
+        </mxCell>
+
+        <!-- 步骤2：ESLint -->
+        <mxCell id="step-eslint" value="&lt;b&gt;2. ESLint 自动修复（source.fixAll.eslint）&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565C0;strokeWidth=3;shadow=1;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="430" y="300" width="300" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-eslint" value="修复可自动修复的代码质量问题" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F7FA;strokeColor=#90A4AE;strokeWidth=2;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="800" y="305" width="300" height="36" as="geometry" />
+        </mxCell>
+
+        <!-- 步骤3：Stylelint -->
+        <mxCell id="step-stylelint" value="&lt;b&gt;3. Stylelint 自动修复（source.fixAll.stylelint）&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565C0;strokeWidth=3;shadow=1;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="430" y="420" width="300" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-stylelint" value="修复 CSS/SCSS/Vue 样式问题" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F7FA;strokeColor=#90A4AE;strokeWidth=2;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="800" y="425" width="300" height="36" as="geometry" />
+        </mxCell>
+
+        <!-- 步骤4：Prettier -->
+        <mxCell id="step-prettier" value="&lt;b&gt;4. Prettier 格式化（editor.formatOnSave）&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565C0;strokeWidth=3;shadow=1;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="430" y="540" width="300" height="46" as="geometry" />
+        </mxCell>
+        <mxCell id="detail-prettier" value="统一代码格式（引号、分号、缩进等）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F7FA;strokeColor=#90A4AE;strokeWidth=2;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="800" y="545" width="300" height="36" as="geometry" />
+        </mxCell>
+
+        <!-- 核心流程连线：触发 → 步骤1 -->
+        <mxCell id="edge-trigger-to-step1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565C0;strokeWidth=4;endArrow=classic;jumpStyle=arc;jumpSize=6;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="trigger-save" target="step-editorconfig" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 核心流程连线：步骤1 → 步骤2 -->
+        <mxCell id="edge-step1-to-step2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565C0;strokeWidth=4;endArrow=classic;jumpStyle=arc;jumpSize=6;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="step-editorconfig" target="step-eslint" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 核心流程连线：步骤2 → 步骤3 -->
+        <mxCell id="edge-step2-to-step3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565C0;strokeWidth=4;endArrow=classic;jumpStyle=arc;jumpSize=6;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="step-eslint" target="step-stylelint" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 核心流程连线：步骤3 → 步骤4 -->
+        <mxCell id="edge-step3-to-step4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565C0;strokeWidth=4;endArrow=classic;jumpStyle=arc;jumpSize=6;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="step-stylelint" target="step-prettier" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 辅助连线：步骤1 → 子说明1 -->
+        <mxCell id="edge-step1-to-detail1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#90A4AE;strokeWidth=2;dashed=1;dashPattern=8 4;endArrow=classic;jumpStyle=arc;jumpSize=6;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="step-editorconfig" target="detail-editorconfig" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 辅助连线：步骤2 → 子说明2 -->
+        <mxCell id="edge-step2-to-detail2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#90A4AE;strokeWidth=2;dashed=1;dashPattern=8 4;endArrow=classic;jumpStyle=arc;jumpSize=6;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="step-eslint" target="detail-eslint" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 辅助连线：步骤3 → 子说明3 -->
+        <mxCell id="edge-step3-to-detail3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#90A4AE;strokeWidth=2;dashed=1;dashPattern=8 4;endArrow=classic;jumpStyle=arc;jumpSize=6;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="step-stylelint" target="detail-stylelint" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 辅助连线：步骤4 → 子说明4 -->
+        <mxCell id="edge-step4-to-detail4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#90A4AE;strokeWidth=2;dashed=1;dashPattern=8 4;endArrow=classic;jumpStyle=arc;jumpSize=6;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="step-prettier" target="detail-prettier" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -607,7 +607,7 @@ TypeScript 只做类型检查，不产出任何文件（`.js`、`.d.ts`、`.map`
 | 全项目 JS 类型检查 | `allowJs + checkJs: true` | 适合 JS 迁移期或大量 JS + JSDoc |
 | 临时跳过历史文件   | `// @ts-nocheck`          | 仅建议短期使用                  |
 
-```js
+```js [eslint.config.js]
 // eslint.config.js
 // @ts-check
 ```
@@ -637,7 +637,7 @@ TypeScript 只做类型检查，不产出任何文件（`.js`、`.d.ts`、`.map`
 
 1. **tsconfig.json** — 改为继承 `tsconfig.lib.json`，补上输出目录配置：
 
-   ```jsonc
+   ```jsonc [tsconfig.json]
    {
      "extends": "../../tsconfig.lib.json",
      "compilerOptions": {
@@ -656,7 +656,7 @@ TypeScript 只做类型检查，不产出任何文件（`.js`、`.d.ts`、`.map`
 
    **单入口包**（如 `@breeze/qiankun-shared`）：
 
-   ```jsonc
+   ```jsonc [packages/qiankun-shared/package.json]
    {
      "exports": {
        ".": "./src/index.ts", // [!code --]
@@ -675,7 +675,7 @@ TypeScript 只做类型检查，不产出任何文件（`.js`、`.d.ts`、`.map`
 
    **多入口包**（如 `@breeze/utils`）：
 
-   ```jsonc
+   ```jsonc [packages/utils/package.json]
    {
      "exports": {
        "./env": "./src/env.ts", // [!code --]
@@ -718,7 +718,7 @@ TypeScript 只做类型检查，不产出任何文件（`.js`、`.d.ts`、`.map`
 
 当需要兼容旧版工具链（Node < 12.11）时，加上 `main`/`types` 作为 `exports` 的降级 fallback：
 
-```jsonc
+```jsonc [package.json]
 {
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -732,6 +732,62 @@ TypeScript 只做类型检查，不产出任何文件（`.js`、`.d.ts`、`.map`
 ```
 
 :::
+
+## 相关依赖
+
+```bash
+# 根目录（全局共享）
+pnpm add -wD typescript @types/node @tsconfig/node24 ts-node
+
+# Vue 应用（apps/main-app、apps/vue3-app）
+pnpm add -D @vue/tsconfig vue-tsc --filter @breeze/main-app --filter @breeze/vue3-app
+```
+
+| 依赖包             | 版本    | 安装位置 | 说明                                                              |
+| ------------------ | ------- | -------- | ----------------------------------------------------------------- |
+| `typescript`       | ~5.9.0  | 根目录   | TypeScript 编译器                                                 |
+| `@types/node`      | ^25.0.1 | 根目录   | Node.js 类型声明                                                  |
+| `@tsconfig/node24` | ^24.0.3 | 根目录   | Node.js 24 官方 tsconfig 预设，`tsconfig.node.base.json` 继承使用 |
+| `ts-node`          | ^10.9.2 | 根目录   | 在 Node.js 中直接运行 TypeScript 文件，用于脚本和配置文件         |
+| `@vue/tsconfig`    | ^0.8.1  | Vue 应用 | Vue 官方 tsconfig 预设，提供 Vue SFC 所需的编译选项               |
+| `vue-tsc`          | ^3.1.5  | Vue 应用 | Vue 项目的类型检查工具，替代 `tsc` 以支持 `.vue` 文件             |
+
+## NPM Scripts
+
+根目录 `package.json` 提供了全仓类型检查脚本：
+
+```json [package.json]
+{
+  "scripts": {
+    "type-check:all": "pnpm -r --parallel --if-present run type-check"
+  }
+}
+```
+
+各子包的 `type-check` 脚本根据项目类型使用不同的工具：
+
+```json [apps/main-app/package.json · apps/vue3-app/package.json]
+{
+  "scripts": {
+    // Vue 应用，需要 vue-tsc 处理 .vue 文件
+    "type-check": "vue-tsc --build"
+  }
+}
+```
+
+```json [apps/mock-server · packages/eslint-config · packages/utils · packages/qiankun-shared]
+{
+  "scripts": {
+    // 纯 TypeScript 项目，直接使用 tsc
+    "type-check": "tsc"
+  }
+}
+```
+
+> [!TIP] `vue-tsc` vs `tsc`
+>
+> - 包含 `.vue` 文件的项目必须使用 `vue-tsc`，它能解析 SFC 中的 `<script>` 块进行类型检查
+> - 纯 TypeScript 项目直接使用 `tsc` 即可
 
 ## 相关链接
 
