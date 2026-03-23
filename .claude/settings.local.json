@@ -22,8 +22,18 @@
       "Bash(find:*)",
       "Bash(npx stylelint:*)",
       "Bash(npx prettier:*)",
-      "Bash(npx eslint-plugin-vue:*)"
+      "Bash(npx eslint-plugin-vue:*)",
+      "WebFetch(domain:github.com)",
+      "mcp__ide__getDiagnostics",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(gh api:*)",
+      "WebFetch(domain:typescript-eslint.io)",
+      "WebFetch(domain:typescript-eslint.nodejs.cn)",
+      "mcp__feishu-mcp__fetch-doc",
+      "mcp__feishu-mcp__update-doc",
+      "Bash(git mv:*)"
     ]
   },
+  "enabledMcpjsonServers": ["feishu-mcp"],
   "disabledMcpjsonServers": ["chrome-devtools", "figma"]
 }
