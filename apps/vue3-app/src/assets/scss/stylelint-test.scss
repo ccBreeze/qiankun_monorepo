@@ -4,9 +4,7 @@
  */
 
 // ========== Tailwind CSS 指令测试 ==========
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
 @layer components {
   .btn-primary {
@@ -49,8 +47,8 @@ $font-size-large: 1.5rem;
 // ========== Mixin 和 Include 测试 ==========
 @mixin flex-center {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 }
 
 .centered-box {
@@ -58,7 +56,7 @@ $font-size-large: 1.5rem;
 }
 
 // ========== 响应式设计测试 ==========
-@screen md {
+@media (width >= 48rem) {
   .responsive-element {
     width: 50%;
   }
