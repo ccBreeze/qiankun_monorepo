@@ -1,6 +1,6 @@
 ---
 name: 生成-drawio-流程图
-description: 根据指定目录/模块的代码内容，分析架构与调用链，生成符合规范的 DrawIO 架构流程图（.drawio XML）。支持从代码自动生成、从图片还原、从需求描述创建。
+description: 根据指定目录/模块的代码内容，分析架构与调用链，生成符合规范的 DrawIO 架构流程图（.drawio XML）。支持从代码自动生成、从图片还原、从需求描述创建。可通过 drawio MCP 服务器在浏览器中实时预览和交互式编辑。
 ---
 
 # 生成 DrawIO 流程图
@@ -18,6 +18,7 @@ description: 根据指定目录/模块的代码内容，分析架构与调用链
 3. 内置校验机制确保 XML 结构正确、连接线不遮挡文字、交叉处自动添加 jumpStyle=arc
 4. 输出标准化代码块，格式清晰，兼容 DrawIO 编辑器
 5. 优化自动布局，保证节点均匀排列，尽量避免线条交叉（可禁用）
+6. **通过 drawio MCP 服务器实时操作浏览器中的 Draw.io 编辑器**
 
 ### 交互规则
 
@@ -36,6 +37,72 @@ description: 根据指定目录/模块的代码内容，分析架构与调用链
 - 用户提供代码目录路径，要求生成架构图
 - 用户提供图片截图，要求还原为 drawio 代码
 - 用户描述图表需求，要求创建流程图
+
+## 工作模式
+
+本技能支持两种工作模式，根据场景自动选择：
+
+### 模式一：MCP 实时编辑模式（推荐）
+
+当 drawio MCP 服务器可用时（`mcp__drawio__*` 工具已加载），优先使用此模式。
+
+**优势**：在浏览器中实时预览、可交互调整、支持增量修改
+
+**工作流程**：
+
+1. **分析需求**（与文件模式相同）
+2. **通过 MCP 工具构建图表**：
+   - 使用 `mcp__drawio__add-rectangle` 添加节点
+   - 使用 `mcp__drawio__add-edge` 创建连接线
+   - 使用 `mcp__drawio__add-cell-of-shape` 添加特殊形状
+   - 使用 `mcp__drawio__create-layer` 管理图层
+   - 使用 `mcp__drawio__edit-cell` / `mcp__drawio__edit-edge` 调整元素
+3. **实时校验**：
+   - 使用 `mcp__drawio__list-paged-model` 检查图表完整性
+   - 使用 `mcp__drawio__get-selected-cell` 验证单个元素
+4. **告知用户**访问 `http://localhost:3000/` 查看实时效果
+
+**MCP 工具速查表**：
+
+| 工具                     | 用途                                                         |
+| ------------------------ | ------------------------------------------------------------ |
+| `add-rectangle`          | 添加矩形节点（x, y, width, height, text, style）             |
+| `add-edge`               | 创建连接线（source_id, target_id, text, style）              |
+| `add-cell-of-shape`      | 添加指定形状（shape_name, x, y, width, height, text, style） |
+| `edit-cell`              | 修改节点（cell_id, text, x, y, width, height, style）        |
+| `edit-edge`              | 修改连接线（cell_id, text, source_id, target_id, style）     |
+| `delete-cell-by-id`      | 删除元素（cell_id）                                          |
+| `get-selected-cell`      | 获取当前选中的元素信息                                       |
+| `list-paged-model`       | 获取图表完整模型                                             |
+| `get-shape-categories`   | 获取可用形状分类                                             |
+| `get-shapes-in-category` | 获取分类下的形状（category_id）                              |
+| `get-shape-by-name`      | 按名称查找形状（shape_name）                                 |
+| `set-cell-shape`         | 修改元素形状（cell_id, shape_name）                          |
+| `set-cell-data`          | 设置元素自定义属性（cell_id, key, value）                    |
+| `create-layer`           | 创建新图层（name）                                           |
+| `list-layers`            | 列出所有图层                                                 |
+| `set-active-layer`       | 切换活动图层（layer_id）                                     |
+| `move-cell-to-layer`     | 移动元素到指定图层（cell_id, target_layer_id）               |
+| `get-active-layer`       | 获取当前活动图层                                             |
+
+**MCP 模式构建顺序**：
+
+1. 先通过 `create-layer` 创建所需图层（如"核心流程"、"辅助元素"等）
+2. 使用 `set-active-layer` 切换到目标图层
+3. 使用 `add-rectangle` 或 `add-cell-of-shape` 逐个添加节点，style 参数遵循下方配色方案
+4. 使用 `add-edge` 创建所有连接线
+5. 使用 `list-paged-model` 检查整体结构
+6. 使用 `edit-cell` / `edit-edge` 微调位置或样式
+
+### 模式二：XML 文件生成模式
+
+当 MCP 服务器不可用，或用户明确要求生成 `.drawio` 文件时使用。
+
+**工作流程**：
+
+1. **分析需求**
+2. **生成 DrawIO XML**（遵循下方规范）
+3. **将 XML 写入 `.drawio` 文件**
 
 ## 处理流程
 
@@ -63,7 +130,7 @@ description: 根据指定目录/模块的代码内容，分析架构与调用链
 - vertex="1" 代表节点，必须包含 mxGeometry 坐标信息
 - edge="1" 代表连接线，需指定 source 和 target
 - style 需严格匹配 DrawIO 规则：rounded=1、edgeStyle=orthogonalEdgeStyle、jumpStyle=arc;jumpSize=6、endArrow=classic 等
-- 弱化元素禁止使用 opacity，必须使用所选配色方案表格中的”弱化元素”颜色，并配合更细边框/虚线实现
+- 弱化元素禁止使用 opacity，必须使用所选配色方案表格中的"弱化元素"颜色，并配合更细边框/虚线实现
 
 ### VitePress 集成规范
 
@@ -78,7 +145,7 @@ import drawioXml from './lint-workflow.drawio?raw'
 </script>
 
 <ClientOnly>
-  <DrawioViewer :data=”drawioXml” />
+  <DrawioViewer :data="drawioXml" />
 </ClientOnly>
 ```
 
@@ -175,9 +242,9 @@ import drawioXml from './lint-workflow.drawio?raw'
 **辅助/配置元素（弱化处理）**：
 
 ```
-节点: fillColor=（使用所选配色方案表格中的“弱化元素”填充色）;strokeColor=（使用所选配色方案表格中的“弱化元素”边框色）;strokeWidth=2
-连线: strokeColor=（使用所选配色方案表格中的“弱化元素”边框色）;strokeWidth=2
-详情展开线: dashed=1;dashPattern=8 4;strokeColor=（使用所选配色方案表格中的“弱化元素”边框色）;strokeWidth=2
+节点: fillColor=（使用所选配色方案表格中的"弱化元素"填充色）;strokeColor=（使用所选配色方案表格中的"弱化元素"边框色）;strokeWidth=2
+连线: strokeColor=（使用所选配色方案表格中的"弱化元素"边框色）;strokeWidth=2
+详情展开线: dashed=1;dashPattern=8 4;strokeColor=（使用所选配色方案表格中的"弱化元素"边框色）;strokeWidth=2
 ```
 
 **功能模块内部节点**（如增强器、中间件等同级组件）：
@@ -324,7 +391,7 @@ import drawioXml from './lint-workflow.drawio?raw'
 生成后逐项检查：
 
 - [ ] 核心流程路径是否通过颜色和线宽突出
-- [ ] 辅助元素是否通过配色方案“弱化元素”的颜色 + 更细边框/虚线弱化（避免设置 opacity）
+- [ ] 辅助元素是否通过配色方案"弱化元素"的颜色 + 更细边框/虚线弱化（避免设置 opacity）
 - [ ] 连接线交叉检查：所有交叉处是否设置了 jumpStyle=arc
 - [ ] 文本遮挡检查：是否有连接线穿过文本或遮挡组件
 - [ ] 格式一致性检查：字体、线条宽度、箭头样式是否统一
@@ -333,6 +400,8 @@ import drawioXml from './lint-workflow.drawio?raw'
 - [ ] 画布边距检查：内容距画布左右至少 100px、上下至少 50px，大画布下内容是否水平和垂直居中
 - [ ] 组件 ID 和连接线 ID 是否语义化
 - [ ] 代码健壮性检查：代码是否符合 drawio 开发规范，是否可以正常打开运行
+- [ ] （MCP 模式）使用 `list-paged-model` 检查所有元素是否正确创建
+- [ ] （MCP 模式）使用 `list-layers` 确认图层结构合理
 
 ## 参考资源
 
@@ -340,3 +409,4 @@ import drawioXml from './lint-workflow.drawio?raw'
 - DrawIO 学习教程：https://www.drawzh.com/
 - 在线编辑器：https://app.diagrams.net/
 - MxGraph 语法：https://jgraph.github.io/mxgraph/docs/tutorial.html
+- drawio-mcp-server：https://github.com/lgazo/drawio-mcp-server

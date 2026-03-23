@@ -1,39 +1,34 @@
 {
   "permissions": {
     "allow": [
-      "WebSearch",
-      "WebFetch(domain:*)",
-      "Bash(node -e:*)",
-      "Bash(cat:*)",
+      "Bash(ls:*)",
       "Bash(tree:*)",
+      "Bash(wc:*)",
       "Bash(mkdir:*)",
       "Bash(mv:*)",
-      "Bash(npx tsc:*)",
-      "Bash(ls:*)",
-      "mcp__chrome-devtools__*",
-      "mcp__figma__*",
-      "Bash(npx eslint:*)",
+
+      "Bash(git mv:*)",
+      "Bash(gh api repos:*)",
+
       "Bash(pnpm:*)",
-      "Bash(curl:*)",
-      "Bash(npx msw init ./public --save)",
-      "Bash(pkill:*)",
-      "Bash(timeout 10 pnpm run:*)",
-      "Bash(wc:*)",
-      "Bash(find:*)",
+      "Bash(npm view:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx eslint:*)",
       "Bash(npx stylelint:*)",
       "Bash(npx prettier:*)",
-      "Bash(npx eslint-plugin-vue:*)",
+
+      "WebSearch",
       "WebFetch(domain:github.com)",
-      "mcp__ide__getDiagnostics",
       "WebFetch(domain:raw.githubusercontent.com)",
-      "Bash(gh api:*)",
-      "WebFetch(domain:typescript-eslint.io)",
-      "WebFetch(domain:typescript-eslint.nodejs.cn)",
+      "WebFetch(domain:www.npmjs.com)",
+
+      "mcp__drawio__*",
+      "mcp__chrome-devtools__*",
+      "mcp__figma__*",
       "mcp__feishu-mcp__fetch-doc",
-      "mcp__feishu-mcp__update-doc",
-      "Bash(git mv:*)"
+      "mcp__feishu-mcp__update-doc"
     ]
   },
-  "enabledMcpjsonServers": ["feishu-mcp"],
+  "enabledMcpjsonServers": ["feishu-mcp", "drawio"],
   "disabledMcpjsonServers": ["chrome-devtools", "figma"]
 }
