@@ -2,7 +2,7 @@
 outline: [2, 4]
 ---
 
-# Stylelint 项目配置
+# Stylelint
 
 本文档说明项目中 Stylelint 的配置内容及各字段含义。
 

@@ -1,4 +1,4 @@
-# pnpm Workspace 与 Catalog
+# pnpm Workspace
 
 本文档记录本项目中用到的 pnpm Monorepo 相关知识，包括 Workspace 配置、Catalog 依赖管理、常用命令等。
 

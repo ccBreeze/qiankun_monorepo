@@ -2,7 +2,7 @@ import type { DefaultTheme } from 'vitepress'
 
 export const nav: DefaultTheme.NavItem[] = [
   {
-    text: '指南',
+    text: '工程化配置',
     link: '/guide/setup',
   },
   {
