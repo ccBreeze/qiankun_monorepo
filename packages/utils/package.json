@@ -16,7 +16,7 @@
   "dependencies": {
     "axios": "catalog:",
     "crypto-js": "catalog:",
-    "lru-cache": "^11.2.4"
+    "lru-cache": "catalog:"
   },
   "devDependencies": {
     "@breeze/eslint-config": "workspace:*",

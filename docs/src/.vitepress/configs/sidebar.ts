@@ -11,6 +11,7 @@ export const sidebar: DefaultTheme.SidebarMulti = {
         { text: 'tsconfig 项目配置', link: '/guide/tsconfig' },
         { text: 'ESLint 项目配置', link: '/guide/eslint-config' },
         { text: 'Stylelint 项目配置', link: '/guide/stylelint-config' },
+        { text: 'pnpm Workspace 与 Catalog', link: '/guide/pnpm-workspace' },
       ],
     },
   ],
