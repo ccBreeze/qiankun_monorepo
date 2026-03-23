@@ -2,6 +2,29 @@
 
 本文档以**文件维度**逐一说明项目中每个 ESLint 配置文件的完整内容及各字段含义。
 
+## 前置：启用 ESM
+
+在根 `package.json` 中添加 `type: "module"`：
+
+```json [package.json]
+{
+  "type": "module"
+}
+```
+
+::: details 为什么需要启用 ESM？
+
+Node.js 中 `.js` 文件默认被当作 CommonJS 模块，无法使用 `import` / `export` 语法。设置 `"type": "module"` 后，所有 `.js` 文件都被识别为 ESM，这对本项目尤其重要：
+
+- **ESLint Flat Config**（`eslint.config.js`）要求使用 `export default`，ESM 是官方推荐写法
+- **Vite** 原生基于 ESM，`vite.config.ts` 等配置文件也是 ESM
+- **项目中所有配置文件**（`eslint.config.js`、`stylelint.config.js` 等）都使用了 `import` / `export` 语法
+
+> [!TIP] 如果个别文件需要 CommonJS
+> 可以将文件后缀改为 `.cjs`，Node.js 会将 `.cjs` 文件始终视为 CommonJS 模块，不受 `"type": "module"` 影响。
+
+:::
+
 ## 整体结构
 
 ```
@@ -87,8 +110,7 @@ export default defineConfigWithVueTs(...vue3, {
 
 两者的连接点在共享配置包的 `typescript.ts` 中：
 
-```typescript
-// packages/eslint-config/src/typescript.ts
+```typescript [packages/eslint-config/src/typescript.ts]
 parserOptions: {
   projectService: {
     allowDefaultProject: ['*.js', '*.mjs', '*.cjs'],
@@ -98,8 +120,7 @@ parserOptions: {
 
 `projectService` 声明"需要类型信息"，但还需要知道去哪里查找 `tsconfig.json`。每个子项目通过 `tsconfigRootDir` 指定搜索起点：
 
-```javascript
-// apps/main-app/eslint.config.js
+```javascript [apps/main-app/eslint.config.js]
 parserOptions: {
   tsconfigRootDir: import.meta.dirname,  // → apps/main-app/
 }
@@ -129,8 +150,7 @@ parserOptions: {
 
 ESLint v9 引入了 [Flat Config](https://eslint.org/docs/latest/use/configure/configuration-files) 格式，取代了旧的 `.eslintrc.*` 层叠配置。核心变化是：**配置文件导出一个数组，数组中的每个对象就是一条配置，按顺序合并**。
 
-```javascript
-// eslint.config.js
+```javascript [eslint.config.js]
 export default [
   config1, // 第一条配置
   config2, // 第二条，同名字段会覆盖第一条
@@ -280,7 +300,7 @@ export const ignores = globalIgnores([
 
 `globalIgnores()` 是 ESLint v9.0+ 提供的工具函数，等价于一个**只有 `ignores` 字段**的配置对象。当配置对象只有 `ignores`（没有 `files`、`rules` 等），ESLint 会将其视为"全局忽略"，对所有后续配置生效。
 
-```javascript
+```javascript [globalIgnores ~vscode-icons:file-type-js~]
 // 这两种写法等价：
 globalIgnores(['**/dist/**'])
 // ↕
@@ -291,7 +311,7 @@ globalIgnores(['**/dist/**'])
 
 如果同时带有 `files` 或其他字段，`ignores` 就变成"仅在该配置对象范围内忽略"：
 
-```javascript
+```javascript [ignores ~vscode-icons:file-type-js~]
 {
   files: ['**/*.ts'],
   ignores: ['**/*.test.ts'],  // 仅在匹配 .ts 文件的上下文中忽略 .test.ts
@@ -786,7 +806,7 @@ export default defineConfigWithVueTs(...vue3, {
 
 `.eslintrc-auto-import.json` 由 `unplugin-auto-import` 在构建时自动生成，内容类似：
 
-```json
+```json [.eslintrc-auto-import.json]
 {
   "globals": {
     "ref": true,
@@ -921,7 +941,7 @@ export default [
 
 常用命令：
 
-```bash
+```bash [pnpm]
 # 根目录配置文件
 pnpm eslint eslint.config.js --max-warnings=0
 
@@ -938,7 +958,7 @@ pnpm --filter main-app exec eslint eslint.config.js --max-warnings=0
 
 当遇到"明明改了配置但 lint 结果没变"等问题时，清除缓存文件即可：
 
-```bash
+```bash [shell ~vscode-icons:file-type-shell~]
 # 清理全仓 lint/format 缓存（含子项目）
 find . -type f \( -name '.eslintcache' -o -name '.stylelintcache' -o -name '.prettiercache' \) \
   -not -path '*/node_modules/*' -delete
@@ -963,6 +983,90 @@ pnpm -w run lint:all
 
 :::
 
+## NPM Scripts
+
+根目录 `package.json` 中提供了以下 ESLint 相关脚本：
+
+```json [package.json]
+{
+  "scripts": {
+    "lint": "eslint . --max-warnings=0 --cache",
+    "lint:fix": "eslint . --fix --cache",
+    "lint:all": "pnpm -r --parallel run lint",
+    "lint:all:fix": "pnpm -r --parallel run lint:fix"
+  }
+}
+```
+
+- `--cache`：启用缓存（缓存文件 `.eslintcache` 生成在运行命令的目录下），仅检查变更的文件，显著提升大型 monorepo 的执行速度
+- `--max-warnings=0`：任何 warning 都会导致 lint 失败，强制团队解决所有警告
+
+| 命令                | 说明                                                         |
+| ------------------- | ------------------------------------------------------------ |
+| `pnpm lint`         | 在根目录运行 ESLint 检查（仅检查根目录自身的文件）           |
+| `pnpm lint:fix`     | 同上，但自动修复可修复的问题                                 |
+| `pnpm lint:all`     | 递归执行所有子包（`apps/*`、`packages/*`）各自的 `lint` 脚本 |
+| `pnpm lint:all:fix` | 递归执行所有子包各自的 `lint:fix` 脚本                       |
+
+> [!TIP] `lint` vs `lint:all`
+>
+> - `lint` / `lint:fix` 只使用根目录的 `eslint.config.js`，仅覆盖根目录文件
+> - `lint:all` / `lint:all:fix` 会触发每个子包各自的 `eslint.config.js`，实现全仓检查
+
+## 相关依赖
+
+### `packages/eslint-config`（共享配置包）
+
+```bash
+pnpm add -D @eslint/js @vue/eslint-config-typescript eslint-config-prettier \
+  eslint-plugin-prettier eslint-plugin-vue typescript-eslint \
+  --filter @breeze/eslint-config
+```
+
+| 依赖包                          | 版本    | 说明                                                     |
+| ------------------------------- | ------- | -------------------------------------------------------- |
+| `@eslint/js`                    | ^9.39.2 | ESLint 官方 JS 推荐规则集                                |
+| `@vue/eslint-config-typescript` | ^14.6.0 | Vue + TypeScript 的 ESLint 预设，整合解析器与规则        |
+| `eslint-config-prettier`        | ^10.1.8 | 关闭所有与 Prettier 冲突的 ESLint 规则                   |
+| `eslint-plugin-prettier`        | ^5.5.4  | 将 Prettier 作为 ESLint 规则运行，格式问题报为 lint 错误 |
+| `eslint-plugin-vue`             | ^10.5.1 | Vue SFC 的 ESLint 规则集                                 |
+| `typescript-eslint`             | ^8.49.0 | TypeScript ESLint 解析器与规则集                         |
+
+### 根目录
+
+```bash
+pnpm add -wD eslint prettier @breeze/eslint-config lint-staged
+```
+
+| 依赖包                  | 版本         | 说明                               |
+| ----------------------- | ------------ | ---------------------------------- |
+| `eslint`                | ^9.39.2      | ESLint 核心                        |
+| `prettier`              | ^3.7.4       | 代码格式化工具                     |
+| `@breeze/eslint-config` | workspace:\* | 本仓库的共享 ESLint 配置包         |
+| `lint-staged`           | ^16.2.7      | Git 提交前对暂存文件运行 lint 检查 |
+
+### Vue 应用（`apps/main-app`、`apps/vue3-app`）
+
+```bash
+pnpm add -D @breeze/eslint-config @vue/eslint-config-typescript \
+  --filter @breeze/main-app --filter @breeze/vue3-app
+```
+
+| 依赖包                          | 版本         | 说明                                                               |
+| ------------------------------- | ------------ | ------------------------------------------------------------------ |
+| `@breeze/eslint-config`         | workspace:\* | 共享 ESLint 配置包                                                 |
+| `@vue/eslint-config-typescript` | ^14.6.0      | Vue + TypeScript 预设，各 Vue 应用的 `eslint.config.js` 中直接使用 |
+
+### 非 Vue 应用（`apps/mock-server`）
+
+```bash
+pnpm add -D @breeze/eslint-config --filter @breeze/mock-server
+```
+
+| 依赖包                  | 版本         | 说明                                       |
+| ----------------------- | ------------ | ------------------------------------------ |
+| `@breeze/eslint-config` | workspace:\* | 共享 ESLint 配置包，使用其中的 `base` 预设 |
+
 ## 相关链接
 
 - [ESLint Flat Config](https://eslint.org/docs/latest/use/configure/configuration-files)
@@ -972,6 +1076,6 @@ pnpm -w run lint:all
 - [Prettier 与 ESLint 集成](https://prettier.io/docs/en/integrating-with-linters.html)
 
 <script setup>
-import configOrderXml from './eslint-config-order.drawio?raw'
-import typeAwareWorkflow from './eslint-type-aware-workflow.drawio?raw'
+import configOrderXml from './drawio/eslint-config-order.drawio?raw'
+import typeAwareWorkflow from './drawio/eslint-type-aware-workflow.drawio?raw'
 </script>

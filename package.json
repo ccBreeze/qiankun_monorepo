@@ -20,8 +20,8 @@
     "lint:fix": "eslint . --fix --cache",
     "lint:all": "pnpm -r --parallel run lint",
     "lint:all:fix": "pnpm -r --parallel run lint:fix",
-    "lint:style": "stylelint '**/*.{css,scss,sass,vue}' --max-warnings=0 --cache",
-    "lint:style:fix": "stylelint '**/*.{css,scss,sass,vue}' --fix --cache",
+    "stylelint": "stylelint '**/*.{css,scss,sass,vue}' --max-warnings=0 --cache",
+    "stylelint:fix": "stylelint '**/*.{css,scss,sass,vue}' --fix --cache",
     "format": "prettier '.' --write --cache",
     "prepare": "husky"
   },
@@ -48,6 +48,7 @@
     "stylelint-config-standard": "catalog:",
     "stylelint-config-standard-scss": "catalog:",
     "stylelint-order": "catalog:",
+    "stylelint-selector-bem-pattern": "^4.0.1",
     "ts-node": "catalog:",
     "typescript": "catalog:"
   }

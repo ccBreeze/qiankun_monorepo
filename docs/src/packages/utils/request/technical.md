@@ -16,7 +16,7 @@ outline: [2, 3]
 ## 架构概览
 
 <script setup>
-import drawioXml from './request-architecture.drawio?raw'
+import drawioXml from './drawio/request-architecture.drawio?raw'
 </script>
 
 <ClientOnly>
@@ -25,7 +25,7 @@ import drawioXml from './request-architecture.drawio?raw'
 
 ## 目录结构
 
-```
+```text [tree ~vscode-icons:default-folder-opened~]
 packages/utils/src/request/
 ├── index.ts                         # 统一导出
 ├── constants.ts                     # 常量/枚举定义
@@ -293,7 +293,7 @@ export const createEnhanceRequest = (context: EnhancerContext) => {
 
 **Usage**：
 
-```typescript
+```typescript [typescript ~vscode-icons:file-type-typescript~]
 /** --- api --- */
 
 // 默认行为直接返回 data 字段，业务层无需关心外层 ApiResponse 结构
@@ -342,7 +342,7 @@ Loading 增强器，默认 `false`。不负责 UI 实现，只调用注入的函
 | 延迟显示 | 通过 controller 传递   | 延迟显示避免快速请求闪烁                                                    |
 | 全局单例 | `globalLoadingManager` | 首次注入 `loadingController` 后全局共享，重复注册不同 controller 会发出警告 |
 
-```typescript
+```typescript [loading ~vscode-icons:file-type-typescript~]
 // 并发多个请求时，loading 会正确显示（引用计数机制）
 await Promise.all([
   postDC(data1, { showLoading: true }), // [!code highlight]

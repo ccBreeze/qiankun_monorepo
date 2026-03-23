@@ -2,12 +2,12 @@ import type { DefaultTheme } from 'vitepress'
 
 export const nav: DefaultTheme.NavItem[] = [
   {
+    text: '指南',
+    link: '/guide/setup',
+  },
+  {
     text: 'Packages',
     items: [
-      {
-        text: 'eslint-config',
-        link: '/packages/eslint-config/overview',
-      },
       {
         text: 'utils',
         link: '/packages/utils/',

@@ -4,7 +4,7 @@ export default {
     'stylelint-config-standard-scss',
     'stylelint-config-recommended-vue/scss',
   ],
-  plugins: ['stylelint-order'],
+  plugins: ['stylelint-order', 'stylelint-selector-bem-pattern'],
   overrides: [
     {
       customSyntax: 'postcss-html',
@@ -49,6 +49,18 @@ export default {
       ],
       { severity: 'error' },
     ],
+    'plugin/selector-bem-pattern': {
+      implicitComponents: ['apps/**/src/**/*'],
+      ignoreCustomProperties: '.*',
+      componentSelectors: {
+        initial: '^\\.[a-z][a-z-]*(?:__(?:[a-z-]+))?(?:--[a-z-]+)?$',
+        combined: '^\\.[a-z][a-z-]*(?:__(?:[a-z-]+))?(?:--[a-z-]+)?$',
+      },
+    },
+    'selector-class-pattern': null,
+    'color-function-notation': null,
+    'color-function-alias-notation': null,
+    'alpha-value-notation': null,
 
     // 支持 Tailwind CSS 指令（scss/at-rule-no-unknown 对 CSS/SCSS/Vue 文件均生效）
     'scss/at-rule-no-unknown': [

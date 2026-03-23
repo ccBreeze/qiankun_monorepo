@@ -22,6 +22,10 @@
   margin-top: 2.5em;
 }
 
+.vp-doc h4 {
+  margin-top: 36px;
+}
+
 .vp-doc th:not(:last-child),
 .vp-doc td:not(:last-child) {
   white-space: nowrap;

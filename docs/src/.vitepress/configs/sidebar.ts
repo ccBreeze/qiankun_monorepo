@@ -1,23 +1,16 @@
 import type { DefaultTheme } from 'vitepress'
 
 export const sidebar: DefaultTheme.SidebarMulti = {
-  '/packages/eslint-config/': [
+  '/guide/': [
     {
-      text: 'eslint-config',
+      text: '指南',
       items: [
-        { text: '概览', link: '/packages/eslint-config/overview' },
-        {
-          text: 'ESLint 项目配置',
-          link: '/packages/eslint-config/eslint-config',
-        },
-        {
-          text: 'tsconfig 项目配置',
-          link: '/packages/eslint-config/tsconfig',
-        },
-        {
-          text: 'VS Code 配置',
-          link: '/packages/eslint-config/vscode',
-        },
+        { text: '项目初始搭建', link: '/guide/setup' },
+        { text: 'Git Hooks 与提交规范', link: '/guide/git-hooks' },
+        { text: 'vscode 与 EditorConfig', link: '/guide/editor-config' },
+        { text: 'tsconfig 项目配置', link: '/guide/tsconfig' },
+        { text: 'ESLint 项目配置', link: '/guide/eslint-config' },
+        { text: 'Stylelint 项目配置', link: '/guide/stylelint-config' },
       ],
     },
   ],
