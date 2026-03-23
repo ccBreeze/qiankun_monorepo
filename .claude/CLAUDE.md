@@ -72,7 +72,7 @@
    pnpm -w run lint:fix [修改的文件路径]
 
    # 样式自动修复（针对 .vue/.css/.scss 文件）
-   pnpm -w run lint:style:fix [修改的文件路径]
+   pnpm -w run stylelint:fix [修改的文件路径]
 
    # 格式化代码
    pnpm -w run format
@@ -81,13 +81,13 @@
    如果修改了多个相关文件或核心代码，建议运行全项目检查：
 
    ```bash
-   pnpm -w run lint:fix && pnpm -w run lint:style:fix && pnpm -w run format
+   pnpm -w run lint:fix && pnpm -w run stylelint:fix && pnpm -w run format
    ```
 
    > 💡 **说明**：
    >
    > - `lint:fix` 会自动修复 ESLint 问题
-   > - `lint:style:fix` 会自动修复样式问题
+   > - `stylelint:fix` 会自动修复样式问题
    > - `format` 会统一代码格式
    > - 提交时 lint-staged 会再次自动检查暂存的文件
 
