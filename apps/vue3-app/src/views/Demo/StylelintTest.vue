@@ -4,7 +4,7 @@
 -->
 <template>
   <div class="stylelint-test">
-    <h2>Stylelint Vue 测试组件</h2>
+    <h2 class="stylelint-test__title">Stylelint Vue 测试组件</h2>
 
     <div class="dynamic-color">动态颜色绑定测试</div>
 
@@ -23,18 +23,19 @@ const themeColor = ref('#42b883')
 </script>
 
 <style scoped lang="scss">
+@use 'sass:color';
+@reference "tailwindcss";
+
 // ========== SCSS 变量测试 ==========
 $primary-color: #42b883;
 $spacing: 1rem;
-
-@use 'sass:color';
 
 // ========== 基础样式测试 ==========
 .stylelint-test {
   padding: $spacing * 2;
   background: color.adjust($primary-color, $lightness: 45%);
 
-  h2 {
+  &__title {
     margin-bottom: $spacing;
     color: $primary-color;
   }
@@ -149,18 +150,21 @@ $spacing: 1rem;
 
   // 2. 盒模型（Box Model）
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   width: 100%;
   height: 200px;
-  margin: $spacing;
   padding: $spacing * 2;
+  margin: $spacing;
+  font-size: 1rem;
+  line-height: 1.5;
 
   // 3. 排版（Typography）
   color: $primary-color;
-  font-size: 1rem;
-  line-height: 1.5;
   text-align: center;
+
+  // 6. 其他（Misc）
+  cursor: pointer;
 
   // 4. 视觉效果（Visual）
   background: #fff;
@@ -170,8 +174,5 @@ $spacing: 1rem;
 
   // 5. 变换和动画（Transform & Animation）
   transition: all 0.3s ease;
-
-  // 6. 其他（Misc）
-  cursor: pointer;
 }
 </style>

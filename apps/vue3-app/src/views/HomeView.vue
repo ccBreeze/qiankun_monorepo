@@ -2,20 +2,20 @@
 
 <template>
   <div class="home">
-    <h1>hello world</h1>
+    <h1 class="home__title">hello world</h1>
   </div>
 </template>
 
 <style scoped>
 .home {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   min-height: 100vh;
 }
 
-h1 {
-  color: #42b983;
+.home__title {
   font-size: 3rem;
+  color: #42b983;
 }
 </style>

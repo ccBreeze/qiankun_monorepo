@@ -11,9 +11,9 @@ $scrollbar-thumb-color: transparent;
 /* 滚动条里面的小方块，能向上向下移动 */
 ::-webkit-scrollbar-thumb {
   background-color: $scrollbar-track-color;
+  background-clip: padding-box;
   border: 6px solid transparent;
   border-radius: 16px;
-  background-clip: padding-box;
 
   &:hover {
     background-color: 'rgba(22, 35, 61, 0.15)';
