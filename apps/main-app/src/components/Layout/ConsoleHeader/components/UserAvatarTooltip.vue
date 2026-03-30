@@ -13,13 +13,13 @@
     </div>
 
     <template #content>
-      <div class="box">
-        <div class="box__top">
-          <a-tooltip :title="userStore.userData.accountName">
-            <div v-show-tooltip class="name">
-              {{ userStore.userData.accountName }}
-            </div>
-          </a-tooltip>
+      <div class="box" @click.stop>
+        <div class="box-top">
+          <a-typography-text
+            class="name"
+            :content="userStore.userData.accountName"
+            :ellipsis="{ tooltip: true }"
+          />
           <div class="tag">{{ userStore.userData.roleName }}</div>
         </div>
         <div class="hr"></div>
@@ -31,11 +31,11 @@
             @click="close"
           >
             <SvgIcon name="lock_setting" />
-            <span>修改密码</span>
+            <span class="btn__text">修改密码</span>
           </router-link>
           <div class="btn" @click="logout">
             <SvgIcon name="logout" />
-            <span>退出登入</span>
+            <span class="btn__text">退出登入</span>
           </div>
         </div>
       </div>
@@ -79,10 +79,10 @@ const logout = async () => {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
     font-size: 20px;
+    color: white;
     user-select: none;
+    transform: translate(-50%, -50%);
   }
 }
 
@@ -90,21 +90,23 @@ const logout = async () => {
   .box {
     padding: 18px 12px 10px;
 
-    &__top {
+    .box-top {
       margin: 0 8px;
 
       .name {
-        font-weight: 600;
+        display: block;
+        width: 160px;
         font-size: 14px;
+        font-weight: 600;
         color: rgb(22 35 61 / 95%);
       }
 
       .tag {
         display: inline-block;
-        margin-top: 8px;
         padding: 0 8px;
-        line-height: 24px;
+        margin-top: 8px;
         font-size: 14px;
+        line-height: 24px;
         color: #528dff;
         background: #e8f4ff;
         border-radius: 2px 8px;
@@ -112,8 +114,8 @@ const logout = async () => {
     }
 
     .hr {
-      margin: 24px 0 16px;
       height: 1px;
+      margin: 24px 0 16px;
       background: rgb(22 35 61 / 8%);
     }
 
@@ -129,7 +131,7 @@ const logout = async () => {
           margin-right: 32px;
         }
 
-        span {
+        .btn__text {
           margin-left: 8px;
           font-size: 14px;
           color: rgb(22 35 61 / 65%);

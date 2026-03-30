@@ -6,6 +6,7 @@
       <ConsoleMenu />
 
       <div class="console-main">
+        <ConsoleTabs />
         <div
           id="console-main"
           ref="consoleContainerRef"
@@ -21,15 +22,19 @@
 <script setup lang="ts">
 import ConsoleHeader from './ConsoleHeader/index.vue'
 import ConsoleMenu from './ConsoleMenu/index.vue'
+import ConsoleTabs from './ConsoleTabs/index.vue'
 
 const route = useRoute()
 
 const consoleContainerRef = ref()
+
 watch(
   () => route.fullPath,
   () => {
     // 页面滚动条回到顶部
-    consoleContainerRef.value.scrollTop = 0
+    if (consoleContainerRef.value) {
+      consoleContainerRef.value.scrollTop = 0
+    }
   },
 )
 </script>
@@ -43,8 +48,8 @@ watch(
 
   .console-layout {
     display: flex;
-    margin: 16px 0 24px;
     height: calc(100vh - $header-height - 16px - 24px);
+    margin: 16px 0 24px;
 
     .console-main {
       flex: 1;
@@ -52,10 +57,10 @@ watch(
       overflow: hidden;
 
       .console-container {
-        margin-top: 16px;
-        border-radius: 16px;
         height: calc(100% - $tabs-height - 16px);
+        margin-top: 16px;
         overflow: auto;
+        border-radius: 16px;
       }
     }
   }

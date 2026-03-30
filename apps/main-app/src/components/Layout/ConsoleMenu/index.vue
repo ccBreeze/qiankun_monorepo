@@ -14,11 +14,11 @@
 </template>
 
 <script lang="ts" setup>
-import { watch, ref, computed, h } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { computed, h, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useMenuStore } from '@/stores/menu'
 import SvgIcon from '@/components/SvgIcon/SvgIcon.vue'
-import { normalizePath, type MenuRecord } from '@breeze/qiankun-shared'
+import { type MenuRoute } from '@breeze/qiankun-shared'
 import type { MenuInfo } from 'ant-design-vue/es/menu/src/interface'
 
 interface MenuItem {
@@ -34,61 +34,29 @@ interface MenuItem {
 
 const route = useRoute()
 const router = useRouter()
-const menuStore = useMenuStore()
+const { activeMenuRoute, activeMenuModule } = storeToRefs(useMenuStore())
 
 /** 当前选中的菜单 key */
-const selectedKeys = ref<string[]>([])
-
-/** 当前展开的菜单 key */
-const openKeys = ref<string[]>([])
-
-/**
- * 获取实际用于匹配菜单的路径
- * 隐藏菜单自动使用父节点的 path
- */
-const getMatchPath = (fullPath: string): string => {
-  const path = normalizePath(fullPath)
-  const routeInfo = menuStore.getMenuByPath(path)
-
-  // 如果是隐藏菜单，使用父节点的 path
-  if (routeInfo?.meta.isHiddenMenu && routeInfo.meta.parentPath) {
-    return routeInfo.meta.parentPath
+const selectedKeys = computed(() => {
+  const raw = activeMenuRoute.value
+  if (!raw) return []
+  let fullPath = raw.path
+  // 支持当前路由指定选中的菜单
+  if (raw.meta.activeMenuPath) {
+    fullPath = raw.meta.parentPath!
   }
-
-  return path
-}
-
-/**
- * 获取父级菜单路径（利用 store 的 getBreadcrumb 优化）
- */
-const getParentKeys = (path: string): string[] => {
-  const breadcrumb = menuStore.getBreadcrumb(path)
-  // 返回除最后一项外的所有路径
-  return breadcrumb.slice(0, -1).map((item) => item.path)
-}
-
-/** 自动展开菜单 */
-const autoExpandMenu = (fullPath: string): void => {
-  const path = getMatchPath(fullPath)
-  const parentKeys = getParentKeys(path)
-  openKeys.value = [...parentKeys, path]
-}
-
-/** 更新当前选中的菜单项 */
-const updateSelectedMenuPath = (fullPath: string): void => {
-  const path = getMatchPath(fullPath)
-  selectedKeys.value = [path]
-}
+  return [fullPath]
+})
 
 /**
  * 生成菜单项（使用 computed 缓存）
  */
 const menuItems = computed<MenuItem[]>(() => {
-  return generateMenu(menuStore.menuRoutes)
+  return generateMenu(activeMenuModule.value?.menuRoutes ?? [])
 })
 
 /** 生成菜单 */
-function generateMenu(list: MenuRecord[], level = 0): MenuItem[] {
+function generateMenu(list: MenuRoute[], level = 0): MenuItem[] {
   if (!list.length) return []
 
   const items: MenuItem[] = []
@@ -100,8 +68,8 @@ function generateMenu(list: MenuRecord[], level = 0): MenuItem[] {
     const children = generateMenu(item.children || [], level + 1)
     items.push({
       ...getLevelConfig(level, item.meta.iconName),
-      label: item.meta.name || item.name || '',
-      key: item.path || item.name,
+      label: item.meta.name || '',
+      key: item.path,
       children: children.length ? children : undefined,
       path: item.path,
     })
@@ -138,18 +106,29 @@ function getLevelConfig(level: number, iconName?: string): Partial<MenuItem> {
 
 /** 菜单点击事件 */
 const handleClick = (info: MenuInfo): void => {
-  const item = info.item as unknown as { path?: string }
   // 仅叶子节点才会触发点击事件
-  if (!item?.path) return
-  void router.push(item.path)
+  void router.push(info.item.path)
 }
 
-/** 只展开当前父级菜单 */
+const openKeys = ref<string[]>([])
+/** 自动展开当前路由的所有父级菜单 */
+const autoExpandMenu = (path: string): void => {
+  const dynamicRoute = activeMenuModule.value?.dynamicRoute
+  if (!dynamicRoute) return
+  openKeys.value = dynamicRoute
+    .resolvePathToRouteAncestors(path)
+    .map((r) => r.path)
+}
+/** 路由变化时自动展开 */
+watch(() => route.fullPath, autoExpandMenu, {
+  immediate: true,
+})
+/** 手动展开/收起子菜单 */
 const onOpenChange = (keys: string[]): void => {
-  const set = new Set(openKeys.value)
-  const latestOpenKey = keys.find((key) => !set.has(key))
-
-  // 如果没有新的菜单项被打开，则保留当前的打开状态
+  // 对比新旧 keys，找出本次新展开的菜单
+  const currentSet = new Set(openKeys.value)
+  const latestOpenKey = keys.find((key) => !currentSet.has(key))
+  // 没有新增，说明是收起操作，直接同步
   if (!latestOpenKey) {
     openKeys.value = keys
     return
@@ -157,34 +136,24 @@ const onOpenChange = (keys: string[]): void => {
 
   autoExpandMenu(latestOpenKey)
 }
-
-/** 路由改变或菜单数据变化时，自动更新菜单选中和展开状态 */
-watch(
-  [() => route.fullPath, () => menuStore.menuRoutes],
-  ([fullPath]) => {
-    updateSelectedMenuPath(fullPath)
-    autoExpandMenu(fullPath)
-  },
-  { immediate: true },
-)
 </script>
 
 <style lang="scss" scoped>
 .menu-wrap {
   height: 100%;
   padding: 16px;
+  overflow-y: auto;
+  user-select: none;
+  scrollbar-width: none;
   background: url('./images/bg.png') repeat 0 0;
   background-color: #fff;
   border-radius: 0 16px 0 0;
-  overflow-y: auto;
-  scrollbar-width: none;
-  user-select: none;
 
   .menu {
     width: 208px;
-    border: none;
     color: rgb(22 35 61 / 65%);
     background-color: transparent;
+    border: none;
 
     :deep(.ant-menu-inline) {
       background: none;
@@ -198,20 +167,20 @@ watch(
     :deep(.ant-menu-item:not(.ant-menu-item-selected)),
     :deep(.ant-menu-submenu-title) {
       &:hover {
+        color: rgb(22 35 61 / 65%);
         background: linear-gradient(
           328deg,
           rgb(82 141 255 / 12%) 0%,
           rgb(82 141 255 / 4%) 100%
         );
-        color: rgb(22 35 61 / 65%);
       }
     }
 
     /** 一级菜单 */
     &:deep(.ant-menu-item-group-title) {
-      color: rgb(22 35 61 / 45%);
       padding: 0;
       padding-bottom: 8px;
+      color: rgb(22 35 61 / 45%);
     }
 
     /** 四级菜单 */
@@ -252,14 +221,14 @@ watch(
         padding-left: 40px !important;
 
         &::before {
-          content: '';
           position: absolute;
           top: 50%;
           left: 34px;
-          transform: translateY(-50%);
           width: 2px;
           height: 12px;
+          content: '';
           background: rgb(22 35 61 / 30%);
+          transform: translateY(-50%);
         }
       }
     }

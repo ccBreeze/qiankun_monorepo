@@ -1,96 +1,84 @@
-/**
- * 路由树构建器
- * 负责将菜单数据转换为路由树结构
- */
 import {
-  ROOT_CODE,
-  type FunctionListItem,
-  type MenuMeta,
-  type MenuParserOptions,
-  type MenuRecord,
-  type MenuTreeNode,
-} from './dynamicRouteTypes'
-import { parseUrl, resolveExtraInfo, type UrlParserConfig } from './urlUtils'
+  type RawMenuItem,
+  type MenuRouteMeta,
+  type DynamicRouteOptions,
+  type MenuRoute,
+} from './types'
+import { resolveRoute, resolveExtraInfo } from './parsers'
+
+/**
+ * 路由树内部虚拟根节点编码
+ *
+ * 后端返回的一级菜单 parentCode 固定值
+ */
+const ROOT_CODE = 'ROOT' as const
+
+/**
+ * 路由树内部虚拟根节点
+ * 仅用于统一承接顶层菜单，不属于对外菜单模型。
+ */
+interface VirtualRootNode {
+  children: MenuRoute[]
+  path?: string
+  component?: string
+}
+
+type RouteTreeNode = MenuRoute | VirtualRootNode
+/** 路由映射（code -> 路由节点） */
+type CodeNodeMap = Map<string, RouteTreeNode>
 
 /**
  * 路由树构建结果
  */
 export interface RouteTreeBuildResult {
-  /** 路由树映射（code -> 路由节点） */
-  treeCodeMap: Map<string, MenuTreeNode>
-  /** 根路由列表 */
-  rootRoutes: MenuRecord[]
-  /** 所有路由列表 */
-  allRoutes: MenuRecord[]
+  /** 根级路由列表（树结构入口） */
+  rootRoutes: MenuRoute[]
+  /** 扁平路由列表 */
+  flatRoutes: MenuRoute[]
 }
 
 /**
- * 路由注册回调函数类型
- */
-export type RouteRegisterCallback = (route: MenuRecord) => void
-
-/**
  * 路由树构建器类
+ *
  * 负责将后端菜单数据转换为路由树结构
  */
 export class RouteTreeBuilder {
-  private urlParserConfig: UrlParserConfig
+  private options: DynamicRouteOptions
+  private menuKey?: string
 
-  constructor(options: MenuParserOptions = {}) {
-    const { routeBase = '', transformParsedUrl, ...rest } = options
-    this.urlParserConfig = {
-      routeBase: routeBase.replace(/\/$/, ''),
-      transformParsedUrl,
-      options: { routeBase, transformParsedUrl, ...rest },
-    }
+  constructor(options: DynamicRouteOptions = {}) {
+    this.options = options
+    this.menuKey = options.menuKey
   }
 
   /**
    * 构建路由树
    * @param list - 后端返回的菜单列表
-   * @param onRouteCreated - 路由创建后的回调（用于注册到匹配器）
    * @returns 路由树构建结果
    */
-  build(
-    list: FunctionListItem[],
-    onRouteCreated?: RouteRegisterCallback,
-  ): RouteTreeBuildResult {
-    const treeCodeMap = new Map<string, MenuTreeNode>([
-      [ROOT_CODE, { children: [] }],
-    ])
+  build(list: RawMenuItem[]): RouteTreeBuildResult {
+    const codeNodeMap: CodeNodeMap = new Map([[ROOT_CODE, { children: [] }]])
+    const flatRoutes: MenuRoute[] = []
 
-    const allRoutes: MenuRecord[] = []
-
-    // 第一次遍历：创建所有节点并建立映射
-    const nodeMap = new Map<
-      string,
-      { item: FunctionListItem; route: MenuRecord }
-    >()
-
+    // 第一次遍历
     for (const item of list) {
-      const existing = nodeMap.get(item.code)
-      if (existing) {
+      if (codeNodeMap.has(item.code)) {
         console.warn(
           `[RouteTreeBuilder] 重复的路由 code，已覆盖: ${item.code}`,
-          {
-            previous: existing.item,
-            current: item,
-          },
+          item,
         )
       }
-
+      // 创建节点
       const route = this.createRouteNode(item)
-      nodeMap.set(item.code, { item, route })
-      treeCodeMap.set(item.code, route)
-      allRoutes.push(route)
-
-      // 通知外部注册路由
-      onRouteCreated?.(route)
+      // 建立映射
+      codeNodeMap.set(item.code, route)
+      flatRoutes.push(route)
     }
 
-    // 第二次遍历：建立父子关系
-    for (const { item, route } of nodeMap.values()) {
-      const parent = treeCodeMap.get(item.parentCode)
+    // 第二次遍历
+    for (const item of list) {
+      const route = codeNodeMap.get(item.code) as MenuRoute
+      const parent = codeNodeMap.get(item.parentCode)
       if (!parent) {
         console.warn(
           `[RouteTreeBuilder] 不存在父路由: ${item.parentCode}`,
@@ -98,18 +86,16 @@ export class RouteTreeBuilder {
         )
         continue
       }
+      // 建立父子关系
       this.buildParentChildRelation(route, parent)
     }
 
-    // 排序
-    this.sortRoutesByManualSort(treeCodeMap)
+    this.sortRoutesByManualSort(codeNodeMap)
 
-    const rootRoutes = treeCodeMap.get(ROOT_CODE)?.children || []
-
+    const rootRoutes = codeNodeMap.get(ROOT_CODE)?.children || []
     return {
-      treeCodeMap,
       rootRoutes,
-      allRoutes,
+      flatRoutes,
     }
   }
 
@@ -118,24 +104,26 @@ export class RouteTreeBuilder {
    * @param item - 菜单项数据
    * @returns 路由节点
    */
-  private createRouteNode(item: FunctionListItem): MenuRecord {
+  private createRouteNode(item: RawMenuItem): MenuRoute {
+    const { transformResolvedRoute, pathPrefix } = this.options
     const extraInfo = resolveExtraInfo(item.icon)
-    const { componentName, ...routeInfo } = parseUrl(
-      item.url,
-      extraInfo,
-      this.urlParserConfig,
-    )
+    // 兼容旧的 extraInfo.pathPrefix（已废弃），优先级高于全局 pathPrefix
+    const effectivePathPrefix = extraInfo.pathPrefix || pathPrefix || ''
+    const resolvedRoute = resolveRoute({
+      url: item.url,
+      pathPrefix: effectivePathPrefix,
+    })
+    // 业务自定义数据
+    const { componentName, ...routeInfo } = transformResolvedRoute
+      ? transformResolvedRoute(resolvedRoute, extraInfo)
+      : resolvedRoute
 
-    // 精简 meta，只保留必要字段
-    const meta: MenuMeta = {
-      name: item.name,
-      code: item.code,
-      parentCode: item.parentCode,
+    const meta: MenuRouteMeta = {
+      ...item,
+      ...extraInfo,
+      menuKey: this.menuKey,
       parentPath: undefined, // 暂时留空，建立父子关系时填充
       componentName,
-      iconName: extraInfo.iconName,
-      isHiddenMenu: extraInfo.isHiddenMenu,
-      manualSort: item.manualSort,
     }
 
     return {
@@ -146,33 +134,24 @@ export class RouteTreeBuilder {
 
   /**
    * 建立父子关系
-   * @param route - 子节点
-   * @param parent - 父节点
+   * @param node - 子节点
+   * @param parentNode - 父节点
    */
-  private buildParentChildRelation(
-    route: MenuRecord,
-    parent: MenuTreeNode,
-  ): void {
-    // 填充 parentPath
-    route.meta.parentPath = parent.path
+  private buildParentChildRelation(node: MenuRoute, parentNode: RouteTreeNode) {
+    node.meta.parentPath = parentNode.path
 
-    const isHiddenMenu = route.meta.isHiddenMenu === true
-
-    // 隐藏菜单不需要初始化父节点的 children
-    if (!isHiddenMenu && !parent.children) {
-      parent.children = []
-      parent.redirect = route.path // 父路由重定向到第一个子路由
-      parent.componentPath = undefined
+    if (!parentNode.children) {
+      parentNode.children = []
     }
-    parent.children?.push(route)
+    parentNode.children.push(node)
   }
 
   /**
    * 对路由树中每个父级下的子路由根据 manualSort 进行排序
-   * @param treeCodeMap - 路由树映射
+   * @param codeNodeMap - 路由树映射
    */
-  private sortRoutesByManualSort(treeCodeMap: Map<string, MenuTreeNode>): void {
-    for (const [, route] of treeCodeMap.entries()) {
+  private sortRoutesByManualSort(codeNodeMap: CodeNodeMap) {
+    for (const [, route] of codeNodeMap.entries()) {
       // 对子路由进行排序
       if (route.children && route.children.length > 1) {
         route.children.sort((a, b) => {
@@ -180,8 +159,6 @@ export class RouteTreeBuilder {
           const sortB = b.meta.manualSort ?? 0
           return sortA - sortB
         })
-        // 更新父路由的重定向到排序后的第一个子路由
-        route.redirect = route.children[0]?.path
       }
     }
   }

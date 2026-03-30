@@ -1,4 +1,4 @@
-import type { FunctionListItem } from '@breeze/qiankun-shared'
+import type { RawMenuItem } from '@breeze/qiankun-shared'
 
 /**
  * 用户数据类型
@@ -8,6 +8,10 @@ export interface UserData {
   aid?: string
   /** 账户名称 */
   accountName?: string
+  /** 用户名 */
+  userName?: string
+  /** 角色名称 */
+  roleName?: string
   /** 登录 token */
   token?: string
   /** 用户名首字母 */
@@ -15,11 +19,9 @@ export interface UserData {
   /** 头像背景图片 */
   avatarBackgroundImage?: string
   /** CRM 菜单列表 */
-  crmReadFunctionList?: FunctionListItem[]
+  crmReadFunctionList?: RawMenuItem[]
   /** OCRM 菜单列表 */
-  coms8ReadFunctionList?: FunctionListItem[]
-  /** 其他扩展属性 */
-  [key: string]: unknown
+  coms8ReadFunctionList?: RawMenuItem[]
 }
 
 /**

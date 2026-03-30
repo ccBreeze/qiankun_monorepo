@@ -2,83 +2,130 @@
  * 菜单状态管理
  */
 import { defineStore } from 'pinia'
-import { ref, shallowRef } from 'vue'
-import {
-  DynamicRoute,
-  ROOT_CODE,
-  type MenuRecord,
-} from '@breeze/qiankun-shared'
-import { useUserStore } from './user'
+import { shallowReactive } from 'vue'
+import { DynamicRoute, type MenuRoute } from '@breeze/qiankun-shared'
+import type { UserData } from '@/types/user'
+import { useRoute } from 'vue-router'
+
+interface MenuModule {
+  title: string
+  iconName: string
+  // TODO: HashHistory 是如何处理的？
+  /** 兜底，仅兼容旧的菜单路径配置 */
+  fallbackPathPrefix?: string
+  /** 子应用首页路径 */
+  appHomePath: string
+  menuRoutes: MenuRoute[]
+  dynamicRoute: DynamicRoute
+}
+
+const menuModuleConfigs = [
+  {
+    // 对应 UserData 中的字段名
+    menuKey: 'coms8ReadFunctionList',
+    title: '餐饮管理',
+    iconName: 'menu-catering-management',
+    // TODO: 支持 HashHistory
+    fallbackPathPrefix: '/ocrm/',
+  },
+  {
+    menuKey: 'crmReadFunctionList',
+    title: '会员管理',
+    iconName: 'menu-membership-management',
+    fallbackPathPrefix: '/crm/',
+  },
+] as const
+
+type MenuKey = (typeof menuModuleConfigs)[number]['menuKey']
+
+/** 沿第一个非隐藏子节点向下查找叶子节点的路径 */
+const findFirstLeafPath = (routes: MenuRoute[]): string | undefined => {
+  let current = routes.find((r) => !r.meta.isHiddenMenu)
+  while (current?.children?.length) {
+    const visibleChild = current.children.find((r) => !r.meta.isHiddenMenu)
+    // 子级全部隐藏时，停留在当前节点
+    if (!visibleChild) break
+    current = visibleChild
+  }
+  return current?.path
+}
 
 export const useMenuStore = defineStore('menu', () => {
-  /** 原始菜单路由（根级别菜单，用于渲染） */
-  const menuRoutes = ref<MenuRecord[]>([])
+  const route = useRoute()
 
-  /** DynamicRoute 实例（使用 shallowRef 避免深度响应式开销） */
-  const dynamicRoute = shallowRef<DynamicRoute | null>(null)
+  /** 已构建的菜单缓存 */
+  const menuMap = shallowReactive(new Map<MenuKey, MenuModule>())
 
-  /**
-   * 初始化菜单
-   * @param routeBase - 路由基础路径，如 '/crm-v8'
-   */
-  const initMenu = (routeBase: string = '/crm-v8'): void => {
-    const userStore = useUserStore()
-    const menuData = userStore.userData.crmReadFunctionList
+  /** 首页（动态匹配）*/
+  const homePath = computed(() => {
+    // 第一个菜单分组的默认落地页
+    return menuMap.values().next().value?.appHomePath ?? '/'
+  })
 
-    if (!menuData || menuData.length === 0) {
-      console.warn('[MenuStore] 菜单数据为空')
-      resetMenu()
-      return
-    }
+  /** 清空菜单缓存 */
+  const resetMenus = (): void => {
+    menuMap.clear()
+  }
 
-    try {
-      const parser = new DynamicRoute({ routeBase })
-      const treeCodeMap = parser.generateRoutes(menuData)
+  /** 根据 menuModuleConfigs 解析用户菜单数据，构建路由树并缓存 */
+  const buildAllMenus = (userData: UserData): void => {
+    resetMenus()
+    if (Object.keys(userData).length === 0) return
 
-      dynamicRoute.value = parser
-      menuRoutes.value = treeCodeMap.get(ROOT_CODE)?.children || []
+    // 一次性构建所有菜单
+    // 通过 route.fullPath 判断属于哪个菜单
+    for (const item of menuModuleConfigs) {
+      const menuData = userData[item.menuKey]
+      if (!menuData?.length) {
+        console.warn('[Menu] 菜单数据为空', { menuKey: item.menuKey })
+        continue
+      }
 
-      console.log('[MenuStore] 菜单初始化成功', {
-        menuCount: menuRoutes.value.length,
-        totalRoutes: parser.allRoutes.length,
+      const dynamicRoute = DynamicRoute.create(menuData, {
+        menuKey: item.menuKey,
+        pathPrefix: item.fallbackPathPrefix,
       })
-    } catch (error) {
-      console.error('[MenuStore] 菜单初始化失败', error)
-      resetMenu()
+      const menuRoutes = dynamicRoute.rootRoutes
+      const appHomePath = findFirstLeafPath(menuRoutes)
+      if (!appHomePath) {
+        console.warn('[Menu] 菜单路由树无叶子节点，跳过分组', {
+          menuKey: item.menuKey,
+        })
+        continue
+      }
+
+      menuMap.set(item.menuKey, {
+        ...item,
+        appHomePath,
+        menuRoutes,
+        dynamicRoute,
+      })
     }
   }
 
-  /** 重置菜单 */
-  const resetMenu = (): void => {
-    menuRoutes.value = []
-    dynamicRoute.value = null
-  }
-
-  /**
-   * 根据路径获取菜单信息
-   * @param path - 路由路径
-   */
-  const getMenuByPath = (path: string): MenuRecord | undefined => {
-    return dynamicRoute.value?.resolvePathToRoute(path)
-  }
-
-  /**
-   * 获取路径的面包屑
-   * @param path - 路由路径
-   * @returns 从根到当前路径的菜单记录数组
-   */
-  const getBreadcrumb = (path: string): MenuRecord[] => {
-    return dynamicRoute.value?.getBreadcrumb(path) || []
-  }
+  /** 当前路由在所有菜单中匹配到的原始路由记录 */
+  const activeMenuRoute = computed<MenuRoute | undefined>(() => {
+    for (const [, entry] of menuMap) {
+      const matched = entry.dynamicRoute.resolvePathToRoute(route.fullPath)
+      if (matched) return matched
+    }
+    return undefined
+  })
+  /** 当前路由匹配的激活菜单 key */
+  const activeMenuKey = computed<MenuKey | undefined>(() => {
+    return activeMenuRoute.value?.meta.menuKey as MenuKey | undefined
+  })
+  /** 当前路由匹配的激活菜单 */
+  const activeMenuModule = computed<MenuModule | undefined>(() => {
+    return activeMenuKey.value ? menuMap.get(activeMenuKey.value) : undefined
+  })
 
   return {
-    // 状态
-    menuRoutes,
-    dynamicRoute,
-    // 方法
-    initMenu,
-    resetMenu,
-    getMenuByPath,
-    getBreadcrumb,
+    menuMap,
+    homePath,
+    activeMenuRoute,
+    activeMenuKey,
+    activeMenuModule,
+    buildAllMenus,
   }
 })

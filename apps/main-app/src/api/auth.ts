@@ -1,9 +1,10 @@
 import { postDC } from '@/utils/request'
-import type { LoginParams, LoginResponse } from './types/auth'
+
+import type { LoginParams, LoginResult } from './types/auth'
 
 /** 登录 */
 export const loginApi = (content: LoginParams) => {
-  return postDC<LoginResponse>(
+  return postDC<LoginResult>(
     {
       actionName: 'candao.account.login',
       content,

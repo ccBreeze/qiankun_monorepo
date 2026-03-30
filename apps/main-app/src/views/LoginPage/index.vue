@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { loginApi } from '@/api'
+import { loginApi } from '@/api/auth'
 import { useAuthStore } from '@/stores/auth'
 
 /** 演示账户类型 */
@@ -40,44 +40,46 @@ async function quickLogin(account: (typeof demoAccounts)[0]) {
 <template>
   <div class="login-page">
     <div class="login-container">
-      <!-- Logo 区域 -->
-      <div class="mb-8 text-center">
-        <div class="mb-4 flex items-center justify-center gap-2">
-          <span class="brand-icon" aria-hidden="true">🚀</span>
-          <span class="logo-text">Qiankun</span>
+      <div class="login-container__body">
+        <!-- Logo 区域 -->
+        <div class="mb-8 text-center">
+          <div class="mb-4 flex items-center justify-center gap-2">
+            <span class="brand-icon" aria-hidden="true">🚀</span>
+            <span class="logo-text">Qiankun</span>
+          </div>
+          <h1 class="mb-2 text-xl font-semibold text-slate-800">
+            微前端管理系统
+          </h1>
+          <p class="text-sm text-slate-500">点击下方账号快速登录</p>
         </div>
-        <h1 class="mb-2 text-xl font-semibold text-slate-800">
-          微前端管理系统
-        </h1>
-        <p class="text-sm text-slate-500">点击下方账号快速登录</p>
-      </div>
 
-      <!-- 快速登录 -->
-      <div class="flex flex-col gap-3">
-        <button
-          v-for="account in demoAccounts"
-          :key="account.username"
-          type="button"
-          class="login-button"
-          :disabled="loading"
-          @click="quickLogin(account)"
-        >
-          <span v-if="loading" class="inline-flex items-center gap-2">
-            <span class="loading-spinner" />
-            <span class="text-sm font-semibold">登录中…</span>
-          </span>
-          <template v-else>
-            <span class="user-avatar">
-              {{ account.username.charAt(0).toUpperCase() }}
+        <!-- 快速登录 -->
+        <div class="flex flex-col gap-3">
+          <button
+            v-for="account in demoAccounts"
+            :key="account.username"
+            type="button"
+            class="login-button"
+            :disabled="loading"
+            @click="quickLogin(account)"
+          >
+            <span v-if="loading" class="inline-flex items-center gap-2">
+              <span class="loading-spinner" />
+              <span class="text-sm font-semibold">登录中…</span>
             </span>
-            <span class="flex flex-col items-start">
-              <span class="text-[15px] font-semibold">{{
-                account.username
-              }}</span>
-              <span class="text-xs opacity-80">{{ account.label }}</span>
-            </span>
-          </template>
-        </button>
+            <template v-else>
+              <span class="user-avatar">
+                {{ account.username.charAt(0).toUpperCase() }}
+              </span>
+              <span class="flex flex-col items-start">
+                <span class="text-[15px] font-semibold">{{
+                  account.username
+                }}</span>
+                <span class="text-xs opacity-80">{{ account.label }}</span>
+              </span>
+            </template>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -85,6 +87,12 @@ async function quickLogin(account: (typeof demoAccounts)[0]) {
 
 <style lang="scss" scoped>
 @reference "tailwindcss";
+
+@media (width >= 640px) {
+  .login-container {
+    padding: calc(var(--spacing, 0.25rem) * 10);
+  }
+}
 
 .login-page {
   @apply relative flex min-h-screen items-center justify-center overflow-hidden p-6;
@@ -104,9 +112,10 @@ async function quickLogin(account: (typeof demoAccounts)[0]) {
 }
 
 .login-page::before {
-  content: '';
   position: absolute;
   inset: -30%;
+  pointer-events: none;
+  content: '';
   background:
     radial-gradient(
       circle at 25% 30%,
@@ -118,9 +127,8 @@ async function quickLogin(account: (typeof demoAccounts)[0]) {
       rgb(168 85 247 / 26%) 0%,
       transparent 55%
     );
-  filter: blur(46px);
   opacity: 0.9;
-  pointer-events: none;
+  filter: blur(46px);
   transform: translate3d(0, 0, 0);
 }
 
@@ -128,27 +136,21 @@ async function quickLogin(account: (typeof demoAccounts)[0]) {
   @apply relative w-full max-w-[420px] rounded-3xl border border-white/40 bg-white/90 p-8 shadow-2xl ring-1 ring-black/5 backdrop-blur-xl;
 }
 
-@media (width >= 640px) {
-  .login-container {
-    padding: calc(var(--spacing, 0.25rem) * 10);
-  }
-}
-
 .login-container::before {
-  content: '';
   position: absolute;
   inset: 0;
-  border-radius: inherit;
+  z-index: 0;
+  pointer-events: none;
+  content: '';
   background: radial-gradient(
     880px 260px at 50% 0%,
     rgb(99 102 241 / 16%) 0%,
     transparent 60%
   );
-  pointer-events: none;
-  z-index: 0;
+  border-radius: inherit;
 }
 
-.login-container > * {
+.login-container__body {
   position: relative;
   z-index: 1;
 }

@@ -1,0 +1,2999 @@
+{
+  "status": 1,
+  "msg": "操作成功",
+  "logId": "de29b302-8f54-4246-9b46-c735dd4bf455",
+  "data": [
+    {
+      "key": "TxReportType",
+      "desc": "TxReportType",
+      "enums": [
+        {
+          "type": 1000,
+          "desc": {
+            "tw": "年度禮券變動報表",
+            "en": "Annual gift card change report",
+            "cn": "年度礼券变动报表"
+          }
+        },
+        {
+          "type": 2000,
+          "desc": {
+            "tw": "年度未使用禮券報表",
+            "en": "Annual unused gift card report",
+            "cn": "年度未使用礼券报表"
+          }
+        },
+        {
+          "type": 3000,
+          "desc": {
+            "tw": "年度客戶使用禮券報表",
+            "en": "Annual customer gift card usage report",
+            "cn": "年度客户使用礼券报表"
+          }
+        },
+        {
+          "type": 4000,
+          "desc": {
+            "tw": "禮券使用間距報表",
+            "en": "Gift card usage interval report",
+            "cn": "礼券使用间距报表"
+          }
+        },
+        {
+          "type": 5000,
+          "desc": {
+            "tw": "禮券總表",
+            "en": "Gift card summary report",
+            "cn": "礼券总表"
+          }
+        },
+        {
+          "type": 6000,
+          "desc": {
+            "tw": "客戶變動分析報表",
+            "en": "Customer change analysis report",
+            "cn": "客户变动分析报表"
+          }
+        },
+        {
+          "type": 7000,
+          "desc": {
+            "tw": "禮券銷售報表",
+            "en": "Gift card sales report",
+            "cn": "礼券销售报表"
+          }
+        },
+        {
+          "type": 8000,
+          "desc": {
+            "tw": "禮券轉移報表",
+            "en": "Gift card transfer report",
+            "cn": "礼券转移报表"
+          }
+        },
+        {
+          "type": 9000,
+          "desc": {
+            "tw": "禮券查詢",
+            "en": "Gift card query",
+            "cn": "礼券查询"
+          }
+        },
+        {
+          "type": 10000,
+          "desc": {
+            "tw": "會員消費記錄",
+            "en": "Member consumption record",
+            "cn": "会员消费记录"
+          }
+        },
+        {
+          "type": 11000,
+          "desc": {
+            "tw": "存券有效期記錄",
+            "en": "Gift card validity record",
+            "cn": "存券有效期记录"
+          }
+        },
+        {
+          "type": 12000,
+          "desc": {
+            "tw": "禮券生成報表",
+            "en": "Gift card generation report",
+            "cn": "礼券生成报表"
+          }
+        },
+        {
+          "type": 13000,
+          "desc": {
+            "tw": "禮券註銷報表",
+            "en": "Gift card cancellation report",
+            "cn": "礼券注销报表"
+          }
+        },
+        {
+          "type": 14000,
+          "desc": {
+            "tw": "禮券回收報表",
+            "en": "Gift card recovery report",
+            "cn": "礼券回收报表"
+          }
+        },
+        {
+          "type": 15000,
+          "desc": {
+            "tw": "禮券過期未回收報表",
+            "en": "Gift card expired and unrecovered report",
+            "cn": "礼券过期未回收报表"
+          }
+        },
+        {
+          "type": 16000,
+          "desc": {
+            "tw": "消費活躍度分析表",
+            "en": "Consumption activity analysis report",
+            "cn": "消费活跃度分析表"
+          }
+        },
+        {
+          "type": 17000,
+          "desc": {
+            "tw": "消費記錄報表",
+            "en": "Consumption record report",
+            "cn": "消费记录报表"
+          }
+        },
+        {
+          "type": 18000,
+          "desc": {
+            "tw": "會員報表",
+            "en": "Member report",
+            "cn": "会员报表"
+          }
+        },
+        {
+          "type": 19000,
+          "desc": {
+            "tw": "會員購買產品報表",
+            "en": "Member purchase product report",
+            "cn": "会员购买产品报表"
+          }
+        },
+        {
+          "type": 20000,
+          "desc": {
+            "tw": "優惠券統計報表",
+            "en": "Coupon statistics report",
+            "cn": "优惠券统计报表"
+          }
+        },
+        {
+          "type": 21000,
+          "desc": {
+            "tw": "優惠券使用報表",
+            "en": "Coupon usage report",
+            "cn": "优惠券使用报表"
+          }
+        }
+      ]
+    },
+    {
+      "key": "TxReportStatus",
+      "desc": "TxReportStatus",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "生成中",
+            "en": "Generating",
+            "cn": "生成中"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "已生成",
+            "en": "Generated",
+            "cn": "已生成"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "已失效",
+            "en": "Invalidated",
+            "cn": "已失效"
+          }
+        }
+      ]
+    },
+    {
+      "key": "SapDocumentType",
+      "desc": "SapDocumentType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "折扣",
+            "en": "Discount",
+            "cn": "折扣"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "益收",
+            "en": "Overflow",
+            "cn": "益收"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "過期",
+            "en": "EXPIRED",
+            "cn": "过期"
+          }
+        }
+      ]
+    },
+    {
+      "key": "ReportDim",
+      "desc": "ReportDim",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "發行",
+            "en": "Issuance",
+            "cn": "发行"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "售卖",
+            "en": "Sold",
+            "cn": "售卖"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "使用",
+            "en": "Usage",
+            "cn": "使用"
+          }
+        },
+        {
+          "type": 4,
+          "desc": {
+            "tw": "過期",
+            "en": "Expiration",
+            "cn": "过期"
+          }
+        },
+        {
+          "type": 5,
+          "desc": {
+            "tw": "作廢",
+            "en": "Invalidation",
+            "cn": "作废"
+          }
+        }
+      ]
+    },
+    {
+      "key": "EducationLevel",
+      "desc": "教育枚举",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "小學或以下",
+            "en": "Primary school or below",
+            "cn": "小学或以下"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "初中",
+            "en": "Junior high school",
+            "cn": "初中"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "高中",
+            "en": "Senior high school",
+            "cn": "高中"
+          }
+        },
+        {
+          "type": 4,
+          "desc": {
+            "tw": "大專",
+            "en": "College",
+            "cn": "大专"
+          }
+        },
+        {
+          "type": 5,
+          "desc": {
+            "tw": "大學",
+            "en": "University",
+            "cn": "大学"
+          }
+        },
+        {
+          "type": 6,
+          "desc": {
+            "tw": "碩士或以上",
+            "en": "Master's degree or above",
+            "cn": "硕士或以上"
+          }
+        }
+      ]
+    },
+    {
+      "key": "MonthlyIncome",
+      "desc": "收入枚举",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "HK$0-HK$5,000",
+            "en": "HK$0-HK$5,000",
+            "cn": "HK$0-HK$5,000"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "HK$5,001-HK$10,000",
+            "en": "HK$5,001-HK$10,000",
+            "cn": "HK$5,001-HK$10,000"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "HK$10,001-HK$20,000",
+            "en": "HK$10,001-HK$20,000",
+            "cn": "HK$10,001-HK$20,000"
+          }
+        },
+        {
+          "type": 4,
+          "desc": {
+            "tw": "HK$20,001-HK$30,000",
+            "en": "HK$20,001-HK$30,000",
+            "cn": "HK$20,001-HK$30,000"
+          }
+        },
+        {
+          "type": 5,
+          "desc": {
+            "tw": "HK$30,001-HK$40,000",
+            "en": "HK$30,001-HK$40,000",
+            "cn": "HK$30,001-HK$40,000"
+          }
+        },
+        {
+          "type": 6,
+          "desc": {
+            "tw": "HK$40,001-HK$50,000",
+            "en": "HK$40,001-HK$50,000",
+            "cn": "HK$40,001-HK$50,000"
+          }
+        },
+        {
+          "type": 7,
+          "desc": {
+            "tw": "HK$50,001或以上",
+            "en": "HK$50,001 or above",
+            "cn": "HK$50,001或以上"
+          }
+        }
+      ]
+    },
+    {
+      "key": "Occupation",
+      "desc": "职业枚举",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "專業人士，請註明",
+            "en": "Professional, please specify",
+            "cn": "专业人士，请注明"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "行政人員",
+            "en": "Administrative staff",
+            "cn": "行政人员"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "藍領人員",
+            "en": "Blue-collar worker",
+            "cn": "蓝领人员"
+          }
+        },
+        {
+          "type": 4,
+          "desc": {
+            "tw": "服務性行業/銷售人員",
+            "en": "Service/Sales personnel",
+            "cn": "服务性行业/销售人员"
+          }
+        },
+        {
+          "type": 5,
+          "desc": {
+            "tw": "商人/東主",
+            "en": "Business owner",
+            "cn": "商人/东主"
+          }
+        },
+        {
+          "type": 6,
+          "desc": {
+            "tw": "家庭主婦",
+            "en": "Housewife",
+            "cn": "家庭主妇"
+          }
+        },
+        {
+          "type": 7,
+          "desc": {
+            "tw": "學生",
+            "en": "Student",
+            "cn": "学生"
+          }
+        },
+        {
+          "type": 8,
+          "desc": {
+            "tw": "沒有工作",
+            "en": "Unemployed",
+            "cn": "没有工作"
+          }
+        },
+        {
+          "type": 9,
+          "desc": {
+            "tw": "其它，請註明",
+            "en": "Other, please specify",
+            "cn": "其它，请注明"
+          }
+        },
+        {
+          "type": 10,
+          "desc": {
+            "tw": "文職人員",
+            "en": "Artistic",
+            "cn": "文职人员"
+          }
+        }
+      ]
+    },
+    {
+      "key": "ProductType",
+      "desc": "ProductType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "cn": "单品"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "cn": "套餐"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "cn": "餐品组合"
+          }
+        }
+      ]
+    },
+    {
+      "key": "TriggerCondition",
+      "desc": "TriggerCondition",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "顧客註冊",
+            "en": "Customer registration",
+            "cn": "顾客注册"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "優惠券過期提醒",
+            "en": "Coupon expiration reminder",
+            "cn": "优惠券过期提醒"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "優惠券領取提醒",
+            "en": "Coupon received reminder",
+            "cn": "优惠券领取提醒"
+          }
+        },
+        {
+          "type": 4,
+          "desc": {
+            "tw": "訂單備餐",
+            "en": "Order preparation",
+            "cn": "订单备餐"
+          }
+        },
+        {
+          "type": 5,
+          "desc": {
+            "tw": "訂單配送",
+            "en": "Order delivery",
+            "cn": "订单配送"
+          }
+        },
+        {
+          "type": 6,
+          "desc": {
+            "tw": "訂單完成",
+            "en": "Order completed",
+            "cn": "订单完成"
+          }
+        },
+        {
+          "type": 7,
+          "desc": {
+            "tw": "訂單取消",
+            "en": "Order cancellation",
+            "cn": "订单取消"
+          }
+        }
+      ]
+    },
+    {
+      "key": "NotifyMessageStatus",
+      "desc": "NotifyMessageStatus",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "等待開始",
+            "en": "Pending",
+            "cn": "等待开始"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "發放中",
+            "en": "Processing",
+            "cn": "发放中"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "已終止",
+            "en": "Terminated",
+            "cn": "已终止"
+          }
+        },
+        {
+          "type": 4,
+          "desc": {
+            "tw": "已完成",
+            "en": "Completed",
+            "cn": "已完成"
+          }
+        }
+      ]
+    },
+    {
+      "key": "MessageStatus",
+      "desc": "MessageStatus",
+      "enums": [
+        {
+          "type": -1,
+          "desc": {
+            "tw": "刪除",
+            "en": "Deleted",
+            "cn": "删除"
+          }
+        }
+      ]
+    },
+    {
+      "key": "ConditionType",
+      "desc": "ConditionType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "支付超時",
+            "en": "Payment timeout",
+            "cn": "支付超时"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "商家取消",
+            "en": "Merchant cancellation",
+            "cn": "商家取消"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "退款失敗",
+            "en": "Refund failed",
+            "cn": "退款失败"
+          }
+        },
+        {
+          "type": 4,
+          "desc": {
+            "tw": "配送異常",
+            "en": "Delivery exception",
+            "cn": "配送异常"
+          }
+        },
+        {
+          "type": 5,
+          "desc": {
+            "tw": "推單失敗-餐品售罄",
+            "en": "Order failed due to sold-out meal items",
+            "cn": "推单失败-餐品售罄"
+          }
+        },
+        {
+          "type": 6,
+          "desc": {
+            "tw": "推單失敗-其他",
+            "en": "Order failed due to other reasons",
+            "cn": "推单失败-其他"
+          }
+        },
+        {
+          "type": 7,
+          "desc": {
+            "tw": "自動完成",
+            "en": "Order automatically completed",
+            "cn": "自动完成"
+          }
+        },
+        {
+          "type": 8,
+          "desc": {
+            "tw": "訂單送達",
+            "en": "Order delivered",
+            "cn": "订单送达"
+          }
+        }
+      ]
+    },
+    {
+      "key": "MessageApp",
+      "desc": "MessageApp",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "太興APP",
+            "en": "TX",
+            "cn": "太兴APP"
+          }
+        }
+      ]
+    },
+    {
+      "key": "UserMessageStatus",
+      "desc": "UserMessageStatus",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "未讀",
+            "en": "Unread",
+            "cn": "未读"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "已讀",
+            "en": "Read",
+            "cn": "已读"
+          }
+        }
+      ]
+    },
+    {
+      "key": "MessageType",
+      "desc": "MessageType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "推廣消息",
+            "en": "Promotion message",
+            "cn": "推广消息"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "動態消息",
+            "en": "Dynamic message",
+            "cn": "动态消息"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "通知消息",
+            "en": "Notification message",
+            "cn": "通知消息"
+          }
+        }
+      ]
+    },
+    {
+      "key": "CustomerType",
+      "desc": "CustomerType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "全部顧客",
+            "en": "All customers",
+            "cn": "全部顾客"
+          }
+        }
+      ]
+    },
+    {
+      "key": "TriggerEvent",
+      "desc": "TriggerEvent",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "會籍帳戶",
+            "en": "Membership account",
+            "cn": "会籍账户"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "交易物流",
+            "en": "Transaction logistics",
+            "cn": "交易物流"
+          }
+        }
+      ]
+    },
+    {
+      "key": "SendTimeType",
+      "desc": "SendTimeType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "即時推送",
+            "en": "Instant send",
+            "cn": "即时推送"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "預約推送",
+            "en": "Scheduled send",
+            "cn": "预约推送"
+          }
+        }
+      ]
+    },
+    {
+      "key": "PromotionMessageStatus",
+      "desc": "PromotionMessageStatus",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "等待開始",
+            "en": "Pending",
+            "cn": "等待开始"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "進行中",
+            "en": "Processing",
+            "cn": "进行中"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "已終止",
+            "en": "Terminated",
+            "cn": "已终止"
+          }
+        }
+      ]
+    },
+    {
+      "key": "NotifyMessageType",
+      "desc": "NotifyMessageType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "常規消息",
+            "en": "Normal message",
+            "cn": "常规消息"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "置頂消息",
+            "en": "Pinned message",
+            "cn": "置顶消息"
+          }
+        }
+      ]
+    },
+    {
+      "key": "ShopeeSyncRecordStatus",
+      "desc": "ShopeeSyncRecordStatus",
+      "enums": [
+        {
+          "type": 3,
+          "desc": {
+            "tw": "同步中",
+            "en": "Syncing",
+            "cn": "同步中"
+          }
+        },
+        {
+          "type": 4,
+          "desc": {
+            "tw": "同步成功",
+            "en": "Success",
+            "cn": "同步成功"
+          }
+        },
+        {
+          "type": 5,
+          "desc": {
+            "tw": "部分成功",
+            "en": "Partial Success",
+            "cn": "部分成功"
+          }
+        },
+        {
+          "type": 6,
+          "desc": {
+            "tw": "同步失敗",
+            "en": "Fail",
+            "cn": "同步失败"
+          }
+        }
+      ]
+    },
+    {
+      "key": "ShopeeSyncStatus",
+      "desc": "ShopeeSyncStatus",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "未同步",
+            "en": "Non Sync",
+            "cn": "未同步"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "待同步",
+            "en": "Wait",
+            "cn": "待同步"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "同步中",
+            "en": "Syncing",
+            "cn": "同步中"
+          }
+        },
+        {
+          "type": 4,
+          "desc": {
+            "tw": "同步成功",
+            "en": "Success",
+            "cn": "同步成功"
+          }
+        },
+        {
+          "type": 5,
+          "desc": {
+            "tw": "部分成功",
+            "en": "Partial Success",
+            "cn": "部分成功"
+          }
+        },
+        {
+          "type": 6,
+          "desc": {
+            "tw": "同步失敗",
+            "en": "Fail",
+            "cn": "同步失败"
+          }
+        }
+      ]
+    },
+    {
+      "key": "ShopeePreFoodType",
+      "desc": "ShopeePreFoodType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "全部商品",
+            "en": "All goods",
+            "cn": "全部商品"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "指定商品",
+            "en": "Designated goods",
+            "cn": "指定商品"
+          }
+        }
+      ]
+    },
+    {
+      "key": "ShopeeStoreSyncStatus",
+      "desc": "ShopeeStoreSyncStatus",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "未同步",
+            "en": "Non Sync",
+            "cn": "未同步"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "待同步",
+            "en": "Wait",
+            "cn": "待同步"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "同步中",
+            "en": "Syncing",
+            "cn": "同步中"
+          }
+        },
+        {
+          "type": 4,
+          "desc": {
+            "tw": "同步成功",
+            "en": "Success",
+            "cn": "同步成功"
+          }
+        },
+        {
+          "type": 6,
+          "desc": {
+            "tw": "同步失敗",
+            "en": "Fail",
+            "cn": "同步失败"
+          }
+        }
+      ]
+    },
+    {
+      "key": "ShopeePreStatus",
+      "desc": "ShopeePreStatus",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "待生效",
+            "en": "Pending",
+            "cn": "待生效"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "進行中",
+            "en": "Processing",
+            "cn": "进行中"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "等待開始",
+            "en": "Wating",
+            "cn": "等待开始"
+          }
+        },
+        {
+          "type": 4,
+          "desc": {
+            "tw": "已結束",
+            "en": "Finished",
+            "cn": "已结束"
+          }
+        }
+      ]
+    },
+    {
+      "key": "ShopeePreDiscountType",
+      "desc": "ShopeePreDiscountType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "百分比折扣",
+            "en": "Percentage Discount",
+            "cn": "百分比折扣"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "統一價格",
+            "en": "Fixed Discount",
+            "cn": "统一价格"
+          }
+        }
+      ]
+    },
+    {
+      "key": "ShopeeExtStatus",
+      "desc": "ShopeeExtStatus",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "進行中",
+            "en": "Processing",
+            "cn": "进行中"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "已暫停",
+            "en": "Pause",
+            "cn": "已暂停"
+          }
+        }
+      ]
+    },
+    {
+      "key": "ShopeeSyncRecordType",
+      "desc": "ShopeeSyncRecordType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "同步活動",
+            "en": "Sync Activity",
+            "cn": "同步活动"
+          }
+        }
+      ]
+    },
+    {
+      "key": "OrderRefundStatus",
+      "desc": "OrderRefundStatus",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "cn": "用户发起申请"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "cn": "用户撤销申请"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "cn": "商家同意申请"
+          }
+        },
+        {
+          "type": 4,
+          "desc": {
+            "cn": "商家拒绝申请"
+          }
+        },
+        {
+          "type": 5,
+          "desc": {
+            "cn": "退款成功"
+          }
+        },
+        {
+          "type": 6,
+          "desc": {
+            "cn": "退款失败"
+          }
+        },
+        {
+          "type": 7,
+          "desc": {
+            "cn": "用户申请仲裁"
+          }
+        },
+        {
+          "type": 8,
+          "desc": {
+            "cn": "客服仲裁有效"
+          }
+        },
+        {
+          "type": 9,
+          "desc": {
+            "cn": "客服仲裁无效"
+          }
+        },
+        {
+          "type": 10,
+          "desc": {
+            "cn": "商家发起申请"
+          }
+        },
+        {
+          "type": 11,
+          "desc": {
+            "cn": "用户发起退货给商家"
+          }
+        },
+        {
+          "type": 12,
+          "desc": {
+            "cn": "客服同意退货申请"
+          }
+        },
+        {
+          "type": 13,
+          "desc": {
+            "cn": "商家同意退货"
+          }
+        },
+        {
+          "type": 14,
+          "desc": {
+            "cn": "商家拒绝退货"
+          }
+        }
+      ]
+    },
+    {
+      "key": "Gender",
+      "desc": "Gender",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "男",
+            "en": "male",
+            "cn": "男"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "女",
+            "en": "female",
+            "cn": "女"
+          }
+        },
+        {
+          "type": 0,
+          "desc": {
+            "tw": "非公開",
+            "en": "not disclosed",
+            "cn": "非公开"
+          }
+        }
+      ]
+    },
+    {
+      "key": "OrderStatus",
+      "desc": "OrderStatus",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "cn": "待支付"
+          }
+        },
+        {
+          "type": 7,
+          "desc": {
+            "cn": "订单已发送"
+          }
+        },
+        {
+          "type": 10,
+          "desc": {
+            "cn": "商家已确认"
+          }
+        },
+        {
+          "type": 12,
+          "desc": {
+            "cn": "备餐中"
+          }
+        },
+        {
+          "type": 14,
+          "desc": {
+            "cn": "配送中"
+          }
+        },
+        {
+          "type": 16,
+          "desc": {
+            "cn": "就餐中"
+          }
+        },
+        {
+          "type": 18,
+          "desc": {
+            "cn": "待取餐"
+          }
+        },
+        {
+          "type": 20,
+          "desc": {
+            "cn": "取餐超时"
+          }
+        },
+        {
+          "type": 21,
+          "desc": {
+            "cn": "备餐完成"
+          }
+        },
+        {
+          "type": 100,
+          "desc": {
+            "cn": "订单完成"
+          }
+        },
+        {
+          "type": -1,
+          "desc": {
+            "cn": "订单取消"
+          }
+        }
+      ]
+    },
+    {
+      "key": "OrderType",
+      "desc": "OrderType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "cn": "外卖"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "cn": "自取"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "cn": "堂食"
+          }
+        },
+        {
+          "type": 4,
+          "desc": {
+            "cn": "外卖预约"
+          }
+        }
+      ]
+    },
+    {
+      "key": "MemberOrderStatus",
+      "desc": "MemberOrderStatus",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "cn": "待支付"
+          }
+        },
+        {
+          "type": 7,
+          "desc": {
+            "cn": "进行中"
+          }
+        },
+        {
+          "type": 10,
+          "desc": {
+            "cn": "进行中"
+          }
+        },
+        {
+          "type": 12,
+          "desc": {
+            "cn": "进行中"
+          }
+        },
+        {
+          "type": 14,
+          "desc": {
+            "cn": "进行中"
+          }
+        },
+        {
+          "type": 16,
+          "desc": {
+            "cn": "进行中"
+          }
+        },
+        {
+          "type": 18,
+          "desc": {
+            "cn": "进行中"
+          }
+        },
+        {
+          "type": 20,
+          "desc": {
+            "cn": "进行中"
+          }
+        },
+        {
+          "type": 21,
+          "desc": {
+            "cn": "进行中"
+          }
+        },
+        {
+          "type": 100,
+          "desc": {
+            "cn": "订单完成"
+          }
+        },
+        {
+          "type": -1,
+          "desc": {
+            "cn": "订单取消"
+          }
+        }
+      ]
+    },
+    {
+      "key": "MemberStatus",
+      "desc": "MemberStatus",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "啟用",
+            "en": "Active",
+            "cn": "启用"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "凍結",
+            "en": "Frozen",
+            "cn": "冻结"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "註銷",
+            "en": "Delete",
+            "cn": "注销"
+          }
+        }
+      ]
+    },
+    {
+      "key": "MemberOptType",
+      "desc": "MemberOptType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "cn": "姓名"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "cn": "手机号"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "cn": "电邮"
+          }
+        },
+        {
+          "type": 4,
+          "desc": {
+            "cn": "性别"
+          }
+        },
+        {
+          "type": 5,
+          "desc": {
+            "cn": "生日"
+          }
+        },
+        {
+          "type": 6,
+          "desc": {
+            "cn": "品牌推广资讯"
+          }
+        },
+        {
+          "type": 7,
+          "desc": {
+            "cn": "状态"
+          }
+        },
+        {
+          "type": 8,
+          "desc": {
+            "cn": "员工状态"
+          }
+        },
+        {
+          "type": 9,
+          "desc": {
+            "cn": "员工信息"
+          }
+        },
+        {
+          "type": 10,
+          "desc": {
+            "cn": "居住地"
+          }
+        },
+        {
+          "type": 11,
+          "desc": {
+            "cn": "工作地"
+          }
+        },
+        {
+          "type": 12,
+          "desc": {
+            "cn": "教育程度"
+          }
+        },
+        {
+          "type": 13,
+          "desc": {
+            "cn": "职业"
+          }
+        },
+        {
+          "type": 14,
+          "desc": {
+            "cn": "职业说明"
+          }
+        },
+        {
+          "type": 15,
+          "desc": {
+            "cn": "月收入"
+          }
+        },
+        {
+          "type": 16,
+          "desc": {
+            "cn": "姓氏"
+          }
+        },
+        {
+          "type": 17,
+          "desc": {
+            "cn": "备注"
+          }
+        }
+      ]
+    },
+    {
+      "key": "UserAddressLabelType",
+      "desc": "UserAddressLabelType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "en": "family",
+            "cn": "屋企"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "en": "company",
+            "cn": "公司"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "en": "other",
+            "cn": "其他"
+          }
+        }
+      ]
+    },
+    {
+      "key": "OrderErrCode",
+      "desc": "OrderErrCode",
+      "enums": [
+        {
+          "type": -1001,
+          "desc": {
+            "tw": "門店暫停營業，請選擇其他餐廳",
+            "en": "Store temporarily closed, please select another restaurant",
+            "cn": "门店暂停营业，请选择其他餐厅"
+          }
+        },
+        {
+          "type": -1002,
+          "desc": {
+            "tw": "部分餐品售罄，請修改購買餐品",
+            "en": "Some items are sold out, please modify your order",
+            "cn": "部分餐品售罄，请修改购买餐品"
+          }
+        },
+        {
+          "type": -1003,
+          "desc": {
+            "tw": "優惠券無法使用，請選擇其他優惠券",
+            "en": "Coupon unavailable, please select another coupon",
+            "cn": "优惠券无法使用，请选择其他优惠券"
+          }
+        },
+        {
+          "type": -1004,
+          "desc": {
+            "tw": "加購商品超過購買上限，請修改購買商品",
+            "en": "Add-on items exceed purchase limit, please modify your selection",
+            "cn": "加购商品超过购买上限，请修改购买商品"
+          }
+        },
+        {
+          "type": -1005,
+          "desc": {
+            "tw": "訂單提交失敗，請重試",
+            "en": "Order submission failed, please try again",
+            "cn": "订单提交失败，请重试"
+          }
+        },
+        {
+          "type": -1006,
+          "desc": {
+            "tw": "部分餐品售罄，請修改購買餐品",
+            "en": "Some items are sold out, please modify your order",
+            "cn": "部分餐品售罄，请修改购买餐品"
+          }
+        },
+        {
+          "type": -1007,
+          "desc": {
+            "tw": "部分餐品售罄，請修改購買餐品",
+            "en": "Some items are sold out, please modify your order",
+            "cn": "部分餐品售罄，请修改购买餐品"
+          }
+        }
+      ]
+    },
+    {
+      "key": "OrderCategory",
+      "desc": "OrderCategory",
+      "enums": [
+        {
+          "type": 0,
+          "desc": {
+            "tw": "餐飲訂單",
+            "en": "Dining order",
+            "cn": "餐饮订单"
+          }
+        },
+        {
+          "type": 1,
+          "desc": {
+            "tw": "卡券訂單",
+            "en": "Coupon order",
+            "cn": "卡券订单"
+          }
+        }
+      ]
+    },
+    {
+      "key": "OrderChangeRecordTypeEnum",
+      "desc": "OrderChangeRecordTypeEnum",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "訂單備註/用戶備註",
+            "en": "Order Notes/User Notes",
+            "cn": "订单备注/用户备注"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "商家備註",
+            "en": "Merchant Notes",
+            "cn": "商家备注"
+          }
+        }
+      ]
+    },
+    {
+      "key": "ActivityType",
+      "desc": "ActivityType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "餐飲活動",
+            "en": "Food",
+            "cn": "餐饮活动"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "卡券活動",
+            "en": "Coupon",
+            "cn": "卡券活动"
+          }
+        }
+      ]
+    },
+    {
+      "key": "PreferentialTypeStatus",
+      "desc": "PreferentialTypeStatus",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "迎新",
+            "en": "Welcoms",
+            "cn": "迎新"
+          }
+        }
+      ]
+    },
+    {
+      "key": "WelcomePreferentialStatus",
+      "desc": "WelcomePreferentialStatus",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "待生效",
+            "en": "Pending",
+            "cn": "待生效"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "等待開始",
+            "en": "Wating",
+            "cn": "等待开始"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "進行中",
+            "en": "Processing",
+            "cn": "进行中"
+          }
+        },
+        {
+          "type": 4,
+          "desc": {
+            "tw": "已終止",
+            "en": "Terminated",
+            "cn": "已终止"
+          }
+        },
+        {
+          "type": 5,
+          "desc": {
+            "tw": "已結束",
+            "en": "Finished",
+            "cn": "已结束"
+          }
+        }
+      ]
+    },
+    {
+      "key": "UserMapType",
+      "desc": "UserMapType",
+      "enums": [
+        {
+          "type": 0,
+          "desc": {
+            "cn": "高德"
+          }
+        },
+        {
+          "type": 1,
+          "desc": {
+            "cn": "google/HK"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "cn": "腾讯"
+          }
+        }
+      ]
+    },
+    {
+      "key": "MealTimeSetType",
+      "desc": "MealTimeSetType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "早餐",
+            "en": "Break",
+            "cn": "早餐"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "午餐",
+            "en": "Lunch",
+            "cn": "午餐"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "下午茶",
+            "en": "Afternoon Tea",
+            "cn": "下午茶"
+          }
+        },
+        {
+          "type": 4,
+          "desc": {
+            "tw": "晚餐",
+            "en": "Dinner",
+            "cn": "晚餐"
+          }
+        },
+        {
+          "type": 5,
+          "desc": {
+            "tw": "夜宵",
+            "en": "Midnight Snack",
+            "cn": "夜宵"
+          }
+        }
+      ]
+    },
+    {
+      "key": "IdentifyCodeType",
+      "desc": "IdentifyCodeType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "條款及細則",
+            "en": "Terms and Conditions",
+            "cn": "条款及细则"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "私隱政策",
+            "en": "Privacy Policy",
+            "cn": "隐私政策"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "使用教學",
+            "en": "Using Teaching",
+            "cn": "使用教学"
+          }
+        }
+      ]
+    },
+    {
+      "key": "DeliveryRangeTaskRecordStatus",
+      "desc": "DeliveryRangeTaskRecordStatus",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "進行中",
+            "en": "Processing",
+            "cn": "进行中"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "已完成",
+            "en": "Completed",
+            "cn": "已完成"
+          }
+        }
+      ]
+    },
+    {
+      "key": "CouponExchangePreGenerateType",
+      "desc": "CouponExchangePreGenerateType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "cn": "商家自定"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "cn": "商家导入"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "cn": "系统生成"
+          }
+        }
+      ]
+    },
+    {
+      "key": "PhysicalCouponCodeOptType",
+      "desc": "PhysicalCouponCodeOptType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "狀態",
+            "en": "Status",
+            "cn": "状态"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "發行狀態",
+            "en": "Release status",
+            "cn": "发行状态"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "發行門店",
+            "en": "Release store name",
+            "cn": "发行门店"
+          }
+        },
+        {
+          "type": 4,
+          "desc": {
+            "tw": "發行Id",
+            "en": "Release ID",
+            "cn": "发行Id"
+          }
+        },
+        {
+          "type": 5,
+          "desc": {
+            "tw": "發行名称",
+            "en": "Release Name",
+            "cn": "发行名称"
+          }
+        },
+        {
+          "type": 6,
+          "desc": {
+            "tw": "發行門店ID",
+            "en": "Release store id",
+            "cn": "发行门店ID"
+          }
+        },
+        {
+          "type": 7,
+          "desc": {
+            "tw": "有效期",
+            "en": "Expiry Date",
+            "cn": "有效期"
+          }
+        }
+      ]
+    },
+    {
+      "key": "CouponExchangePreCodeStatus",
+      "desc": "CouponExchangePreCodeStatus",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "待使用",
+            "cn": "待使用"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "已使用",
+            "cn": "已使用"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "已過期",
+            "cn": "已过期"
+          }
+        }
+      ]
+    },
+    {
+      "key": "SendCouponTaskStatus",
+      "desc": "SendCouponTaskStatus",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "cn": "待生效"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "cn": "进行中"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "cn": "已完成"
+          }
+        },
+        {
+          "type": 4,
+          "desc": {
+            "cn": "已失效"
+          }
+        }
+      ]
+    },
+    {
+      "key": "SendCouponPushType",
+      "desc": "SendCouponPushType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "cn": "即时发放"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "cn": "预约发放"
+          }
+        }
+      ]
+    },
+    {
+      "key": "CouponTimeType",
+      "desc": "CouponTimeType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "cn": "固定日期"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "cn": "动态日期"
+          }
+        }
+      ]
+    },
+    {
+      "key": "CouponPromotionType",
+      "desc": "CouponPromotionType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "滿送",
+            "en": "man-song",
+            "cn": "满送"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "早鳥",
+            "en": "zao-niao",
+            "cn": "早鸟"
+          }
+        }
+      ]
+    },
+    {
+      "key": "ReceiveCouponStatus",
+      "desc": "ReceiveCouponStatus",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "已停售",
+            "en": "Discontinued",
+            "cn": "已停領"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "領取中",
+            "en": "Receiveing",
+            "cn": "领取中"
+          }
+        }
+      ]
+    },
+    {
+      "key": "PhysicalCouponCodeStatus",
+      "desc": "PhysicalCouponCodeStatus",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "待生效",
+            "en": "Pending",
+            "cn": "待生效"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "可使用",
+            "en": "Active",
+            "cn": "可使用"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "已過期",
+            "en": "Expired",
+            "cn": "已过期"
+          }
+        },
+        {
+          "type": 4,
+          "desc": {
+            "tw": "已使用",
+            "en": "Used",
+            "cn": "已使用"
+          }
+        },
+        {
+          "type": 5,
+          "desc": {
+            "tw": "已作廢",
+            "en": "Invalidated",
+            "cn": "已作废"
+          }
+        }
+      ]
+    },
+    {
+      "key": "ECouponStatus",
+      "desc": "ECouponStatus",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "已停售",
+            "en": "Discontinued",
+            "cn": "已停售"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "售賣中",
+            "en": "On sale",
+            "cn": "售卖中"
+          }
+        }
+      ]
+    },
+    {
+      "key": "TransactionType",
+      "desc": "TransactionType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "分享",
+            "en": "Share",
+            "cn": "分享"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "現金券",
+            "en": "Cash coupon",
+            "cn": "现金券"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "產品券",
+            "en": "Product coupon",
+            "cn": "产品券"
+          }
+        },
+        {
+          "type": 4,
+          "desc": {
+            "tw": "訂單記錄",
+            "en": "Order",
+            "cn": "订单记录"
+          }
+        },
+        {
+          "type": 5,
+          "desc": {
+            "tw": "優惠券",
+            "en": "discount",
+            "cn": "优惠券"
+          }
+        }
+      ]
+    },
+    {
+      "key": "CouponObtainWay",
+      "desc": "CouponObtainWay",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "手動發券",
+            "en": "manual coupon issuance",
+            "cn": "手动发券"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "兌換獲券",
+            "en": "exchange coupon",
+            "cn": "兑换获券"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "三方發券",
+            "en": "third-party coupon issuance",
+            "cn": "三方发券"
+          }
+        },
+        {
+          "type": 4,
+          "desc": {
+            "tw": "購買獲券",
+            "en": "purchase coupon",
+            "cn": "购买获券"
+          }
+        },
+        {
+          "type": 5,
+          "desc": {
+            "tw": "領取獲券",
+            "en": "receive coupon",
+            "cn": "领取获券"
+          }
+        },
+        {
+          "type": 6,
+          "desc": {
+            "tw": "註冊獲券",
+            "en": "registration coupon",
+            "cn": "注册获券"
+          }
+        },
+        {
+          "type": 7,
+          "desc": {
+            "tw": "數據遷移",
+            "en": "data migration",
+            "cn": "数据迁移"
+          }
+        }
+      ]
+    },
+    {
+      "key": "CouponOrderRefundStatus",
+      "desc": "CouponOrderRefundStatus",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "退款中",
+            "en": "Refunding",
+            "cn": "退款中"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "退款成功",
+            "en": "Refund success",
+            "cn": "退款成功"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "退款失敗",
+            "en": "Refund failed",
+            "cn": "退款失败"
+          }
+        }
+      ]
+    },
+    {
+      "key": "CouponPromotionStatus",
+      "desc": "CouponPromotionStatus",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "待生效",
+            "en": "Pending",
+            "cn": "待生效"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "等待開始",
+            "en": "Waiting",
+            "cn": "等待开始"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "進行中",
+            "en": "Processing",
+            "cn": "进行中"
+          }
+        },
+        {
+          "type": 4,
+          "desc": {
+            "tw": "已終止",
+            "en": "Terminated",
+            "cn": "已终止"
+          }
+        },
+        {
+          "type": 5,
+          "desc": {
+            "tw": "已結束",
+            "en": "Finished",
+            "cn": "已结束"
+          }
+        }
+      ]
+    },
+    {
+      "key": "CouponParentType",
+      "desc": "CouponParentType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "cn": "现金券"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "cn": "優惠券"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "cn": "商品券"
+          }
+        }
+      ]
+    },
+    {
+      "key": "PhysicalCouponBatchStatus",
+      "desc": "PhysicalCouponBatchStatus",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "進行中",
+            "en": "Processing",
+            "cn": "进行中"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "已完成",
+            "en": "Completed",
+            "cn": "已完成"
+          }
+        }
+      ]
+    },
+    {
+      "key": "CouponOrderDiscountType",
+      "desc": "CouponOrderDiscountType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "滿送",
+            "en": "Man-song",
+            "cn": "满送"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "早鳥",
+            "en": "Zao-niao",
+            "cn": "早鸟"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "POS優惠",
+            "en": "POS discount",
+            "cn": "POS优惠"
+          }
+        },
+        {
+          "type": 4,
+          "desc": {
+            "tw": "SAP折扣",
+            "en": "SAP discount",
+            "cn": "SAP折扣"
+          }
+        }
+      ]
+    },
+    {
+      "key": "GenerateCodeRuleType",
+      "desc": "GenerateCodeRuleType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "cn": "数字+字母"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "cn": "纯数字"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "cn": "纯字母"
+          }
+        }
+      ]
+    },
+    {
+      "key": "PhysicalCouponCodeReleaseStatus",
+      "desc": "PhysicalCouponCodeReleaseStatus",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "待發行",
+            "en": "To be released",
+            "cn": "待发行"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "待激活",
+            "en": "To be activated",
+            "cn": "待激活"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "已激活",
+            "en": "Activated",
+            "cn": "已激活"
+          }
+        },
+        {
+          "type": 4,
+          "desc": {
+            "tw": "已售出",
+            "en": "Sold",
+            "cn": "已售出"
+          }
+        },
+        {
+          "type": 5,
+          "desc": {
+            "tw": "已作廢",
+            "en": "Invalidated",
+            "cn": "已作废"
+          }
+        },
+        {
+          "type": 6,
+          "desc": {
+            "tw": "已過期",
+            "en": "Expired",
+            "cn": "已过期"
+          }
+        }
+      ]
+    },
+    {
+      "key": "CouponOrigin",
+      "desc": "CouponOrigin",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "cn": "商家后台"
+          }
+        },
+        {
+          "type": 4,
+          "desc": {
+            "cn": "客户端"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "cn": "三方|Azure"
+          }
+        }
+      ]
+    },
+    {
+      "key": "CouponOrderStatus",
+      "desc": "CouponOrderStatus",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "待支付",
+            "en": "Pending payment",
+            "cn": "待支付"
+          }
+        },
+        {
+          "type": 10,
+          "desc": {
+            "tw": "商家已確認",
+            "en": "Merchant confirmed",
+            "cn": "商家已确认"
+          }
+        },
+        {
+          "type": 100,
+          "desc": {
+            "tw": "訂單完成",
+            "en": "Order completed",
+            "cn": "订单完成"
+          }
+        },
+        {
+          "type": -1,
+          "desc": {
+            "tw": "訂單取消",
+            "en": "Order cancelled",
+            "cn": "订单取消"
+          }
+        }
+      ]
+    },
+    {
+      "key": "CouponStatus",
+      "desc": "CouponStatus",
+      "enums": [
+        {
+          "type": 0,
+          "desc": {
+            "cn": "待生效"
+          }
+        },
+        {
+          "type": 1,
+          "desc": {
+            "cn": "进行中"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "cn": "已结束"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "cn": "删除"
+          }
+        }
+      ]
+    },
+    {
+      "key": "CouponCategory",
+      "desc": "CouponCategory",
+      "enums": [
+        {
+          "type": 0,
+          "desc": {
+            "tw": "券模版",
+            "en": "Coupon",
+            "cn": "券模版"
+          }
+        },
+        {
+          "type": 1,
+          "desc": {
+            "tw": "實體券",
+            "en": "Physical coupon",
+            "cn": "实体券"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "電子券",
+            "en": "Electronic coupon",
+            "cn": "电子券"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "領取優惠券",
+            "en": "Receive coupon",
+            "cn": "领取优惠券"
+          }
+        }
+      ]
+    },
+    {
+      "key": "GenerateCodeRuleMode",
+      "desc": "GenerateCodeRuleMode",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "cn": "自动生成"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "cn": "自定前缀"
+          }
+        }
+      ]
+    },
+    {
+      "key": "CouponExchangePreStatus",
+      "desc": "CouponExchangePreStatus",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "cn": "待生效"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "cn": "启用"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "cn": "等待开始"
+          }
+        },
+        {
+          "type": 4,
+          "desc": {
+            "cn": "进行中"
+          }
+        },
+        {
+          "type": 5,
+          "desc": {
+            "cn": "已结束"
+          }
+        },
+        {
+          "type": 6,
+          "desc": {
+            "cn": "已终止"
+          }
+        }
+      ]
+    },
+    {
+      "key": "CouponOptType",
+      "desc": "CouponOptType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "變更信息",
+            "en": "Update Info",
+            "cn": "变更信息"
+          }
+        }
+      ]
+    },
+    {
+      "key": "PhysicalCouponCodeTransferStatus",
+      "desc": "PhysicalCouponCodeTransferStatus",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "進行中",
+            "en": "Processing",
+            "cn": "进行中"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "已完成",
+            "en": "Completed",
+            "cn": "已完成"
+          }
+        }
+      ]
+    },
+    {
+      "key": "BusinessType",
+      "desc": "BusinessType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "門店銷售",
+            "en": "Store sales",
+            "cn": "门店销售"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "渠道銷售",
+            "en": "Channel sales",
+            "cn": "渠道销售"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "業務贈送",
+            "en": "Business gift",
+            "cn": "业务赠送"
+          }
+        }
+      ]
+    },
+    {
+      "key": "CouponExchangePreCodeType",
+      "desc": "CouponExchangePreCodeType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "唯一碼",
+            "cn": "唯一码"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "通用碼",
+            "cn": "通用码"
+          }
+        }
+      ]
+    },
+    {
+      "key": "MemberCouponStatus",
+      "desc": "MemberCouponStatus",
+      "enums": [
+        {
+          "type": 0,
+          "desc": {
+            "tw": "待生效",
+            "en": "Pending",
+            "cn": "待生效"
+          }
+        },
+        {
+          "type": 1,
+          "desc": {
+            "tw": "可使用",
+            "en": "Enabled",
+            "cn": "可使用"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "作廢",
+            "en": "Disabled",
+            "cn": "作廢"
+          }
+        },
+        {
+          "type": 4,
+          "desc": {
+            "tw": "已過期",
+            "en": "Expired",
+            "cn": "已过期"
+          }
+        },
+        {
+          "type": 5,
+          "desc": {
+            "tw": "已使用",
+            "en": "Used",
+            "cn": "已使用"
+          }
+        },
+        {
+          "type": 6,
+          "desc": {
+            "tw": "已凍結",
+            "en": "Frozen",
+            "cn": "已冻结"
+          }
+        }
+      ]
+    },
+    {
+      "key": "UserTransactionChangeType",
+      "desc": "UserTransactionChangeType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "增加",
+            "en": "Increase",
+            "cn": "增加"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "購買",
+            "en": "Purchase",
+            "cn": "购买"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "返還",
+            "en": "Return",
+            "cn": "返还"
+          }
+        },
+        {
+          "type": 4,
+          "desc": {
+            "tw": "消費",
+            "en": "Use",
+            "cn": "消费"
+          }
+        },
+        {
+          "type": 5,
+          "desc": {
+            "tw": "分享",
+            "en": "Share",
+            "cn": "分享"
+          }
+        },
+        {
+          "type": 6,
+          "desc": {
+            "tw": "過期",
+            "en": "Expire",
+            "cn": "过期"
+          }
+        },
+        {
+          "type": 7,
+          "desc": {
+            "tw": "調整",
+            "en": "Adjust",
+            "cn": "调整"
+          }
+        },
+        {
+          "type": 8,
+          "desc": {
+            "tw": "迎新",
+            "en": "Orientation",
+            "cn": "迎新"
+          }
+        }
+      ]
+    },
+    {
+      "key": "CouponType",
+      "desc": "CouponType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "滿減",
+            "cn": "满减"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "贈品",
+            "cn": "赠品"
+          }
+        },
+        {
+          "type": 3,
+          "desc": {
+            "tw": "現金",
+            "cn": "现金"
+          }
+        },
+        {
+          "type": 5,
+          "desc": {
+            "tw": "折扣",
+            "cn": "折扣"
+          }
+        },
+        {
+          "type": 9,
+          "desc": {
+            "tw": "餐品",
+            "cn": "餐品"
+          }
+        }
+      ]
+    },
+    {
+      "key": "QrCodeType",
+      "desc": "QrCodeType",
+      "enums": [
+        {
+          "type": 1,
+          "desc": {
+            "tw": "優惠券二維碼",
+            "en": "Coupon QR code",
+            "cn": "优惠券二维码"
+          }
+        },
+        {
+          "type": 2,
+          "desc": {
+            "tw": "會員二維碼",
+            "en": "Member QR code",
+            "cn": "会员二维码"
+          }
+        }
+      ]
+    }
+  ],
+  "serverTime": "1770888582328"
+}

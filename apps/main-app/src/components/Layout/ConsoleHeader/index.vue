@@ -2,7 +2,16 @@
   <div class="console-header">
     <img src="@/assets/images/logo_COMS.png" class="logo" />
 
-    <div class="shunt-menu"></div>
+    <div class="shunt-menu">
+      <ShuntMenuButton
+        v-for="[menuKey, menu] in menuMap"
+        :key="menuKey"
+        :icon-name="menu.iconName ?? ''"
+        :title="menu.title ?? ''"
+        :href="menu.appHomePath"
+        :is-active="menuKey === activeMenuKey"
+      />
+    </div>
 
     <div class="right">
       <div class="multilingual-wrap">
@@ -14,8 +23,12 @@
 </template>
 
 <script setup lang="ts">
+import ShuntMenuButton from './components/ShuntMenuButton.vue'
 import UserAvatarTooltip from './components/UserAvatarTooltip.vue'
 import MultipleLanguages from '@/components/MultipleLanguages/MultipleLanguages.vue'
+import { useMenuStore } from '@/stores/menu'
+
+const { menuMap, activeMenuKey } = storeToRefs(useMenuStore())
 </script>
 
 <style lang="scss" scoped>
@@ -36,17 +49,17 @@ import MultipleLanguages from '@/components/MultipleLanguages/MultipleLanguages.
 
   /** 系统导航 */
   .shunt-menu {
-    flex: 1;
     box-sizing: border-box;
+    flex: 1;
     height: 100%;
     padding-top: 4px;
   }
 
   .right {
-    padding-top: 4px;
-    flex-shrink: 0;
     display: flex;
+    flex-shrink: 0;
     align-items: center;
+    padding-top: 4px;
 
     .multilingual-wrap {
       margin-right: 24px;
