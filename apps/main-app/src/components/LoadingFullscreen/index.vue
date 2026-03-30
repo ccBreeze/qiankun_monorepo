@@ -45,8 +45,8 @@ defineExpose({ close })
 
 <template>
   <div
-    class="mask fullscreen"
-    :class="{ 'fullscreen-show': spinning }"
+    class="mask mask--fullscreen"
+    :class="{ 'mask--visible': spinning }"
     :style="{ '--transition-duration': `${transitionDuration}s` }"
   >
     <a-spin />
@@ -54,26 +54,24 @@ defineExpose({ close })
 </template>
 
 <style lang="scss" scoped>
-.mask {
-  &.fullscreen {
-    position: fixed;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgb(0 0 0 / 45%);
-    z-index: 1000;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    justify-content: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: all var(--transition-duration);
+.mask--fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  visibility: hidden;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(0 0 0 / 45%);
+  opacity: 0;
+  transition: all var(--transition-duration);
+}
 
-    &.fullscreen-show {
-      opacity: 1;
-      visibility: visible;
-    }
-  }
+.mask--visible {
+  visibility: visible;
+  opacity: 1;
 }
 </style>

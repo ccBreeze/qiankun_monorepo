@@ -1,54 +1,57 @@
 import axios from 'axios'
 import { message } from 'ant-design-vue'
 import {
-  attachRequestInterceptors,
-  attachResponseInterceptors,
+  createRequestInterceptor,
+  createResponseInterceptor,
   createEnhanceRequest,
   type RequestData,
   type RequestConfig,
 } from '@breeze/utils/request'
 import { useAuthStore } from '@/stores/auth'
-import { requestLoadingDelay } from '@/constant'
 import loading from '@/components/LoadingFullscreen'
+
+type PostConfig = Omit<RequestConfig, 'method' | 'url' | 'data'>
 
 const instance = axios.create()
 
+/** 请求拦截器 */
 instance.interceptors.request.use(
-  attachRequestInterceptors({
+  createRequestInterceptor({
     getAuthToken: () => useAuthStore().accessToken ?? '',
-    systemCode: 'oms_crm',
   }),
 )
 
+/** 响应拦截器 */
 instance.interceptors.response.use(
-  attachResponseInterceptors({
-    onLoginExpired: (data) =>
-      useAuthStore().showLogoutModal(data.msg ?? '登录已失效'),
-  }) as Parameters<typeof instance.interceptors.response.use>[0],
+  createResponseInterceptor({
+    onLoginExpired: (data) => {
+      const msg = data.msg ?? '登录已失效'
+      useAuthStore().showLogoutModal(msg)
+    },
+  }),
 )
 
 /** 增强器配置 */
 const enhanceRequest = createEnhanceRequest({
-  showError: (error) => {
-    const displayMsg = error?.msg || '未知错误'
-    message.error(displayMsg)
+  onError: (error) => {
+    const msg = error?.msg || '未知错误'
+    message.error(msg)
   },
-  showSuccess: (data) => void message.success(data?.msg),
+  onSuccess: (data) => {
+    message.success(data?.msg)
+  },
   loadingController: {
     show: (options) => loading(options),
     hide: () => loading.close(),
   },
-  loadingDelay: requestLoadingDelay,
 })
 
-/** 通用请求处理 */
+/** 创建通用请求（应用增强器） */
 export const handleRequest = <T = unknown>(
   config: RequestConfig,
 ): Promise<T> => {
   return enhanceRequest(() => instance.request<T, T>(config), config)
 }
-
-type PostConfig = Omit<RequestConfig, 'method' | 'url' | 'data'>
 
 /** POST 请求 */
 export const post = <T = unknown>(

@@ -1,11 +1,11 @@
 {
   "status": 1,
   "msg": "操作成功",
-  "logId": "af50330c-2231-4d86-9869-6eaaab295876",
+  "logId": "803a890d-75f8-4e33-9794-f515d7c40040",
   "data": {
-    "aid": 2510,
-    "accountName": "breeze",
-    "userName": "breeze",
+    "aid": 2835,
+    "accountName": "liamli",
+    "userName": "liamli",
     "bindRoleId": 28,
     "roleName": "运营商管理员",
     "roleType": 1,
@@ -30,9 +30,9 @@
       }
     ],
     "accountType": 2,
-    "token": "e351d74f67413aac60c94a49dd48c769",
+    "token": "8405e7bb654ca0b57d85ed964e043a75",
     "applicationCode": "repast",
-    "email": "breezeli@can-dao.com",
+    "email": "liamli@can-dao.com",
     "platformKey": "a1b9f2aca1150632",
     "apartSecond": 5,
     "functionCodes": [],
@@ -1066,17 +1066,6 @@
         "status": 1
       },
       {
-        "id": 10245,
-        "name": " Shopee活动",
-        "code": "000300040005",
-        "parentCode": "00030004",
-        "sort": 5,
-        "manualSort": 0,
-        "url": "000300040005",
-        "icon": "",
-        "status": 1
-      },
-      {
         "id": 9755,
         "name": "团购券订单",
         "code": "0003000400030002",
@@ -1132,35 +1121,24 @@
         "status": 1
       },
       {
-        "id": 10246,
-        "name": "创建Shopee活动",
-        "code": "0003000400050001",
-        "parentCode": "000300040005",
-        "sort": 1,
-        "manualSort": 0,
-        "url": "index/marketing/thirdMarketing/create",
-        "icon": "",
-        "status": 1
-      },
-      {
-        "id": 10247,
-        "name": "Shopee活动详情",
-        "code": "0003000400050002",
-        "parentCode": "000300040005",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "index/marketing/thirdMarketing/details",
-        "icon": "",
-        "status": 1
-      },
-      {
-        "id": 10248,
+        "id": 10056,
         "name": "编辑Shopee活动",
         "code": "0003000400050003",
         "parentCode": "000300040005",
-        "sort": 3,
+        "sort": 1,
         "manualSort": 0,
         "url": "index/marketing/thirdMarketing/edit",
+        "icon": "",
+        "status": 1
+      },
+      {
+        "id": 10058,
+        "name": "创建Shopee活动",
+        "code": "0003000400050001",
+        "parentCode": "000300040005",
+        "sort": 3,
+        "manualSort": 0,
+        "url": "index/marketing/thirdMarketing/create",
         "icon": "",
         "status": 1
       },
@@ -5436,17 +5414,6 @@
         "status": 1
       },
       {
-        "id": 10245,
-        "name": " Shopee活动",
-        "code": "000300040005",
-        "parentCode": "00030004",
-        "sort": 5,
-        "manualSort": 0,
-        "url": "000300040005",
-        "icon": "",
-        "status": 1
-      },
-      {
         "id": 9755,
         "name": "团购券订单",
         "code": "0003000400030002",
@@ -5502,35 +5469,24 @@
         "status": 1
       },
       {
-        "id": 10246,
-        "name": "创建Shopee活动",
-        "code": "0003000400050001",
-        "parentCode": "000300040005",
-        "sort": 1,
-        "manualSort": 0,
-        "url": "index/marketing/thirdMarketing/create",
-        "icon": "",
-        "status": 1
-      },
-      {
-        "id": 10247,
-        "name": "Shopee活动详情",
-        "code": "0003000400050002",
-        "parentCode": "000300040005",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "index/marketing/thirdMarketing/details",
-        "icon": "",
-        "status": 1
-      },
-      {
-        "id": 10248,
+        "id": 10056,
         "name": "编辑Shopee活动",
         "code": "0003000400050003",
         "parentCode": "000300040005",
-        "sort": 3,
+        "sort": 1,
         "manualSort": 0,
         "url": "index/marketing/thirdMarketing/edit",
+        "icon": "",
+        "status": 1
+      },
+      {
+        "id": 10058,
+        "name": "创建Shopee活动",
+        "code": "0003000400050001",
+        "parentCode": "000300040005",
+        "sort": 3,
+        "manualSort": 0,
+        "url": "index/marketing/thirdMarketing/create",
         "icon": "",
         "status": 1
       },
@@ -8064,6 +8020,17 @@
         "status": 1
       },
       {
+        "id": 10053,
+        "name": "報表",
+        "code": "0003",
+        "parentCode": "ROOT",
+        "sort": 4,
+        "manualSort": 0,
+        "url": "0003",
+        "icon": "",
+        "status": 1
+      },
+      {
         "id": 9887,
         "name": "用戶數據",
         "code": "00010001",
@@ -8093,7 +8060,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/userDetails",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/userList\"}",
         "status": 1
       },
       {
@@ -8119,28 +8086,6 @@
         "status": 1
       },
       {
-        "id": 9893,
-        "name": "實體券",
-        "code": "00020003",
-        "parentCode": "0002",
-        "sort": 2,
-        "manualSort": 3,
-        "url": "00020003",
-        "icon": "{\"iconName\":\"shi-ti-quan\"}",
-        "status": 1
-      },
-      {
-        "id": 9894,
-        "name": "電子券",
-        "code": "00020004",
-        "parentCode": "0002",
-        "sort": 2,
-        "manualSort": 2,
-        "url": "/CouponElectronic",
-        "icon": "{\"iconName\":\"dian-zi-quan\"}",
-        "status": 1
-      },
-      {
         "id": 9873,
         "name": "券模版",
         "code": "000200010001",
@@ -8159,17 +8104,6 @@
         "sort": 2,
         "manualSort": 0,
         "url": "/couponStatistics",
-        "icon": "",
-        "status": 1
-      },
-      {
-        "id": 9895,
-        "name": "券領取",
-        "code": "000200010005",
-        "parentCode": "00020001",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/getCouponActivity",
         "icon": "",
         "status": 1
       },
@@ -8203,7 +8137,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/couponDetail",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/couponListTemp\"}",
         "status": 1
       },
       {
@@ -8214,7 +8148,7 @@
         "sort": 2,
         "manualSort": 0,
         "url": "/creatCouponTemp",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/couponListTemp\"}",
         "status": 1
       },
       {
@@ -8225,7 +8159,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/couponDistributeDetail",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/couponDistribute\"}",
         "status": 1
       },
       {
@@ -8236,29 +8170,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/couponManagementDetail",
-        "icon": "{\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 9896,
-        "name": "創建券",
-        "code": "0002000100050001",
-        "parentCode": "000200010005",
-        "sort": 1,
-        "manualSort": 0,
-        "url": "/getCouponActivity/detailForm",
-        "icon": "{\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 9897,
-        "name": "領取詳情",
-        "code": "0002000100050002",
-        "parentCode": "000200010005",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/getCouponActivity/detailRead",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/couponManagement\"}",
         "status": 1
       },
       {
@@ -8273,28 +8185,6 @@
         "status": 1
       },
       {
-        "id": 9898,
-        "name": "售賣活動",
-        "code": "000200020002",
-        "parentCode": "00020002",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/CouponPromotion",
-        "icon": "",
-        "status": 1
-      },
-      {
-        "id": 9899,
-        "name": "迎新活動",
-        "code": "000200020003",
-        "parentCode": "00020002",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/getCouponNewUser",
-        "icon": "",
-        "status": 1
-      },
-      {
         "id": 9882,
         "name": "創建兌換活動",
         "code": "0002000200010001",
@@ -8302,7 +8192,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/couponExchangeActivityForm",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/couponExchangeActivity\"}",
         "status": 1
       },
       {
@@ -8313,193 +8203,17 @@
         "sort": 2,
         "manualSort": 0,
         "url": "/couponExchangeActivityDetails",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/couponExchangeActivity\"}",
         "status": 1
       },
       {
-        "id": 9900,
-        "name": "創建活动",
-        "code": "0002000200020001",
-        "parentCode": "000200020002",
-        "sort": 1,
-        "manualSort": 0,
-        "url": "/CouponPromotion/CouponPromotionForm",
-        "icon": "{\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 9901,
-        "name": "活動詳情",
-        "code": "0002000200020002",
-        "parentCode": "000200020002",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/CouponPromotion/CouponPromotionDetails",
-        "icon": "{\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 9902,
-        "name": "創建活動",
-        "code": "0002000200030001",
-        "parentCode": "000200020003",
-        "sort": 1,
-        "manualSort": 0,
-        "url": "/getCouponNewUser/detailForm",
-        "icon": "{\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 9903,
-        "name": "活動詳情",
-        "code": "0002000200030002",
-        "parentCode": "000200020003",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/getCouponNewUser/detailRead",
-        "icon": "{\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 9904,
-        "name": "實體卡券",
-        "code": "000200030001",
-        "parentCode": "00020003",
-        "sort": 1,
-        "manualSort": 0,
-        "url": "/CouponPhysical",
-        "icon": "",
-        "status": 1
-      },
-      {
-        "id": 9905,
-        "name": "實體券碼",
-        "code": "000200030002",
-        "parentCode": "00020003",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/CouponCodeManagement",
-        "icon": "",
-        "status": 1
-      },
-      {
-        "id": 9906,
-        "name": "券碼轉移",
-        "code": "000200030003",
-        "parentCode": "00020003",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/CouponCodeTransfer",
-        "icon": "",
-        "status": 1
-      },
-      {
-        "id": 9907,
-        "name": "創建實體卡券",
-        "code": "0002000300010001",
-        "parentCode": "000200030001",
-        "sort": 1,
-        "manualSort": 0,
-        "url": "/CouponPhysical/CouponPhysicalForm",
-        "icon": "{\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 9908,
-        "name": "實體卡券詳情",
-        "code": "0002000300010002",
-        "parentCode": "000200030001",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/CouponPhysical/CouponPhysicalDetails",
-        "icon": "{\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 9909,
-        "name": "創建批次",
-        "code": "0002000300010003",
-        "parentCode": "000200030001",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/CouponPhysical/CouponCodeBatchForm",
-        "icon": "{\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 9910,
-        "name": "創建發行",
-        "code": "0002000300010004",
-        "parentCode": "000200030001",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/CouponPhysical/CouponCodeReleaseForm",
-        "icon": "{\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 9911,
-        "name": "券碼詳情",
-        "code": "0002000300020001",
-        "parentCode": "000200030002",
-        "sort": 1,
-        "manualSort": 0,
-        "url": "/CouponCodeManagement/CouponCodeManagementDetails",
-        "icon": "{\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 9912,
-        "name": "記錄詳情",
-        "code": "0002000300030001",
-        "parentCode": "000200030003",
-        "sort": 1,
-        "manualSort": 0,
-        "url": "/CouponCodeTransfer/CouponCodeTransferDetails",
-        "icon": "{\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 9913,
-        "name": "創建電子券",
-        "code": "000200040001",
-        "parentCode": "00020004",
-        "sort": 1,
-        "manualSort": 0,
-        "url": "/CouponElectronic/CouponElectronicForm",
-        "icon": "{\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 9914,
-        "name": "電子券詳情",
-        "code": "000200040002",
-        "parentCode": "00020004",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/CouponElectronic/CouponElectronicDetails",
-        "icon": "{\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 10083,
+        "id": 10054,
         "name": "財務報表",
         "code": "00030001",
         "parentCode": "0003",
         "sort": 1,
         "manualSort": 0,
         "url": "/financialReport",
-        "icon": "",
-        "status": 1
-      },
-      {
-        "id": 10253,
-        "name": "運營明細報表",
-        "code": "00030002",
-        "parentCode": "0003",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/operationDetailReport",
         "icon": "",
         "status": 1
       }
@@ -8529,6 +8243,17 @@
         "status": 1
       },
       {
+        "id": 10053,
+        "name": "報表",
+        "code": "0003",
+        "parentCode": "ROOT",
+        "sort": 4,
+        "manualSort": 0,
+        "url": "0003",
+        "icon": "",
+        "status": 1
+      },
+      {
         "id": 9887,
         "name": "用戶數據",
         "code": "00010001",
@@ -8558,7 +8283,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/userDetails",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/userList\"}",
         "status": 1
       },
       {
@@ -8584,28 +8309,6 @@
         "status": 1
       },
       {
-        "id": 9893,
-        "name": "實體券",
-        "code": "00020003",
-        "parentCode": "0002",
-        "sort": 2,
-        "manualSort": 3,
-        "url": "00020003",
-        "icon": "{\"iconName\":\"shi-ti-quan\"}",
-        "status": 1
-      },
-      {
-        "id": 9894,
-        "name": "電子券",
-        "code": "00020004",
-        "parentCode": "0002",
-        "sort": 2,
-        "manualSort": 2,
-        "url": "/CouponElectronic",
-        "icon": "{\"iconName\":\"dian-zi-quan\"}",
-        "status": 1
-      },
-      {
         "id": 9873,
         "name": "券模版",
         "code": "000200010001",
@@ -8624,17 +8327,6 @@
         "sort": 2,
         "manualSort": 0,
         "url": "/couponStatistics",
-        "icon": "",
-        "status": 1
-      },
-      {
-        "id": 9895,
-        "name": "券領取",
-        "code": "000200010005",
-        "parentCode": "00020001",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/getCouponActivity",
         "icon": "",
         "status": 1
       },
@@ -8668,7 +8360,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/couponDetail",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/couponListTemp\"}",
         "status": 1
       },
       {
@@ -8679,7 +8371,7 @@
         "sort": 2,
         "manualSort": 0,
         "url": "/creatCouponTemp",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/couponListTemp\"}",
         "status": 1
       },
       {
@@ -8690,7 +8382,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/couponDistributeDetail",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/couponDistribute\"}",
         "status": 1
       },
       {
@@ -8701,29 +8393,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/couponManagementDetail",
-        "icon": "{\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 9896,
-        "name": "創建券",
-        "code": "0002000100050001",
-        "parentCode": "000200010005",
-        "sort": 1,
-        "manualSort": 0,
-        "url": "/getCouponActivity/detailForm",
-        "icon": "{\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 9897,
-        "name": "領取詳情",
-        "code": "0002000100050002",
-        "parentCode": "000200010005",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/getCouponActivity/detailRead",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/couponManagement\"}",
         "status": 1
       },
       {
@@ -8738,28 +8408,6 @@
         "status": 1
       },
       {
-        "id": 9898,
-        "name": "售賣活動",
-        "code": "000200020002",
-        "parentCode": "00020002",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/CouponPromotion",
-        "icon": "",
-        "status": 1
-      },
-      {
-        "id": 9899,
-        "name": "迎新活動",
-        "code": "000200020003",
-        "parentCode": "00020002",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/getCouponNewUser",
-        "icon": "",
-        "status": 1
-      },
-      {
         "id": 9882,
         "name": "創建兌換活動",
         "code": "0002000200010001",
@@ -8767,7 +8415,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/couponExchangeActivityForm",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/couponExchangeActivity\"}",
         "status": 1
       },
       {
@@ -8778,193 +8426,17 @@
         "sort": 2,
         "manualSort": 0,
         "url": "/couponExchangeActivityDetails",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/couponExchangeActivity\"}",
         "status": 1
       },
       {
-        "id": 9900,
-        "name": "創建活动",
-        "code": "0002000200020001",
-        "parentCode": "000200020002",
-        "sort": 1,
-        "manualSort": 0,
-        "url": "/CouponPromotion/CouponPromotionForm",
-        "icon": "{\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 9901,
-        "name": "活動詳情",
-        "code": "0002000200020002",
-        "parentCode": "000200020002",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/CouponPromotion/CouponPromotionDetails",
-        "icon": "{\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 9902,
-        "name": "創建活動",
-        "code": "0002000200030001",
-        "parentCode": "000200020003",
-        "sort": 1,
-        "manualSort": 0,
-        "url": "/getCouponNewUser/detailForm",
-        "icon": "{\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 9903,
-        "name": "活動詳情",
-        "code": "0002000200030002",
-        "parentCode": "000200020003",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/getCouponNewUser/detailRead",
-        "icon": "{\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 9904,
-        "name": "實體卡券",
-        "code": "000200030001",
-        "parentCode": "00020003",
-        "sort": 1,
-        "manualSort": 0,
-        "url": "/CouponPhysical",
-        "icon": "",
-        "status": 1
-      },
-      {
-        "id": 9905,
-        "name": "實體券碼",
-        "code": "000200030002",
-        "parentCode": "00020003",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/CouponCodeManagement",
-        "icon": "",
-        "status": 1
-      },
-      {
-        "id": 9906,
-        "name": "券碼轉移",
-        "code": "000200030003",
-        "parentCode": "00020003",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/CouponCodeTransfer",
-        "icon": "",
-        "status": 1
-      },
-      {
-        "id": 9907,
-        "name": "創建實體卡券",
-        "code": "0002000300010001",
-        "parentCode": "000200030001",
-        "sort": 1,
-        "manualSort": 0,
-        "url": "/CouponPhysical/CouponPhysicalForm",
-        "icon": "{\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 9908,
-        "name": "實體卡券詳情",
-        "code": "0002000300010002",
-        "parentCode": "000200030001",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/CouponPhysical/CouponPhysicalDetails",
-        "icon": "{\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 9909,
-        "name": "創建批次",
-        "code": "0002000300010003",
-        "parentCode": "000200030001",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/CouponPhysical/CouponCodeBatchForm",
-        "icon": "{\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 9910,
-        "name": "創建發行",
-        "code": "0002000300010004",
-        "parentCode": "000200030001",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/CouponPhysical/CouponCodeReleaseForm",
-        "icon": "{\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 9911,
-        "name": "券碼詳情",
-        "code": "0002000300020001",
-        "parentCode": "000200030002",
-        "sort": 1,
-        "manualSort": 0,
-        "url": "/CouponCodeManagement/CouponCodeManagementDetails",
-        "icon": "{\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 9912,
-        "name": "記錄詳情",
-        "code": "0002000300030001",
-        "parentCode": "000200030003",
-        "sort": 1,
-        "manualSort": 0,
-        "url": "/CouponCodeTransfer/CouponCodeTransferDetails",
-        "icon": "{\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 9913,
-        "name": "創建電子券",
-        "code": "000200040001",
-        "parentCode": "00020004",
-        "sort": 1,
-        "manualSort": 0,
-        "url": "/CouponElectronic/CouponElectronicForm",
-        "icon": "{\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 9914,
-        "name": "電子券詳情",
-        "code": "000200040002",
-        "parentCode": "00020004",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/CouponElectronic/CouponElectronicDetails",
-        "icon": "{\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 10083,
+        "id": 10054,
         "name": "財務報表",
         "code": "00030001",
         "parentCode": "0003",
         "sort": 1,
         "manualSort": 0,
         "url": "/financialReport",
-        "icon": "",
-        "status": 1
-      },
-      {
-        "id": 10253,
-        "name": "運營明細報表",
-        "code": "00030002",
-        "parentCode": "0003",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/operationDetailReport",
         "icon": "",
         "status": 1
       }
@@ -9082,17 +8554,6 @@
         "status": 1
       },
       {
-        "id": 9915,
-        "name": "卡券訂單",
-        "code": "000100020004",
-        "parentCode": "00010002",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/CouponOrder",
-        "icon": "{\"routeBase\": \"/crm-v8\"}",
-        "status": 1
-      },
-      {
         "id": 9769,
         "name": "關注訂單",
         "code": "000100020003",
@@ -9111,7 +8572,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/index/order/orderDetail",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/order/orderList\"}",
         "status": 1
       },
       {
@@ -9167,17 +8628,6 @@
         "manualSort": 0,
         "url": "/index/order/bigOrder",
         "icon": "",
-        "status": 1
-      },
-      {
-        "id": 9916,
-        "name": "訂單詳情",
-        "code": "0001000200040001",
-        "parentCode": "000100020004",
-        "sort": 1,
-        "manualSort": 0,
-        "url": "/CouponOrder/CouponOrderDetail",
-        "icon": "{\"routeBase\": \"/crm-v8\",\"hiddenMenu\":true}",
         "status": 1
       },
       {
@@ -9342,7 +8792,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/index/datainput/menu/recommendMenu",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/datainput/menu\"}",
         "status": 1
       },
       {
@@ -9353,7 +8803,7 @@
         "sort": 2,
         "manualSort": 0,
         "url": "/index/datainput/menu/edit/:menu_id",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/datainput/menu\"}",
         "status": 1
       },
       {
@@ -9364,7 +8814,7 @@
         "sort": 3,
         "manualSort": 0,
         "url": "/index/datainput/menu/recommendMenu/recommendMenuAction",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/datainput/menu\"}",
         "status": 1
       },
       {
@@ -9375,7 +8825,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/index/datainput/products/product/:productId",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/datainput/products\"}",
         "status": 1
       },
       {
@@ -9386,7 +8836,7 @@
         "sort": 2,
         "manualSort": 0,
         "url": "/index/datainput/products/requirement/:brand_id",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/datainput/products\"}",
         "status": 1
       },
       {
@@ -9397,7 +8847,7 @@
         "sort": 3,
         "manualSort": 0,
         "url": "/index/datainput/products/shelfStatus",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/datainput/products\"}",
         "status": 1
       },
       {
@@ -9408,7 +8858,7 @@
         "sort": 4,
         "manualSort": 0,
         "url": "/index/datainput/products/publicChargingShelfStatus",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/datainput/products\"}",
         "status": 1
       },
       {
@@ -9419,7 +8869,7 @@
         "sort": 5,
         "manualSort": 0,
         "url": "/index/datainput/products/propertyTemplateShelfStatus",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/datainput/products\"}",
         "status": 1
       },
       {
@@ -9452,7 +8902,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/index/label/labelManagement/labelManagement/:id",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/label/labelManagement\"}",
         "status": 1
       },
       {
@@ -9507,7 +8957,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/index/datainput/brand/:brand_id",
-        "icon": "{\"hiddenMenu\":true,\"hiddenMenu\":true}",
+        "icon": "{\"hiddenMenu\":true,\"activeMenuPath\":\"/BrandList\"}",
         "status": 1
       },
       {
@@ -9529,7 +8979,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/index/datainput/store/cu/:store_id",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/datainput/store\"}",
         "status": 1
       },
       {
@@ -9540,7 +8990,7 @@
         "sort": 2,
         "manualSort": 0,
         "url": "/index/datainput/store/district",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/datainput/store\"}",
         "status": 1
       },
       {
@@ -9551,7 +9001,7 @@
         "sort": 3,
         "manualSort": 0,
         "url": "/index/datainput/store/checkInfo",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/datainput/store\"}",
         "status": 1
       },
       {
@@ -9562,7 +9012,7 @@
         "sort": 4,
         "manualSort": 0,
         "url": "/index/datainput/store/inventory/:store_id",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/datainput/store\"}",
         "status": 1
       },
       {
@@ -9650,7 +9100,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/index/website/IM/applyIm",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/website/IM\"}",
         "status": 1
       },
       {
@@ -9661,7 +9111,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/index/datainput/holiday",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/datainput/holiday\"}",
         "status": 1
       },
       {
@@ -9672,40 +9122,40 @@
         "sort": 2,
         "manualSort": 0,
         "url": "/index/datainput/quota",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/datainput/quota\"}",
         "status": 1
       },
       {
-        "id": 9917,
+        "id": 10039,
         "name": "餐期管理",
         "code": "0002000400050003",
         "parentCode": "000200040005",
-        "sort": 2,
+        "sort": 3,
         "manualSort": 0,
         "url": "/Mealschedule",
-        "icon": "{\"routeBase\": \"/crm-v8\",\"hiddenMenu\":true}",
+        "icon": "{\"routeBase\": \"/crm-v8\",\"activeMenuPath\":\"/Mealschedule\"}",
         "status": 1
       },
       {
-        "id": 9918,
+        "id": 10040,
         "name": "發券原因",
         "code": "0002000400050004",
         "parentCode": "000200040005",
-        "sort": 2,
+        "sort": 4,
         "manualSort": 0,
         "url": "/CouponIssuanceReason",
-        "icon": "{\"routeBase\": \"/crm-v8\",\"hiddenMenu\":true}",
+        "icon": "{\"routeBase\": \"/crm-v8\",\"activeMenuPath\":true}",
         "status": 1
       },
       {
-        "id": 10079,
+        "id": 10041,
         "name": "配送时间",
         "code": "0002000400050005",
         "parentCode": "000200040005",
-        "sort": 3,
+        "sort": 5,
         "manualSort": 0,
         "url": "/dmsSetting",
-        "icon": "{\"routeBase\": \"/crm-v8\",\"hiddenMenu\":true}",
+        "icon": "{\"routeBase\": \"/crm-v8\",\"activeMenuPath\":\"/dmsSetting\"}",
         "status": 1
       },
       {
@@ -9716,29 +9166,29 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/index/datainput/quotaDetail",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/datainput/quotaDetail\"}",
         "status": 1
       },
       {
-        "id": 9919,
+        "id": 10042,
         "name": "餐期設置",
         "code": "00020004000500030001",
         "parentCode": "0002000400050003",
         "sort": 1,
         "manualSort": 0,
         "url": "/Mealschedule/detail",
-        "icon": "{\"routeBase\": \"/crm-v8\",\"hiddenMenu\":true}",
+        "icon": "{\"routeBase\": \"/crm-v8\",\"activeMenuPath\":\"/Mealschedule\"}",
         "status": 1
       },
       {
-        "id": 10080,
+        "id": 10043,
         "name": "记录详情",
         "code": "00020004000500050001",
         "parentCode": "0002000400050005",
         "sort": 1,
         "manualSort": 0,
         "url": "/dmsSetting/RecordDetail",
-        "icon": "{\"routeBase\": \"/crm-v8\",\"hiddenMenu\":true}",
+        "icon": "{\"routeBase\": \"/crm-v8\",\"activeMenuPath\":\"/dmsSetting\"}",
         "status": 1
       },
       {
@@ -9837,7 +9287,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/index/thirdparty/apply/docking",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/thirdparty/apply\"}",
         "status": 1
       },
       {
@@ -9848,7 +9298,7 @@
         "sort": 2,
         "manualSort": 0,
         "url": "/index/thirdparty/apply/pos",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/thirdparty/apply\"}",
         "status": 1
       },
       {
@@ -9859,7 +9309,7 @@
         "sort": 3,
         "manualSort": 0,
         "url": "/index/thirdparty/apply/mapping/:id",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/thirdparty/apply\"}",
         "status": 1
       },
       {
@@ -9870,7 +9320,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/index/thirdparty/channelSyncTask",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/thirdparty/syn\"}",
         "status": 1
       },
       {
@@ -9881,7 +9331,7 @@
         "sort": 2,
         "manualSort": 0,
         "url": "/index/thirdparty/historySyncRecord",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/thirdparty/syn\"}",
         "status": 1
       },
       {
@@ -9892,7 +9342,7 @@
         "sort": 3,
         "manualSort": 0,
         "url": "/index/thirdparty/proMapping",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/thirdparty/syn\"}",
         "status": 1
       },
       {
@@ -9903,7 +9353,7 @@
         "sort": 4,
         "manualSort": 0,
         "url": "/index/thirdparty/productAuditResult",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/thirdparty/syn\"}",
         "status": 1
       },
       {
@@ -9914,7 +9364,7 @@
         "sort": 5,
         "manualSort": 0,
         "url": "/index/thirdparty/historyPosPushRecord",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/thirdparty/syn\"}",
         "status": 1
       },
       {
@@ -9925,7 +9375,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/index/marketing/selfEmployed/meiTuan/addMtcoupon/:uid",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/marketing/thirdMarketing\"}",
         "status": 1
       },
       {
@@ -9936,7 +9386,7 @@
         "sort": 2,
         "manualSort": 0,
         "url": "/index/marketing/thirdMarketing/grab/details/:id",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/marketing/thirdMarketing\"}",
         "status": 1
       },
       {
@@ -9947,7 +9397,7 @@
         "sort": 3,
         "manualSort": 0,
         "url": "/index/marketing/thirdMarketing/grab/create",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/marketing/thirdMarketing\"}",
         "status": 1
       },
       {
@@ -9958,7 +9408,7 @@
         "sort": 4,
         "manualSort": 0,
         "url": "/index/marketing/thirdMarketing/grab/edit/:id",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/marketing/thirdMarketing\"}",
         "status": 1
       },
       {
@@ -9969,7 +9419,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/index/marketing/preLimitCreate",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/marketing/selfEmployed\"}",
         "status": 1
       },
       {
@@ -9980,7 +9430,7 @@
         "sort": 2,
         "manualSort": 0,
         "url": "/index/marketing/selfEmployed/benefitCard/edit/:id",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/marketing/selfEmployed\"}",
         "status": 1
       },
       {
@@ -9991,7 +9441,7 @@
         "sort": 3,
         "manualSort": 0,
         "url": "/index/marketing/selfEmployed/benefitCard/agreementConfig",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/marketing/selfEmployed\"}",
         "status": 1
       },
       {
@@ -10002,7 +9452,7 @@
         "sort": 4,
         "manualSort": 0,
         "url": "/index/marketing/selfEmployed/benefitCard/noticeConfig",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/marketing/selfEmployed\"}",
         "status": 1
       },
       {
@@ -10013,7 +9463,7 @@
         "sort": 5,
         "manualSort": 0,
         "url": "/index/marketing/selfEmployed/benefitCard/recommendCardList",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/marketing/selfEmployed\"}",
         "status": 1
       },
       {
@@ -10039,39 +9489,6 @@
         "status": 1
       },
       {
-        "id": 9920,
-        "name": "應用通知",
-        "code": "000300030005",
-        "parentCode": "00030003",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/appNotification",
-        "icon": "{\"routeBase\": \"/crm-v8\"}",
-        "status": 1
-      },
-      {
-        "id": 9921,
-        "name": "條款細則",
-        "code": "000300030003",
-        "parentCode": "00030003",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/termsandConditions",
-        "icon": "{\"routeBase\": \"/crm-v8\"}",
-        "status": 1
-      },
-      {
-        "id": 9929,
-        "name": "版本管理",
-        "code": "000300030006",
-        "parentCode": "00030003",
-        "sort": 4,
-        "manualSort": 0,
-        "url": "/applicationManagement",
-        "icon": "{\"routeBase\": \"/crm-v8\"}",
-        "status": 1
-      },
-      {
         "id": 9845,
         "name": "网站的设置",
         "code": "0003000300010001",
@@ -10079,7 +9496,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/index/website/config/web/:keyId/:siteName",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/website/config\"}",
         "status": 1
       },
       {
@@ -10090,7 +9507,7 @@
         "sort": 2,
         "manualSort": 0,
         "url": "/index/website/config/H5/:keyId/:siteName",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/website/config\"}",
         "status": 1
       },
       {
@@ -10101,7 +9518,7 @@
         "sort": 3,
         "manualSort": 0,
         "url": "/index/website/config/WeChat/:keyId/:siteName",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/website/config\"}",
         "status": 1
       },
       {
@@ -10112,7 +9529,7 @@
         "sort": 4,
         "manualSort": 0,
         "url": "/index/website/config/longGraph/:keyId/:siteName",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/website/config\"}",
         "status": 1
       },
       {
@@ -10123,51 +9540,7 @@
         "sort": 5,
         "manualSort": 0,
         "url": "/index/website/config/editor/:keyId/:siteName",
-        "icon": "{\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 9922,
-        "name": "條款詳情",
-        "code": "0003000300030001",
-        "parentCode": "000300030003",
-        "sort": 1,
-        "manualSort": 0,
-        "url": "/termsandConditions/detail",
-        "icon": "{\"routeBase\":\"/crm-v8\",\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 9923,
-        "name": "通知消息详情",
-        "code": "0003000300050001",
-        "parentCode": "000300030005",
-        "sort": 1,
-        "manualSort": 0,
-        "url": "/appNotification/notificationDetail",
-        "icon": "{\"hiddenMenu\":true,\"routeBase\": \"/crm-v8\"}",
-        "status": 1
-      },
-      {
-        "id": 9924,
-        "name": "动态消息详情",
-        "code": "0003000300050002",
-        "parentCode": "000300030005",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/appNotification/dynamicDetail",
-        "icon": "{\"hiddenMenu\":true,\"routeBase\": \"/crm-v8\"}",
-        "status": 1
-      },
-      {
-        "id": 9925,
-        "name": "推广消息详情",
-        "code": "0003000300050003",
-        "parentCode": "000300030005",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/appNotification/promotionDetail",
-        "icon": "{\"hiddenMenu\":true,\"routeBase\": \"/crm-v8\"}",
+        "icon": "{\"activeMenuPath\":\"/index/website/config\"}",
         "status": 1
       },
       {
@@ -10233,7 +9606,7 @@
         "sort": 2,
         "manualSort": 0,
         "url": "/index/finance/reconciliation-handle",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/finance/reconciliation\"}",
         "status": 1
       },
       {
@@ -10349,13 +9722,24 @@
     ],
     "coms8NotNeedPageFunctionList": [
       {
-        "id": 10084,
+        "id": 10052,
         "name": "设置",
         "code": "0002000200030010",
         "parentCode": "000200020003",
         "sort": 1,
         "manualSort": 0,
         "url": "",
+        "icon": "",
+        "status": 1
+      },
+      {
+        "id": 9884,
+        "name": "CDBI",
+        "code": "00990005",
+        "parentCode": "0099",
+        "sort": 4,
+        "manualSort": 0,
+        "url": "00990005",
         "icon": "",
         "status": 1
       }
@@ -10472,17 +9856,6 @@
         "status": 1
       },
       {
-        "id": 9915,
-        "name": "卡券訂單",
-        "code": "000100020004",
-        "parentCode": "00010002",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/CouponOrder",
-        "icon": "{\"routeBase\": \"/crm-v8\"}",
-        "status": 1
-      },
-      {
         "id": 9769,
         "name": "關注訂單",
         "code": "000100020003",
@@ -10501,7 +9874,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/index/order/orderDetail",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/order/orderList\"}",
         "status": 1
       },
       {
@@ -10557,17 +9930,6 @@
         "manualSort": 0,
         "url": "/index/order/bigOrder",
         "icon": "",
-        "status": 1
-      },
-      {
-        "id": 9916,
-        "name": "訂單詳情",
-        "code": "0001000200040001",
-        "parentCode": "000100020004",
-        "sort": 1,
-        "manualSort": 0,
-        "url": "/CouponOrder/CouponOrderDetail",
-        "icon": "{\"routeBase\": \"/crm-v8\",\"hiddenMenu\":true}",
         "status": 1
       },
       {
@@ -10732,7 +10094,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/index/datainput/menu/recommendMenu",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/datainput/menu\"}",
         "status": 1
       },
       {
@@ -10743,7 +10105,7 @@
         "sort": 2,
         "manualSort": 0,
         "url": "/index/datainput/menu/edit/:menu_id",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/datainput/menu\"}",
         "status": 1
       },
       {
@@ -10754,7 +10116,7 @@
         "sort": 3,
         "manualSort": 0,
         "url": "/index/datainput/menu/recommendMenu/recommendMenuAction",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/datainput/menu\"}",
         "status": 1
       },
       {
@@ -10765,7 +10127,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/index/datainput/products/product/:productId",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/datainput/products\"}",
         "status": 1
       },
       {
@@ -10776,7 +10138,7 @@
         "sort": 2,
         "manualSort": 0,
         "url": "/index/datainput/products/requirement/:brand_id",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/datainput/products\"}",
         "status": 1
       },
       {
@@ -10787,7 +10149,7 @@
         "sort": 3,
         "manualSort": 0,
         "url": "/index/datainput/products/shelfStatus",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/datainput/products\"}",
         "status": 1
       },
       {
@@ -10798,7 +10160,7 @@
         "sort": 4,
         "manualSort": 0,
         "url": "/index/datainput/products/publicChargingShelfStatus",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/datainput/products\"}",
         "status": 1
       },
       {
@@ -10809,7 +10171,7 @@
         "sort": 5,
         "manualSort": 0,
         "url": "/index/datainput/products/propertyTemplateShelfStatus",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/datainput/products\"}",
         "status": 1
       },
       {
@@ -10842,7 +10204,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/index/label/labelManagement/labelManagement/:id",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/label/labelManagement\"}",
         "status": 1
       },
       {
@@ -10897,7 +10259,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/index/datainput/brand/:brand_id",
-        "icon": "{\"hiddenMenu\":true,\"hiddenMenu\":true}",
+        "icon": "{\"hiddenMenu\":true,\"activeMenuPath\":\"/BrandList\"}",
         "status": 1
       },
       {
@@ -10919,7 +10281,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/index/datainput/store/cu/:store_id",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/datainput/store\"}",
         "status": 1
       },
       {
@@ -10930,7 +10292,7 @@
         "sort": 2,
         "manualSort": 0,
         "url": "/index/datainput/store/district",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/datainput/store\"}",
         "status": 1
       },
       {
@@ -10941,7 +10303,7 @@
         "sort": 3,
         "manualSort": 0,
         "url": "/index/datainput/store/checkInfo",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/datainput/store\"}",
         "status": 1
       },
       {
@@ -10952,7 +10314,7 @@
         "sort": 4,
         "manualSort": 0,
         "url": "/index/datainput/store/inventory/:store_id",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/datainput/store\"}",
         "status": 1
       },
       {
@@ -11040,7 +10402,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/index/website/IM/applyIm",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/website/IM\"}",
         "status": 1
       },
       {
@@ -11051,7 +10413,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/index/datainput/holiday",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/datainput/holiday\"}",
         "status": 1
       },
       {
@@ -11062,40 +10424,40 @@
         "sort": 2,
         "manualSort": 0,
         "url": "/index/datainput/quota",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/datainput/quota\"}",
         "status": 1
       },
       {
-        "id": 9917,
+        "id": 10039,
         "name": "餐期管理",
         "code": "0002000400050003",
         "parentCode": "000200040005",
-        "sort": 2,
+        "sort": 3,
         "manualSort": 0,
         "url": "/Mealschedule",
-        "icon": "{\"routeBase\": \"/crm-v8\",\"hiddenMenu\":true}",
+        "icon": "{\"routeBase\": \"/crm-v8\",\"activeMenuPath\":\"/Mealschedule\"}",
         "status": 1
       },
       {
-        "id": 9918,
+        "id": 10040,
         "name": "發券原因",
         "code": "0002000400050004",
         "parentCode": "000200040005",
-        "sort": 2,
+        "sort": 4,
         "manualSort": 0,
         "url": "/CouponIssuanceReason",
-        "icon": "{\"routeBase\": \"/crm-v8\",\"hiddenMenu\":true}",
+        "icon": "{\"routeBase\": \"/crm-v8\",\"activeMenuPath\":true}",
         "status": 1
       },
       {
-        "id": 10079,
+        "id": 10041,
         "name": "配送时间",
         "code": "0002000400050005",
         "parentCode": "000200040005",
-        "sort": 3,
+        "sort": 5,
         "manualSort": 0,
         "url": "/dmsSetting",
-        "icon": "{\"routeBase\": \"/crm-v8\",\"hiddenMenu\":true}",
+        "icon": "{\"routeBase\": \"/crm-v8\",\"activeMenuPath\":\"/dmsSetting\"}",
         "status": 1
       },
       {
@@ -11106,29 +10468,29 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/index/datainput/quotaDetail",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/datainput/quotaDetail\"}",
         "status": 1
       },
       {
-        "id": 9919,
+        "id": 10042,
         "name": "餐期設置",
         "code": "00020004000500030001",
         "parentCode": "0002000400050003",
         "sort": 1,
         "manualSort": 0,
         "url": "/Mealschedule/detail",
-        "icon": "{\"routeBase\": \"/crm-v8\",\"hiddenMenu\":true}",
+        "icon": "{\"routeBase\": \"/crm-v8\",\"activeMenuPath\":\"/Mealschedule\"}",
         "status": 1
       },
       {
-        "id": 10080,
+        "id": 10043,
         "name": "记录详情",
         "code": "00020004000500050001",
         "parentCode": "0002000400050005",
         "sort": 1,
         "manualSort": 0,
         "url": "/dmsSetting/RecordDetail",
-        "icon": "{\"routeBase\": \"/crm-v8\",\"hiddenMenu\":true}",
+        "icon": "{\"routeBase\": \"/crm-v8\",\"activeMenuPath\":\"/dmsSetting\"}",
         "status": 1
       },
       {
@@ -11227,7 +10589,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/index/thirdparty/apply/docking",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/thirdparty/apply\"}",
         "status": 1
       },
       {
@@ -11238,7 +10600,7 @@
         "sort": 2,
         "manualSort": 0,
         "url": "/index/thirdparty/apply/pos",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/thirdparty/apply\"}",
         "status": 1
       },
       {
@@ -11249,7 +10611,7 @@
         "sort": 3,
         "manualSort": 0,
         "url": "/index/thirdparty/apply/mapping/:id",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/thirdparty/apply\"}",
         "status": 1
       },
       {
@@ -11260,7 +10622,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/index/thirdparty/channelSyncTask",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/thirdparty/syn\"}",
         "status": 1
       },
       {
@@ -11271,7 +10633,7 @@
         "sort": 2,
         "manualSort": 0,
         "url": "/index/thirdparty/historySyncRecord",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/thirdparty/syn\"}",
         "status": 1
       },
       {
@@ -11282,7 +10644,7 @@
         "sort": 3,
         "manualSort": 0,
         "url": "/index/thirdparty/proMapping",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/thirdparty/syn\"}",
         "status": 1
       },
       {
@@ -11293,7 +10655,7 @@
         "sort": 4,
         "manualSort": 0,
         "url": "/index/thirdparty/productAuditResult",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/thirdparty/syn\"}",
         "status": 1
       },
       {
@@ -11304,7 +10666,7 @@
         "sort": 5,
         "manualSort": 0,
         "url": "/index/thirdparty/historyPosPushRecord",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/thirdparty/syn\"}",
         "status": 1
       },
       {
@@ -11315,7 +10677,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/index/marketing/selfEmployed/meiTuan/addMtcoupon/:uid",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/marketing/thirdMarketing\"}",
         "status": 1
       },
       {
@@ -11326,7 +10688,7 @@
         "sort": 2,
         "manualSort": 0,
         "url": "/index/marketing/thirdMarketing/grab/details/:id",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/marketing/thirdMarketing\"}",
         "status": 1
       },
       {
@@ -11337,7 +10699,7 @@
         "sort": 3,
         "manualSort": 0,
         "url": "/index/marketing/thirdMarketing/grab/create",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/marketing/thirdMarketing\"}",
         "status": 1
       },
       {
@@ -11348,7 +10710,7 @@
         "sort": 4,
         "manualSort": 0,
         "url": "/index/marketing/thirdMarketing/grab/edit/:id",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/marketing/thirdMarketing\"}",
         "status": 1
       },
       {
@@ -11359,7 +10721,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/index/marketing/preLimitCreate",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/marketing/selfEmployed\"}",
         "status": 1
       },
       {
@@ -11370,7 +10732,7 @@
         "sort": 2,
         "manualSort": 0,
         "url": "/index/marketing/selfEmployed/benefitCard/edit/:id",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/marketing/selfEmployed\"}",
         "status": 1
       },
       {
@@ -11381,7 +10743,7 @@
         "sort": 3,
         "manualSort": 0,
         "url": "/index/marketing/selfEmployed/benefitCard/agreementConfig",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/marketing/selfEmployed\"}",
         "status": 1
       },
       {
@@ -11392,7 +10754,7 @@
         "sort": 4,
         "manualSort": 0,
         "url": "/index/marketing/selfEmployed/benefitCard/noticeConfig",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/marketing/selfEmployed\"}",
         "status": 1
       },
       {
@@ -11403,7 +10765,7 @@
         "sort": 5,
         "manualSort": 0,
         "url": "/index/marketing/selfEmployed/benefitCard/recommendCardList",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/marketing/selfEmployed\"}",
         "status": 1
       },
       {
@@ -11429,39 +10791,6 @@
         "status": 1
       },
       {
-        "id": 9920,
-        "name": "應用通知",
-        "code": "000300030005",
-        "parentCode": "00030003",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/appNotification",
-        "icon": "{\"routeBase\": \"/crm-v8\"}",
-        "status": 1
-      },
-      {
-        "id": 9921,
-        "name": "條款細則",
-        "code": "000300030003",
-        "parentCode": "00030003",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/termsandConditions",
-        "icon": "{\"routeBase\": \"/crm-v8\"}",
-        "status": 1
-      },
-      {
-        "id": 9929,
-        "name": "版本管理",
-        "code": "000300030006",
-        "parentCode": "00030003",
-        "sort": 4,
-        "manualSort": 0,
-        "url": "/applicationManagement",
-        "icon": "{\"routeBase\": \"/crm-v8\"}",
-        "status": 1
-      },
-      {
         "id": 9845,
         "name": "网站的设置",
         "code": "0003000300010001",
@@ -11469,7 +10798,7 @@
         "sort": 1,
         "manualSort": 0,
         "url": "/index/website/config/web/:keyId/:siteName",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/website/config\"}",
         "status": 1
       },
       {
@@ -11480,7 +10809,7 @@
         "sort": 2,
         "manualSort": 0,
         "url": "/index/website/config/H5/:keyId/:siteName",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/website/config\"}",
         "status": 1
       },
       {
@@ -11491,7 +10820,7 @@
         "sort": 3,
         "manualSort": 0,
         "url": "/index/website/config/WeChat/:keyId/:siteName",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/website/config\"}",
         "status": 1
       },
       {
@@ -11502,7 +10831,7 @@
         "sort": 4,
         "manualSort": 0,
         "url": "/index/website/config/longGraph/:keyId/:siteName",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/website/config\"}",
         "status": 1
       },
       {
@@ -11513,51 +10842,7 @@
         "sort": 5,
         "manualSort": 0,
         "url": "/index/website/config/editor/:keyId/:siteName",
-        "icon": "{\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 9922,
-        "name": "條款詳情",
-        "code": "0003000300030001",
-        "parentCode": "000300030003",
-        "sort": 1,
-        "manualSort": 0,
-        "url": "/termsandConditions/detail",
-        "icon": "{\"routeBase\":\"/crm-v8\",\"hiddenMenu\":true}",
-        "status": 1
-      },
-      {
-        "id": 9923,
-        "name": "通知消息详情",
-        "code": "0003000300050001",
-        "parentCode": "000300030005",
-        "sort": 1,
-        "manualSort": 0,
-        "url": "/appNotification/notificationDetail",
-        "icon": "{\"hiddenMenu\":true,\"routeBase\": \"/crm-v8\"}",
-        "status": 1
-      },
-      {
-        "id": 9924,
-        "name": "动态消息详情",
-        "code": "0003000300050002",
-        "parentCode": "000300030005",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/appNotification/dynamicDetail",
-        "icon": "{\"hiddenMenu\":true,\"routeBase\": \"/crm-v8\"}",
-        "status": 1
-      },
-      {
-        "id": 9925,
-        "name": "推广消息详情",
-        "code": "0003000300050003",
-        "parentCode": "000300030005",
-        "sort": 2,
-        "manualSort": 0,
-        "url": "/appNotification/promotionDetail",
-        "icon": "{\"hiddenMenu\":true,\"routeBase\": \"/crm-v8\"}",
+        "icon": "{\"activeMenuPath\":\"/index/website/config\"}",
         "status": 1
       },
       {
@@ -11623,7 +10908,7 @@
         "sort": 2,
         "manualSort": 0,
         "url": "/index/finance/reconciliation-handle",
-        "icon": "{\"hiddenMenu\":true}",
+        "icon": "{\"activeMenuPath\":\"/index/finance/reconciliation\"}",
         "status": 1
       },
       {
@@ -11739,13 +11024,24 @@
     ],
     "coms8NotNeedPageReadFunctionList": [
       {
-        "id": 10084,
+        "id": 10052,
         "name": "设置",
         "code": "0002000200030010",
         "parentCode": "000200020003",
         "sort": 1,
         "manualSort": 0,
         "url": "",
+        "icon": "",
+        "status": 1
+      },
+      {
+        "id": 9884,
+        "name": "CDBI",
+        "code": "00990005",
+        "parentCode": "0099",
+        "sort": 4,
+        "manualSort": 0,
+        "url": "00990005",
         "icon": "",
         "status": 1
       }
@@ -11762,5 +11058,5 @@
     "comsLangType": 0,
     "somsLangType": 0
   },
-  "serverTime": "1767000106873"
+  "serverTime": "1774516941739"
 }

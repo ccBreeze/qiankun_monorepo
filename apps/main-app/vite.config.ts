@@ -11,7 +11,6 @@ import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 const resolvePath = (relativePath: string) =>
   fileURLToPath(new URL(relativePath, import.meta.url))
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [
     vue(),

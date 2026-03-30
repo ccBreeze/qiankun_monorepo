@@ -24,22 +24,18 @@ export const sidebar: DefaultTheme.SidebarMulti = {
       ],
     },
   ],
-  '/packages/qiankun-shared/': [
+  '/qiankun/': [
     {
-      text: '简介',
-      items: [
-        { text: 'qiankun-shared 概览', link: '/packages/qiankun-shared/' },
-      ],
+      text: 'qiankun-shared',
+      items: [{ text: '动态路由源码解析', link: '/qiankun/dynamic-route' }],
     },
     {
-      text: 'Router (动态路由)',
+      text: '主应用（壳）',
       items: [
-        { text: '概览', link: '/packages/qiankun-shared/router/overview' },
-        {
-          text: '菜单与路由规则',
-          link: '/packages/qiankun-shared/router/menu-rules',
-        },
-        { text: 'API 参考', link: '/packages/qiankun-shared/router/api' },
+        { text: '微应用注册表', link: '/qiankun/micro-app-registry' },
+        { text: '微应用状态管理', link: '/qiankun/micro-app-store' },
+        { text: '菜单状态管理', link: '/qiankun/menu-store' },
+        { text: '标签栏状态管理', link: '/qiankun/tab-bar-store' },
       ],
     },
   ],
