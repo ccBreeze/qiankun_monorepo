@@ -2,26 +2,14 @@
  * URL 解析工具函数
  * 提供路径规范化、URL 解析等纯函数
  */
-import type { MenuExtra, ResolvedRouteInfo } from './types'
-
-/**
- * resolveRoute 参数
- */
-export interface ResolveRouteParams {
-  /** 菜单 url */
-  url: string
-  /** 路径前缀，由调用方在传入前完成合并 */
-  pathPrefix?: string
-}
+import type { MenuExtra, ResolveRouteParams, ResolvedRouteInfo } from './types'
 
 /**
  * 规范化路径
- * @param path - 原始路径
- * @returns 规范化后的路径
- * @description 统一处理路径规范化：添加前导斜杠、移除 query、hash 和末尾斜杠
+ *
  * @example
  * normalizePath('path') => '/path'
- * normalizePath('/path?id=1#hash') => '/path'
+ * normalizePath('/path?id=1') => '/path'
  * normalizePath('/path/') => '/path'
  * normalizePath('/') => '/'
  */
@@ -30,8 +18,9 @@ export function normalizePath(path: string) {
   if (!path.startsWith('/')) {
     path = '/' + path
   }
-  // 移除 query 和 hash：/xxx?id=1#hash -> /xxx
-  path = path.replace(/[?#].*$/, '')
+  // 移除 query
+  // /xxx?id=1 -> /xxx
+  path = path.replace(/\?.*$/, '')
   // 合并连续斜杠：/a//b -> /a/b
   path = path.replace(/\/{2,}/g, '/')
   // 移除末尾斜杠（但保留根路径 /）：/xxx/ -> /xxx
@@ -82,20 +71,42 @@ const formatPathSegment = (url: string, separator: string = '') => {
 }
 
 /**
+ * 解析路径前缀
+ *
+ * 优先从 url 中匹配已注册的微应用前缀（如 /coms/#/、/crm/），
+ * 未匹配到时按优先级取兜底值 routeBase > pathPrefix。
+ */
+export function resolvePathPrefix(params: {
+  url: string
+  pathPrefix?: string
+  routeBase?: string
+  registeredPrefixes?: string[]
+}): string {
+  const url = normalizePath(params.url)
+  const matchedPrefix = params.registeredPrefixes?.find((prefix) =>
+    url.startsWith(prefix),
+  )
+  if (matchedPrefix) return matchedPrefix
+  return params.routeBase || params.pathPrefix || ''
+}
+
+/**
  * 解析 URL 并生成路径和组件信息
  */
 export function resolveRoute(params: ResolveRouteParams): ResolvedRouteInfo {
-  // TODO: url 携带 /crm 前缀如何处理？
   const url = normalizePath(params.url)
+  const pathPrefix = resolvePathPrefix(params)
+  const path = normalizePath(pathPrefix + url)
 
-  const filePath = formatPathSegment(url, '/')
-  const componentName = formatPathSegment(url)
-  const path = normalizePath(params.pathPrefix + url)
+  // 基于 path 计算，但需移除 pathPrefix
+  const pathWithoutPrefix = normalizePath(path.replace(pathPrefix, ''))
+  const filePath = formatPathSegment(pathWithoutPrefix, '/')
+  const name = formatPathSegment(pathWithoutPrefix)
 
   return {
-    url,
+    name,
     path,
     filePath,
-    componentName,
+    pathPrefix,
   }
 }

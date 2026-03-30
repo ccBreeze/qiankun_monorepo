@@ -6,13 +6,16 @@ import { shallowReactive } from 'vue'
 import { DynamicRoute, type MenuRoute } from '@breeze/qiankun-shared'
 import type { UserData } from '@/types/user'
 import { useRoute } from 'vue-router'
+import {
+  type MicroAppConfig,
+  microAppRegistry,
+  resolvePathPrefix,
+} from '@/views/MicroApp/utils/registry'
 
 interface MenuModule {
   title: string
   iconName: string
-  // TODO: HashHistory 是如何处理的？
-  /** 兜底，仅兼容旧的菜单路径配置 */
-  fallbackPathPrefix?: string
+  packageName: MicroAppConfig['packageName']
   /** 子应用首页路径 */
   appHomePath: string
   menuRoutes: MenuRoute[]
@@ -25,14 +28,13 @@ const menuModuleConfigs = [
     menuKey: 'coms8ReadFunctionList',
     title: '餐饮管理',
     iconName: 'menu-catering-management',
-    // TODO: 支持 HashHistory
-    fallbackPathPrefix: '/ocrm/',
+    packageName: 'ocrm',
   },
   {
     menuKey: 'crmReadFunctionList',
     title: '会员管理',
     iconName: 'menu-membership-management',
-    fallbackPathPrefix: '/crm/',
+    packageName: 'candao-crm',
   },
 ] as const
 
@@ -81,9 +83,11 @@ export const useMenuStore = defineStore('menu', () => {
         continue
       }
 
+      const pathPrefix = resolvePathPrefix(item.packageName)
       const dynamicRoute = DynamicRoute.create(menuData, {
         menuKey: item.menuKey,
-        pathPrefix: item.fallbackPathPrefix,
+        pathPrefix,
+        registeredPrefixes: [...microAppRegistry.keys()],
       })
       const menuRoutes = dynamicRoute.rootRoutes
       const appHomePath = findFirstLeafPath(menuRoutes)

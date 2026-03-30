@@ -1,6 +1,7 @@
-interface MicroAppConfig {
+export interface MicroAppConfig {
   /** 微应用包名，用于生成路由前缀 */
   packageName: string
+  pathPrefix?: string
 }
 
 export interface RegistrableMicroApp extends MicroAppConfig {
@@ -15,10 +16,14 @@ export interface RegistrableMicroApp extends MicroAppConfig {
 /** 所有微应用的静态配置列表 */
 const microAppConfigs = [
   {
-    packageName: 'candao-crm-v8',
+    packageName: 'ocrm',
+    pathPrefix: '/ocrm/#/',
   },
   {
     packageName: 'candao-crm',
+  },
+  {
+    packageName: 'candao-crm-v8',
   },
 ]
 
@@ -36,7 +41,8 @@ const getPathPrefix = (packageName: string) => {
 const createMicroAppRegistryEntry = (
   microAppConfig: MicroAppConfig,
 ): [string, RegistrableMicroApp] => {
-  const pathPrefix = getPathPrefix(microAppConfig.packageName)
+  const pathPrefix =
+    microAppConfig.pathPrefix || getPathPrefix(microAppConfig.packageName)
 
   return [
     pathPrefix,
@@ -50,3 +56,17 @@ const createMicroAppRegistryEntry = (
 export const microAppRegistry = new Map(
   microAppConfigs.map(createMicroAppRegistryEntry),
 )
+
+/**
+ * 根据 packageName 从注册表中查找对应的 pathPrefix
+ *
+ * @throws 找不到时抛出错误，确保配置一致性
+ */
+export const resolvePathPrefix = (packageName: string): string => {
+  for (const [, app] of microAppRegistry) {
+    if (app.packageName === packageName) return app.pathPrefix
+  }
+  throw new Error(
+    `[MicroApp] 未在注册表中找到 packageName "${packageName}"，请检查 microAppConfigs 配置`,
+  )
+}

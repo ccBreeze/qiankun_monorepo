@@ -23,23 +23,23 @@ const menuModuleConfigs = [
     menuKey: 'coms8ReadFunctionList',
     title: '餐饮管理',
     iconName: 'menu-catering-management',
-    fallbackPathPrefix: '/ocrm/',
+    packageName: 'ocrm',
   },
   {
     menuKey: 'crmReadFunctionList',
     title: '会员管理',
     iconName: 'menu-membership-management',
-    fallbackPathPrefix: '/crm/',
+    packageName: 'candao-crm',
   },
 ] as const
 ```
 
-| 字段                 | 说明                                                       |
-| -------------------- | ---------------------------------------------------------- |
-| `menuKey`            | 对应 `UserData` 中的字段名，后端下发的菜单数据从此字段读取 |
-| `title`              | 菜单分组的显示名称                                         |
-| `iconName`           | 菜单分组图标，用于顶部导航渲染                             |
-| `fallbackPathPrefix` | 路径前缀，传递给 `DynamicRoute` 的 `pathPrefix`            |
+| 字段          | 说明                                                                                     |
+| ------------- | ---------------------------------------------------------------------------------------- |
+| `menuKey`     | 对应 `UserData` 中的字段名，后端下发的菜单数据从此字段读取                               |
+| `title`       | 菜单分组的显示名称                                                                       |
+| `iconName`    | 菜单分组图标，用于顶部导航渲染                                                           |
+| `packageName` | 微应用包名，通过 `resolvePathPrefix` 从注册表查找对应的 `pathPrefix` 传给 `DynamicRoute` |
 
 ### `menuModuleConfigs` 和 `microAppConfigs` 不是一回事
 
@@ -51,13 +51,13 @@ const menuModuleConfigs = [
     menuKey: 'coms8ReadFunctionList',
     title: '餐饮管理',
     iconName: 'menu-catering-management',
-    fallbackPathPrefix: '/ocrm/',
+    packageName: 'ocrm',
   },
   {
     menuKey: 'crmReadFunctionList',
     title: '会员管理',
     iconName: 'menu-membership-management',
-    fallbackPathPrefix: '/crm/',
+    packageName: 'candao-crm',
   },
 ] as const
 ```
@@ -65,10 +65,14 @@ const menuModuleConfigs = [
 ```ts [apps/main-app/src/views/MicroApp/utils/registry.ts]
 const microAppConfigs = [
   {
-    packageName: 'candao-crm-v8',
+    packageName: 'ocrm',
+    pathPrefix: '/ocrm/#/',
   },
   {
     packageName: 'candao-crm',
+  },
+  {
+    packageName: 'candao-crm-v8',
   },
 ]
 ```
@@ -120,9 +124,11 @@ const buildAllMenus = (userData: UserData): void => {
     // [!code focus]
     // 1. 创建 DynamicRoute 实例（内部完成路由树构建 + 匹配器注册）
     // [!code focus]
+    const pathPrefix = resolvePathPrefix(item.packageName) // [!code focus]
     const dynamicRoute = DynamicRoute.create(menuData, {
       menuKey: item.menuKey, // [!code focus]
-      pathPrefix: item.fallbackPathPrefix, // [!code focus]
+      pathPrefix, // [!code focus]
+      registeredPrefixes: [...microAppRegistry.keys()], // [!code focus]
     }) // [!code focus]
 
     // [!code focus]
@@ -183,7 +189,8 @@ const buildAllMenus = (userData: UserData): void => {
     "parentCode": "00020001",
     "parentPath": "/crm/00020001",
     "menuKey": "crmReadFunctionList",
-    "componentName": "CouponListTemp"
+    "filePath": "CouponListTemp",
+    "pathPrefix": "/crm/"
   },
   "children": [
     {
@@ -197,7 +204,8 @@ const buildAllMenus = (userData: UserData): void => {
         "menuKey": "crmReadFunctionList",
         "activeMenuPath": "/couponListTemp",
         "isHiddenMenu": true,
-        "componentName": "CouponDetail"
+        "filePath": "CouponDetail",
+        "pathPrefix": "/crm/"
       }
     },
     {
@@ -211,7 +219,8 @@ const buildAllMenus = (userData: UserData): void => {
         "menuKey": "crmReadFunctionList",
         "activeMenuPath": "/couponListTemp",
         "isHiddenMenu": true,
-        "componentName": "CreatCouponTemp"
+        "filePath": "CreatCouponTemp",
+        "pathPrefix": "/crm/"
       }
     }
   ]
@@ -233,7 +242,7 @@ const buildAllMenus = (userData: UserData): void => {
 interface MenuModule {
   title: string
   iconName: string
-  fallbackPathPrefix?: string
+  packageName: MicroAppConfig['packageName']
   /** 子应用首页路径 */
   appHomePath: string
   menuRoutes: MenuRoute[]
