@@ -105,16 +105,17 @@ export class RouteTreeBuilder {
    * @returns 路由节点
    */
   private createRouteNode(item: RawMenuItem): MenuRoute {
-    const { transformResolvedRoute, pathPrefix } = this.options
+    const { transformResolvedRoute } = this.options
     const extraInfo = resolveExtraInfo(item.icon)
-    // 兼容旧的 extraInfo.pathPrefix（已废弃），优先级高于全局 pathPrefix
-    const effectivePathPrefix = extraInfo.pathPrefix || pathPrefix || ''
+
     const resolvedRoute = resolveRoute({
       url: item.url,
-      pathPrefix: effectivePathPrefix,
+      routeBase: extraInfo.routeBase,
+      pathPrefix: this.options.pathPrefix,
+      registeredPrefixes: this.options.registeredPrefixes,
     })
     // 业务自定义数据
-    const { componentName, ...routeInfo } = transformResolvedRoute
+    const { name, filePath, pathPrefix, ...routeInfo } = transformResolvedRoute
       ? transformResolvedRoute(resolvedRoute, extraInfo)
       : resolvedRoute
 
@@ -123,11 +124,13 @@ export class RouteTreeBuilder {
       ...extraInfo,
       menuKey: this.menuKey,
       parentPath: undefined, // 暂时留空，建立父子关系时填充
-      componentName,
+      filePath,
+      pathPrefix,
     }
 
     return {
       ...routeInfo,
+      name,
       meta,
     }
   }

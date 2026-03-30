@@ -34,12 +34,16 @@ packages/qiankun-shared/src/router/
 | `ResolvedRouteInfo`   | `resolveRoute` 的返回值，同时作为 `transformResolvedRoute` 的返回类型（纯路由字段，不含 `extraInfo`） |
 
 ::: details MenuRouteMeta 的组成
-`MenuRouteMeta` 继承自 `RawMenuItem`、`MenuExtra`、`Pick<DynamicRouteOptions, 'menuKey'>`，并额外补充两个运行时字段：
+`MenuRouteMeta` 继承自 `RawMenuItem`、`MenuExtra`、`Pick<ResolvedRouteInfo, 'pathPrefix' | 'filePath'>`，并额外补充运行时字段：
 
 - `parentPath`：父菜单路径，建树阶段填充
-- `componentName`：组件名称，用于 keep-alive
+- `menuKey`：菜单分组标识
 
 它是组件和匹配器统一依赖的类型，避免各处分别引用多个源类型。
+:::
+
+::: details MenuRoute 的组成
+`MenuRoute` 继承自 `Pick<ResolvedRouteInfo, 'name' | 'path' | 'component'>`，其中 `name` 同时作为 vue-router 的路由名称和 keep-alive 的匹配标识。
 :::
 
 ## parsers.ts
@@ -56,7 +60,7 @@ normalizePath('/order/list?id=1') // => '/order/list'
 normalizePath('/order//list/') // => '/order/list'
 ```
 
-它不只是给 `resolveRoute` 用，也被 `RouteMatcher.resolvePathToRoute()` 复用，这意味着 query/hash 不会影响菜单命中。
+它不只是给 `resolveRoute` 用，也被 `RouteMatcher.resolvePathToRoute()` 复用，这意味着 query 不会影响菜单命中。注意 hash 不会被移除，以支持 hash history 模式的路由前缀（如 `/ocrm/#/`）。
 
 ### `resolveExtraInfo(iconStr)`
 
@@ -68,19 +72,23 @@ normalizePath('/order//list/') // => '/order/list'
 | `isHiddenMenu`          | 隐藏菜单标记，不出现在侧边栏，但保留在路径匹配和祖先链中        |
 | `activeMenuPath`        | 指定激活时应选中的菜单路径；设置后 `isHiddenMenu` 自动为 `true` |
 | `hiddenMenu` _(已废弃)_ | 旧版隐藏标记，自动归一化为 `isHiddenMenu`                       |
-| `pathPrefix` _(已废弃)_ | 菜单路径前缀，建议直接在 `url` 中拼接完整路径                   |
+| `routeBase` _(已废弃)_  | 菜单路径前缀（兜底），建议直接在 `url` 中拼接完整路径           |
+
+### `resolvePathPrefix(params)`
+
+解析路径前缀。优先从 url 中匹配已注册的微应用前缀（如 `/ocrm/#/`、`/crm/`），未匹配到时按优先级取兜底值 `routeBase` > `pathPrefix`。
 
 ### `resolveRoute(params)`
 
-根据 url 解析信息：
+根据 url 解析路由信息。内部调用 `resolvePathPrefix` 确定前缀后，生成以下字段：
 
-| 输出字段        | 来源                                                                           |
-| --------------- | ------------------------------------------------------------------------------ |
-| `url`           | 经 `normalizePath` 规范化后的菜单 URL                                          |
-| `path`          | `pathPrefix + url` 规范化后的路由路径                                          |
-| `filePath`      | URL 各段首字母大写后用 `/` 拼接（如 `/user/profile` → `User/Profile`）         |
-| `componentName` | URL 各段首字母大写后直接拼接，PascalCase（如 `/user/profile` → `UserProfile`） |
-| `component`     | 默认不生成，交给 `transformResolvedRoute` 自定义                               |
+| 输出字段     | 来源                                                                                                                                                 |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`       | 基于去除前缀后的路径，各段首字母大写后直接拼接，PascalCase（如 `/user/profile` → `UserProfile`）。同时作为 vue-router 路由名称和 keep-alive 匹配标识 |
+| `path`       | `pathPrefix + url` 规范化后的完整路由路径                                                                                                            |
+| `filePath`   | 基于去除前缀后的路径，各段首字母大写后用 `/` 拼接（如 `/user/profile` → `User/Profile`）                                                             |
+| `pathPrefix` | 实际生效的路径前缀                                                                                                                                   |
+| `component`  | 默认不生成，交给 `transformResolvedRoute` 自定义                                                                                                     |
 
 ## RouteTreeBuilder.ts
 

@@ -29,32 +29,11 @@ export interface MenuExtra {
   isHiddenMenu?: boolean
   /** 指定激活时应选中的菜单路径（定义后 isHiddenMenu = true） */
   activeMenuPath?: string
+
   /** @deprecated 使用 isHiddenMenu 代替 */
   hiddenMenu?: boolean
-  /** @deprecated 应直接在 url 中拼接完整路径，无需单独指定 pathPrefix */
-  pathPrefix?: string
-}
-
-/**
- * 菜单元信息
- */
-export interface MenuRouteMeta
-  extends RawMenuItem, MenuExtra, Pick<DynamicRouteOptions, 'menuKey'> {
-  /** 父菜单路径 */
-  parentPath?: string
-  /** 组件名称（用于 keep-alive） */
-  componentName?: string
-}
-
-/**
- * 解析后的菜单数据
- */
-export interface MenuRoute {
-  path: string
-  meta: MenuRouteMeta
-  /** 组件路径 */
-  component?: string
-  children?: MenuRoute[]
+  /** @deprecated 应直接在 url 中拼接完整路径，无需单独指定 routeBase */
+  routeBase?: string
 }
 
 /**
@@ -62,16 +41,28 @@ export interface MenuRoute {
  * 作为 transformResolvedRoute 的返回值类型
  */
 export interface ResolvedRouteInfo {
-  /** 规范化后的原始菜单 URL（如 /datainput/brand） */
-  url: string
+  /**
+   * 路由名称（PascalCase，如 UserProfile）
+   *
+   * 用途：
+   * 1. vue-router addRoute 注册动态路由的 name
+   * 2. vue keep-alive 的 include/exclude 匹配标识
+   */
+  name: string
   /** 路由路径（含前缀），用于 router 跳转 */
   path: string
-  /** 文件路径（首字母大写，如 Datainput/Brand） */
-  filePath: string
-  /** 组件名称（PascalCase，用于 keep-alive，如 UserProfile） */
-  componentName: string
   /** 组件文件路径，业务层可通过 transformResolvedRoute 覆盖 */
   component?: string
+
+  /**
+   * 文件路径（首字母大写，如 Datainput/Brand）
+   *
+   * 在业务层通过 import.meta.glob() 获取所有页面的组件
+   * 补全 MenuRoute.component 后调用 router.addRoute 实现动态路由
+   */
+  filePath: string
+  /** 路由前缀（用于区分微应用） */
+  pathPrefix: string
 }
 
 /**
@@ -86,15 +77,56 @@ export type TransformResolvedRoute<
  * DynamicRoute 构造函数选项
  */
 export interface DynamicRouteOptions {
-  // TODO: 需要兼容旧的系统路由
-  // TODO: 如果是 hashHistory 如何处理
-  /** @deprecated 应直接在 url 中拼接完整路径，无需单独指定 pathPrefix */
+  /**
+   * @deprecated 应直接在 url 中拼接完整路径，无需单独指定 pathPrefix
+   *
+   * 主要为了兼容旧项目的配置
+   */
   pathPrefix?: string
   /** 菜单分组标识，写入每条路由的 meta 中，主应用据此判断当前路由属于哪个菜单分组 */
   menuKey?: string
+  /**
+   * 已注册的微应用路径前缀列表
+   *
+   * 当菜单 url 已包含其中某个前缀时，不再拼接 pathPrefix（兜底值）
+   */
+  registeredPrefixes?: string[]
   /**
    * 自定义 URL 解析结果转换函数
    * 在默认解析逻辑完成后调用，允许业务层完全自定义解析结果
    */
   transformResolvedRoute?: TransformResolvedRoute
+}
+
+/**
+ * resolveRoute 参数
+ */
+export interface ResolveRouteParams
+  extends
+    Pick<RawMenuItem, 'url'>,
+    Pick<DynamicRouteOptions, 'pathPrefix' | 'registeredPrefixes'>,
+    Pick<MenuExtra, 'routeBase'> {}
+
+/**
+ * 菜单元信息
+ */
+export interface MenuRouteMeta
+  extends
+    RawMenuItem,
+    MenuExtra,
+    Pick<ResolvedRouteInfo, 'pathPrefix' | 'filePath'> {
+  /** 父菜单路径 */
+  parentPath?: string
+  menuKey: DynamicRouteOptions['menuKey']
+}
+
+/**
+ * 解析后的菜单数据
+ */
+export interface MenuRoute extends Pick<
+  ResolvedRouteInfo,
+  'name' | 'path' | 'component'
+> {
+  meta: MenuRouteMeta
+  children?: MenuRoute[]
 }
