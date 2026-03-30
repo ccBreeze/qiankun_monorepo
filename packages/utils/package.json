@@ -1,0 +1,27 @@
+{
+  "name": "@breeze/utils",
+  "version": "1.0.0",
+  "description": "通用工具函数库",
+  "type": "module",
+  "exports": {
+    "./constants": "./src/constants/index.ts",
+    "./env": "./src/env.ts",
+    "./request": "./src/request/index.ts"
+  },
+  "scripts": {
+    "type-check": "tsc",
+    "lint": "eslint . --max-warnings=0 --cache",
+    "lint:fix": "eslint . --fix --cache"
+  },
+  "dependencies": {
+    "axios": "catalog:",
+    "crypto-js": "catalog:",
+    "lru-cache": "catalog:"
+  },
+  "devDependencies": {
+    "@breeze/eslint-config": "workspace:*",
+    "@types/crypto-js": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
+  }
+}

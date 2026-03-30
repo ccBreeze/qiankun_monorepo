@@ -7,6 +7,14 @@
     "figma": {
       "type": "http",
       "url": "https://mcp.figma.com/mcp"
+    },
+    "feishu-mcp": {
+      "type": "http",
+      "url": "https://mcp.feishu.cn/mcp/mcp_5jsrBPaGYEuFnMdbaebUnKeRqxm2VaxMbTyyjbPbSXiqOWo2Wa3HiCFYNhziiImjwJwq_w7MORk"
+    },
+    "drawio": {
+      "command": "npx",
+      "args": ["-y", "drawio-mcp-server", "--editor"]
     }
   }
 }

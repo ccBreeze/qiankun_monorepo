@@ -1,17 +1,13 @@
 import type { Linter } from 'eslint'
-import eslintConfigPrettier from 'eslint-config-prettier'
-import prettierPlugin from 'eslint-plugin-prettier'
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 
-export const prettier: Linter.Config[] = [
-  // 关闭与 Prettier 冲突的 ESLint 规则
-  eslintConfigPrettier,
-  {
-    // 启用 prettier/prettier 规则，将 Prettier 格式问题作为 ESLint 报错
-    plugins: {
-      prettier: prettierPlugin,
-    },
-    rules: {
-      'prettier/prettier': 'error',
-    },
-  },
-]
+/**
+ * 使用官方推荐配置，一次性完成：
+ * 1. 关闭所有与 Prettier 冲突的 ESLint 规则（eslint-config-prettier）
+ * 2. 注册 prettier 插件并启用 prettier/prettier 规则
+ *
+ * ⚠️ 必须放在配置数组的最后，确保 eslint-config-prettier 能覆盖前面所有规则中的格式规则
+ *
+ * @see https://github.com/prettier/eslint-plugin-prettier#recommended-configuration
+ */
+export const prettier = [eslintPluginPrettierRecommended]

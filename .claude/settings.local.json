@@ -1,21 +1,34 @@
 {
   "permissions": {
     "allow": [
-      "WebSearch",
-      "WebFetch(domain:*)",
-      "Bash(node -e:*)",
-      "Bash(cat:*)",
+      "Bash(ls:*)",
       "Bash(tree:*)",
+      "Bash(wc:*)",
       "Bash(mkdir:*)",
       "Bash(mv:*)",
+
+      "Bash(git mv:*)",
+      "Bash(gh api repos:*)",
+
+      "Bash(pnpm:*)",
+      "Bash(npm view:*)",
       "Bash(npx tsc:*)",
-      "Bash(ls:*)",
+      "Bash(npx eslint:*)",
+      "Bash(npx stylelint:*)",
+      "Bash(npx prettier:*)",
+
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:www.npmjs.com)",
+
+      "mcp__drawio__*",
       "mcp__chrome-devtools__*",
       "mcp__figma__*",
-      "Bash(npx eslint:*)",
-      "Bash(pnpm:*)"
+      "mcp__feishu-mcp__fetch-doc",
+      "mcp__feishu-mcp__update-doc"
     ]
   },
-  "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": ["chrome-devtools", "figma"]
+  "enabledMcpjsonServers": ["feishu-mcp", "drawio"],
+  "disabledMcpjsonServers": ["chrome-devtools", "figma"]
 }
