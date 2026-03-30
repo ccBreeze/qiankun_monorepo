@@ -29,7 +29,7 @@ const menuModuleConfigs = [
     menuKey: 'crmReadFunctionList',
     title: '会员管理',
     iconName: 'menu-membership-management',
-    packageName: 'candao-crm',
+    packageName: 'breeze-crm',
   },
 ] as const
 ```
@@ -57,7 +57,7 @@ const menuModuleConfigs = [
     menuKey: 'crmReadFunctionList',
     title: '会员管理',
     iconName: 'menu-membership-management',
-    packageName: 'candao-crm',
+    packageName: 'breeze-crm',
   },
 ] as const
 ```
@@ -69,10 +69,10 @@ const microAppConfigs = [
     pathPrefix: '/ocrm/#/',
   },
   {
-    packageName: 'candao-crm',
+    packageName: 'breeze-crm',
   },
   {
-    packageName: 'candao-crm-v8',
+    packageName: 'breeze-crm-v8',
   },
 ]
 ```

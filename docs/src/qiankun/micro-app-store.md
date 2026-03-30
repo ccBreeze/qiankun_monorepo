@@ -38,8 +38,8 @@ export const useMicroAppStore = defineStore('microApp', () => {
 
 | 当前路径           | 匹配结果                           |
 | ------------------ | ---------------------------------- |
-| `/crm-v8/home`     | `candao-crm-v8`（匹配 `/crm-v8/`） |
-| `/crm/member/list` | `candao-crm`（匹配 `/crm/`）       |
+| `/crm-v8/home`     | `breeze-crm-v8`（匹配 `/crm-v8/`） |
+| `/crm/member/list` | `breeze-crm`（匹配 `/crm/`）       |
 | `/login`           | `undefined`（无匹配）              |
 
 ### 这个匹配结果只能决定“微应用归属”
@@ -59,7 +59,7 @@ export const useMicroAppStore = defineStore('microApp', () => {
 :::
 
 ::: warning 注册顺序的影响
-`microAppRegistry` 是一个 `Map`，遍历顺序与插入顺序一致。如果存在路由前缀相互包含的情况（如 `/crm/` 和 `/crm-v8/`），需要确保更长的前缀排在前面，否则 `/crm-v8/home` 可能被 `/crm/` 错误匹配。当前配置中 `candao-crm-v8` 排在 `candao-crm` 之前，因此匹配顺序是正确的。
+`microAppRegistry` 是一个 `Map`，遍历顺序与插入顺序一致。如果存在路由前缀相互包含的情况（如 `/crm/` 和 `/crm-v8/`），需要确保更长的前缀排在前面，否则 `/crm-v8/home` 可能被 `/crm/` 错误匹配。当前配置中 `breeze-crm-v8` 排在 `breeze-crm` 之前，因此匹配顺序是正确的。
 :::
 
 ## 被谁使用

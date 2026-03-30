@@ -43,7 +43,7 @@ interface ManageActionRequest {
 
 /**
  * 根据 actionName 加载对应的 mock 数据
- * actionName: candao.account.login -> data/candao.account.login.json
+ * actionName: breeze.account.login -> data/breeze.account.login.json
  */
 const loadMockData = async (actionName: string) => {
   if (!isSafeActionName(actionName)) {
@@ -65,7 +65,7 @@ const loadMockData = async (actionName: string) => {
  * POST /ManageAction
  *
  * 根据 actionName 自动匹配 data 目录下的 json 文件
- * 例如: candao.account.login -> data/candao.account.login.json
+ * 例如: breeze.account.login -> data/breeze.account.login.json
  */
 export default defineEventHandler(async (event) => {
   // 模拟网络延迟

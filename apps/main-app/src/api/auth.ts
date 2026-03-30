@@ -6,7 +6,7 @@ import type { LoginParams, LoginResult } from './types/auth'
 export const loginApi = (content: LoginParams) => {
   return postDC<LoginResult>(
     {
-      actionName: 'candao.account.login',
+      actionName: 'breeze.account.login',
       content,
     },
     {

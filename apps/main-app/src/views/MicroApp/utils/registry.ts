@@ -20,20 +20,20 @@ const microAppConfigs = [
     pathPrefix: '/ocrm/#/',
   },
   {
-    packageName: 'candao-crm',
+    packageName: 'breeze-crm',
   },
   {
-    packageName: 'candao-crm-v8',
+    packageName: 'breeze-crm-v8',
   },
 ]
 
 /**
  * 获取路由路径前缀
  *
- * eg: `candao-crm` → `/crm/`
+ * eg: `breeze-crm` → `/crm/`
  */
 const getPathPrefix = (packageName: string) => {
-  const routeSegment = packageName.replace(/^candao-/, '')
+  const routeSegment = packageName.replace(/^breeze-/, '')
   return `/${routeSegment}/`
 }
 

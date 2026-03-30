@@ -4,7 +4,7 @@ import { postDC } from '@/utils/request'
 export const getEnumsApi = () => {
   return postDC(
     {
-      actionName: 'candao.system.getEnums',
+      actionName: 'breeze.system.getEnums',
     },
     {
       useCache: true,
