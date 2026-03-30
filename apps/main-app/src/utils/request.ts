@@ -34,7 +34,7 @@ instance.interceptors.response.use(
 /** 增强器配置 */
 const enhanceRequest = createEnhanceRequest({
   onError: (error) => {
-    const msg = error?.msg || '未知错误'
+    const msg = error.response?.data.msg || '未知错误'
     message.error(msg)
   },
   onSuccess: (data) => {
