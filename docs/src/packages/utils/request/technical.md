@@ -218,8 +218,11 @@ interface RequestEnhancerConfig {
   retry?: boolean | RetryConfig
 }
 
-/** 消息提示函数类型 */
-type MessageFn = (res: ApiResponse | null) => void
+/** 成功消息提示函数类型 */
+type SuccessMessageFn = (res: ApiResponse | null) => void
+
+/** 错误消息提示函数类型 */
+type ErrorMessageFn = (error: AxiosError<ApiResponse>) => void
 
 /** 加载控制器接口 */
 interface LoadingController {
@@ -229,8 +232,8 @@ interface LoadingController {
 
 /** 增强器上下文配置 */
 interface EnhancerContext {
-  onError?: MessageFn // 错误消息处理器
-  onSuccess?: MessageFn // 成功消息处理器
+  onError?: ErrorMessageFn // 错误消息处理器
+  onSuccess?: SuccessMessageFn // 成功消息处理器
   loadingController?: LoadingController // Loading 控制器
   loadingDelay?: number // Loading 延迟时间（毫秒）
 }
@@ -484,9 +487,8 @@ import {
   createEnhanceRequest,
   type RequestData,
   type RequestConfig,
-} from '@breeze/utils'
+} from '@breeze/utils/request'
 import { useAuthStore } from '@/stores/auth'
-import { requestLoadingDelay } from '@/constant'
 import loading from '@/components/LoadingFullscreen'
 
 type PostConfig = Omit<RequestConfig, 'method' | 'url' | 'data'>
@@ -520,7 +522,7 @@ instance.interceptors.response.use(
 const enhanceRequest = createEnhanceRequest({
   // [!code focus]
   onError: (error) => {
-    const msg = error?.msg || '未知错误'
+    const msg = error.response?.data.msg || '未知错误'
     message.error(msg)
   }, // [!code focus]
   // [!code focus]
@@ -532,7 +534,6 @@ const enhanceRequest = createEnhanceRequest({
     show: (options) => loading(options),
     hide: () => loading.close(),
   }, // [!code focus]
-  loadingDelay: requestLoadingDelay, // [!code focus]
 }) // [!code focus]
 
 // 5. 创建通用请求（应用增强器） // [!code focus]

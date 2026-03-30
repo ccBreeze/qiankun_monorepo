@@ -2,6 +2,7 @@
  * 增强器模块内部类型定义
  */
 
+import type { AxiosError } from 'axios'
 import { type CACHE_STRATEGY } from '../constants'
 import type { ApiFn, ApiResponse, RequestConfig } from './common'
 
@@ -41,8 +42,11 @@ export interface RequestEnhancerConfig {
   retry?: boolean | RetryConfig
 }
 
-/** 消息提示函数类型 */
-export type MessageFn = (res: ApiResponse | null) => void
+/** 成功消息提示函数类型 */
+export type SuccessMessageFn = (res: ApiResponse | null) => void
+
+/** 错误消息提示函数类型 */
+export type ErrorMessageFn = (error: AxiosError<ApiResponse>) => void
 
 /** 加载控制器接口 */
 export interface LoadingController {
@@ -53,9 +57,9 @@ export interface LoadingController {
 /** 增强器上下文配置 */
 export interface EnhancerContext {
   /** 错误消息处理器 */
-  onError?: MessageFn
+  onError?: ErrorMessageFn
   /** 成功消息处理器 */
-  onSuccess?: MessageFn
+  onSuccess?: SuccessMessageFn
   /** Loading 控制器 */
   loadingController?: LoadingController
   /** Loading 延迟时间（毫秒） */

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import Home from '@/views/HomePage/index.vue'
 import { microAppRegistry } from '@/views/MicroApp/utils/registry'
+import { setupRouterGuard } from './guard'
 
 /**
  * 根据微应用注册表动态生成路由别名
@@ -37,5 +38,7 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 })
+
+setupRouterGuard(router)
 
 export default router
