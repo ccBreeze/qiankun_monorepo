@@ -1,0 +1,11 @@
+/** 文本溢出时显示省略号 */
+@mixin text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/** 隐藏滚动条 */
+@mixin hide-scrollbar {
+  scrollbar-width: none;
+}

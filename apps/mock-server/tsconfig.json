@@ -1,0 +1,8 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["nitropack"]
+  },
+  "include": ["**/*"],
+  "exclude": ["node_modules", ".nitro", ".output"]
+}

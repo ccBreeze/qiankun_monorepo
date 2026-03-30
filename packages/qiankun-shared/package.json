@@ -1,0 +1,22 @@
+{
+  "name": "@breeze/qiankun-shared",
+  "version": "1.0.0",
+  "description": "qiankun 微前端共享状态和通信模块",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "type-check": "tsc",
+    "lint": "eslint . --max-warnings=0 --cache",
+    "lint:fix": "eslint . --fix --cache"
+  },
+  "dependencies": {
+    "path-to-regexp": "catalog:",
+    "qiankun": "catalog:"
+  },
+  "devDependencies": {
+    "@breeze/eslint-config": "workspace:*",
+    "typescript": "catalog:"
+  }
+}

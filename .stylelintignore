@@ -8,3 +8,7 @@
 
 # 其他
 **/.husky/
+
+# 第三方/生成的主题变量
+# TEMP
+apps/main-app/src/assets/theme.css

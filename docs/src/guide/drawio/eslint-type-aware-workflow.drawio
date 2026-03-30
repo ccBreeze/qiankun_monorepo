@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile>
+  <diagram id="eslint-type-aware-workflow" name="ESLint 类型感知检查工作流程">
+    <mxGraphModel dx="1851" dy="1191" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- 标题 -->
+        <mxCell id="title" value="&lt;b&gt;ESLint 类型感知检查工作流程&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=20;fillColor=none;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="350" y="285" width="600" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- 步骤1: ESLint 扫描文件（入口/枢纽节点） -->
+        <mxCell id="step-scan" value="&lt;b&gt;ESLint 扫描文件&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe0b2;strokeColor=#E65100;strokeWidth=3;shadow=1;fontStyle=1;fontSize=14;arcSize=30;" vertex="1" parent="1">
+          <mxGeometry x="420" y="365" width="460" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- 步骤2: projectService 查找 tsconfig.json（核心节点） -->
+        <mxCell id="step-find-tsconfig" value="&lt;b&gt;projectService 从 tsconfigRootDir 查找最近的 tsconfig.json&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565C0;strokeWidth=3;shadow=1;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="420" y="465" width="460" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- 步骤3: 加载 TypeScript 编译器（核心节点） -->
+        <mxCell id="step-load-ts" value="&lt;b&gt;加载 TypeScript 编译器，构建类型信息&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565C0;strokeWidth=3;shadow=1;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="420" y="565" width="460" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- 步骤4: 类型感知规则执行检查（结果/功能节点） -->
+        <mxCell id="step-type-check" value="&lt;b&gt;类型感知规则获得完整类型，执行检查&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=3;shadow=1;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="420" y="665" width="460" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- 连接线: 步骤1 → 步骤2 -->
+        <mxCell id="edge-scan-to-find" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565C0;strokeWidth=4;endArrow=classic;endFill=1;jumpStyle=arc;jumpSize=6;" edge="1" source="step-scan" target="step-find-tsconfig" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 连接线: 步骤2 → 步骤3 -->
+        <mxCell id="edge-find-to-load" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565C0;strokeWidth=4;endArrow=classic;endFill=1;jumpStyle=arc;jumpSize=6;" edge="1" source="step-find-tsconfig" target="step-load-ts" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 连接线: 步骤3 → 步骤4 -->
+        <mxCell id="edge-load-to-check" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565C0;strokeWidth=4;endArrow=classic;endFill=1;jumpStyle=arc;jumpSize=6;" edge="1" source="step-load-ts" target="step-type-check" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
