@@ -31,7 +31,7 @@ export interface RegistrableMicroApp extends MicroAppConfig {
 
 | 字段          | 说明                                                                                                                                                                                      |
 | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `packageName` | 微应用的包名（如 `candao-crm`），是唯一标识                                                                                                                                               |
+| `packageName` | 微应用的包名（如 `breeze-crm`），是唯一标识                                                                                                                                               |
 | `pathPrefix`  | 路由前缀（如 `/crm/`），可在配置中显式指定（如 hash history 场景的 `/ocrm/#/`），否则由 `packageName` 自动派生。微应用需将其作为 `createWebHistory`/`createWebHashHistory` 的 `base` 参数 |
 
 ## 路由前缀生成规则
@@ -40,18 +40,18 @@ export interface RegistrableMicroApp extends MicroAppConfig {
 
 ```ts [apps/main-app/src/views/MicroApp/utils/registry.ts]
 const getPathPrefix = (packageName: string) => {
-  const routeSegment = packageName.replace(/^candao-/, '')
+  const routeSegment = packageName.replace(/^breeze-/, '')
   return `/${routeSegment}/`
 }
 ```
 
-转换规则：移除 `candao-` 前缀，加上前后斜杠。如果配置中显式指定了 `pathPrefix`，则直接使用，不走自动派生。
+转换规则：移除 `breeze-` 前缀，加上前后斜杠。如果配置中显式指定了 `pathPrefix`，则直接使用，不走自动派生。
 
 | packageName     | pathPrefix（显式指定） | pathPrefix（最终） |
 | --------------- | ---------------------- | ------------------ |
 | `ocrm`          | `/ocrm/#/`             | `/ocrm/#/`         |
-| `candao-crm`    | —                      | `/crm/`            |
-| `candao-crm-v8` | —                      | `/crm-v8/`         |
+| `breeze-crm`    | —                      | `/crm/`            |
+| `breeze-crm-v8` | —                      | `/crm-v8/`         |
 
 ## 注册表结构
 
@@ -68,8 +68,8 @@ export const microAppRegistry = new Map(
 | pathPrefix | packageName     |
 | ---------- | --------------- |
 | `/ocrm/#/` | `ocrm`          |
-| `/crm/`    | `candao-crm`    |
-| `/crm-v8/` | `candao-crm-v8` |
+| `/crm/`    | `breeze-crm`    |
+| `/crm-v8/` | `breeze-crm-v8` |
 
 ## 如何新增微应用
 
@@ -78,9 +78,9 @@ export const microAppRegistry = new Map(
 ```ts
 const microAppConfigs = [
   { packageName: 'ocrm', pathPrefix: '/ocrm/#/' },
-  { packageName: 'candao-crm' },
-  { packageName: 'candao-crm-v8' },
-  { packageName: 'candao-new-app' }, // 新增，pathPrefix 自动生成为 /new-app/
+  { packageName: 'breeze-crm' },
+  { packageName: 'breeze-crm-v8' },
+  { packageName: 'breeze-new-app' }, // 新增，pathPrefix 自动生成为 /new-app/
 ]
 ```
 

@@ -34,7 +34,7 @@ const menuModuleConfigs = [
     menuKey: 'crmReadFunctionList',
     title: '会员管理',
     iconName: 'menu-membership-management',
-    packageName: 'candao-crm',
+    packageName: 'breeze-crm',
   },
 ] as const
 
