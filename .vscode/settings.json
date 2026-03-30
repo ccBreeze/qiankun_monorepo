@@ -26,6 +26,6 @@
     "package.json": "package-lock.json, pnpm-lock.yaml, pnpm-workspace.yaml, .npmrc, .yarnrc*, yarn.lock, .gitattributes, .gitignore, .czrc, .lintstagedrc*, commitlint.config.*",
     "eslint.config.*": ".eslintcache, .eslintrc*, .prettier*, .editorconfig, stylelint.config.*, .stylelint*",
     "tsconfig.json": "tsconfig.*.json, *.tsbuildinfo, env.d.ts",
-    "vite.config.*": "vitest.config.*, postcss.config.*, tailwind.config.*, index.html"
+    "vite.config.*": "vitest.config.*, postcss.config.*, index.html"
   }
 }

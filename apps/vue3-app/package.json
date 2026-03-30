@@ -13,10 +13,11 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
     "lint": "eslint . --max-warnings=0 --cache",
-    "lint:fix": "eslint . --fix --cache",
-    "format": "prettier --write src/"
+    "lint:fix": "eslint . --fix --cache"
   },
   "dependencies": {
+    "@ant-design/icons-vue": "catalog:",
+    "ant-design-vue": "catalog:",
     "pinia": "catalog:",
     "vue": "catalog:",
     "vue-router": "catalog:"
@@ -32,7 +33,6 @@
     "@vue/tsconfig": "catalog:",
     "autoprefixer": "catalog:",
     "npm-run-all2": "catalog:",
-    "prettier": "catalog:",
     "sass": "catalog:",
     "tailwindcss": "catalog:",
     "typescript": "catalog:",
