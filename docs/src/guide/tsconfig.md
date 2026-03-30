@@ -436,12 +436,6 @@ describe('test', () => {}) // ❌ 类型错误 — jest 类型未加载
 }
 ```
 
-> [!NOTE] vue3-app 的 `include` 额外包含 `tailwind.config.*`：
->
-> ```jsonc
-> "include": ["vite.config.*", "tailwind.config.*"]
-> ```
-
 ### mock-server
 
 Nitro mock 服务器的配置，仅用于类型检查，不需要输出声明文件。

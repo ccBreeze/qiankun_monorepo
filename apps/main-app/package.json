@@ -11,8 +11,7 @@
     "preview": "vite preview",
     "type-check": "vue-tsc --build",
     "lint": "eslint . --max-warnings=0 --cache",
-    "lint:fix": "eslint . --fix --cache",
-    "format": "prettier . --write --cache"
+    "lint:fix": "eslint . --fix --cache"
   },
   "dependencies": {
     "@ant-design/icons-vue": "catalog:",
@@ -30,6 +29,8 @@
   "devDependencies": {
     "@breeze/eslint-config": "workspace:*",
     "@tailwindcss/postcss": "catalog:",
+    "@tsconfig/node24": "catalog:",
+    "@types/node": "catalog:",
     "@vitejs/plugin-vue": "catalog:",
     "@vitejs/plugin-vue-jsx": "catalog:",
     "@vue/eslint-config-typescript": "catalog:",

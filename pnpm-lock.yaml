@@ -297,6 +297,12 @@ importers:
       '@tailwindcss/postcss':
         specifier: 'catalog:'
         version: 4.1.18
+      '@tsconfig/node24':
+        specifier: 'catalog:'
+        version: 24.0.3
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.0.1
       '@vitejs/plugin-vue':
         specifier: 'catalog:'
         version: 6.0.3(vite@7.3.0(@types/node@25.0.1)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.97.3)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.25(typescript@5.9.3))
@@ -355,6 +361,12 @@ importers:
 
   apps/vue3-app:
     dependencies:
+      '@ant-design/icons-vue':
+        specifier: 'catalog:'
+        version: 7.0.1(vue@3.5.25(typescript@5.9.3))
+      ant-design-vue:
+        specifier: 'catalog:'
+        version: 4.2.6(vue@3.5.25(typescript@5.9.3))
       pinia:
         specifier: 'catalog:'
         version: 3.0.4(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3))
@@ -395,9 +407,6 @@ importers:
       npm-run-all2:
         specifier: 'catalog:'
         version: 8.0.4
-      prettier:
-        specifier: 'catalog:'
-        version: 3.7.4
       sass:
         specifier: 'catalog:'
         version: 1.97.3
