@@ -18,7 +18,8 @@ export class DynamicRoute {
   private options: DynamicRouteOptions
 
   constructor(options: DynamicRouteOptions = {}) {
-    options.pathPrefix = options.pathPrefix?.replace(/\/$/, '') ?? ''
+    options.fallbackActiveRule =
+      options.fallbackActiveRule?.replace(/\/$/, '') ?? ''
     this.options = options
   }
 

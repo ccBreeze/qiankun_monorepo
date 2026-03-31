@@ -22,7 +22,7 @@ workspace 内的包互相引用时，使用 `workspace:` 协议：
 {
   "dependencies": {
     "@breeze/utils": "workspace:*",
-    "@breeze/qiankun-shared": "workspace:*"
+    "@breeze/router": "workspace:*"
   }
 }
 ```

@@ -111,11 +111,11 @@ export class RouteTreeBuilder {
     const resolvedRoute = resolveRoute({
       url: item.url,
       routeBase: extraInfo.routeBase,
-      pathPrefix: this.options.pathPrefix,
-      registeredPrefixes: this.options.registeredPrefixes,
+      fallbackActiveRule: this.options.fallbackActiveRule,
+      registeredActiveRules: this.options.registeredActiveRules,
     })
     // 业务自定义数据
-    const { name, filePath, pathPrefix, ...routeInfo } = transformResolvedRoute
+    const { name, filePath, activeRule, ...routeInfo } = transformResolvedRoute
       ? transformResolvedRoute(resolvedRoute, extraInfo)
       : resolvedRoute
 
@@ -125,7 +125,7 @@ export class RouteTreeBuilder {
       menuKey: this.menuKey,
       parentPath: undefined, // 暂时留空，建立父子关系时填充
       filePath,
-      pathPrefix,
+      activeRule,
     }
 
     return {

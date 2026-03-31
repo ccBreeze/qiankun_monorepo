@@ -29,17 +29,17 @@ const menuModuleConfigs = [
     menuKey: 'crmReadFunctionList',
     title: '会员管理',
     iconName: 'menu-membership-management',
-    packageName: 'breeze-crm',
+    packageName: 'vue3-history',
   },
 ] as const
 ```
 
-| 字段          | 说明                                                                                     |
-| ------------- | ---------------------------------------------------------------------------------------- |
-| `menuKey`     | 对应 `UserData` 中的字段名，后端下发的菜单数据从此字段读取                               |
-| `title`       | 菜单分组的显示名称                                                                       |
-| `iconName`    | 菜单分组图标，用于顶部导航渲染                                                           |
-| `packageName` | 微应用包名，通过 `resolvePathPrefix` 从注册表查找对应的 `pathPrefix` 传给 `DynamicRoute` |
+| 字段          | 说明                                                                                                                                     |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `menuKey`     | 对应 `UserData` 中的字段名，后端下发的菜单数据从此字段读取                                                                               |
+| `title`       | 菜单分组的显示名称                                                                                                                       |
+| `iconName`    | 菜单分组图标，用于顶部导航渲染                                                                                                           |
+| `packageName` | 微应用包名，通过 `microAppRegistry.get(packageName)` 读取对应微应用配置，其中 `activeRule` 作为 `fallbackActiveRule` 传给 `DynamicRoute` |
 
 ### `menuModuleConfigs` 和 `microAppConfigs` 不是一回事
 
@@ -57,7 +57,7 @@ const menuModuleConfigs = [
     menuKey: 'crmReadFunctionList',
     title: '会员管理',
     iconName: 'menu-membership-management',
-    packageName: 'breeze-crm',
+    packageName: 'vue3-history',
   },
 ] as const
 ```
@@ -69,7 +69,7 @@ const microAppConfigs = [
     pathPrefix: '/ocrm/#/',
   },
   {
-    packageName: 'breeze-crm',
+    packageName: 'vue3-history',
   },
   {
     packageName: 'breeze-crm-v8',
@@ -79,10 +79,10 @@ const microAppConfigs = [
 
 两者都和“路由”有关，但解决的问题完全不同：
 
-| 配置                | 关注维度              | 主要作用                                 |
-| ------------------- | --------------------- | ---------------------------------------- |
-| `menuModuleConfigs` | 菜单分组 / 业务视角   | 决定当前路由属于哪个菜单分组             |
-| `microAppConfigs`   | 微应用注册 / 技术视角 | 根据 `pathPrefix` 决定应该加载哪个微应用 |
+| 配置                | 关注维度              | 主要作用                                                                            |
+| ------------------- | --------------------- | ----------------------------------------------------------------------------------- |
+| `menuModuleConfigs` | 菜单分组 / 业务视角   | 决定当前路由属于哪个菜单分组                                                        |
+| `microAppConfigs`   | 微应用注册 / 技术视角 | 根据 `pathPrefix` 决定应该加载哪个微应用，并提供 qiankun 所需的 `activeRule` 等配置 |
 
 这两个问题不是一一对应关系。
 
@@ -93,7 +93,7 @@ const microAppConfigs = [
 例如：
 
 - 顶部菜单“会员管理”是一个业务分组
-- 它下面既可能有 `/crm/...` 的页面，也可能有 `/crm-v8/...` 的页面
+- 它下面既可能有 `/vue3-history/...` 的页面，也可能有 `/crm-v8/...` 的页面
 - 这两个前缀会命中不同的微应用，但在菜单层面仍然属于同一个菜单分组
 
 因此菜单归属不能只做前缀匹配，而要依赖 `DynamicRoute` 生成出来的完整菜单路由表进行匹配。
@@ -114,21 +114,24 @@ const buildAllMenus = (userData: UserData): void => {
   resetMenus()
   if (Object.keys(userData).length === 0) return
 
+  const registeredActiveRules = [...microAppRegistry.values()].map(
+    (app) => app.activeRule,
+  )
+
   for (const item of menuModuleConfigs) {
     const menuData = userData[item.menuKey]
     if (!menuData?.length) {
-      console.warn('[Menu] 菜单数据为空', { menuKey: item.menuKey })
+      console.error('[Menu] 菜单数据为空', { menuKey: item.menuKey })
       continue
     }
 
     // [!code focus]
     // 1. 创建 DynamicRoute 实例（内部完成路由树构建 + 匹配器注册）
     // [!code focus]
-    const pathPrefix = resolvePathPrefix(item.packageName) // [!code focus]
     const dynamicRoute = DynamicRoute.create(menuData, {
       menuKey: item.menuKey, // [!code focus]
-      pathPrefix, // [!code focus]
-      registeredPrefixes: [...microAppRegistry.keys()], // [!code focus]
+      fallbackActiveRule: microAppRegistry.get(item.packageName)!.activeRule, // [!code focus]
+      registeredActiveRules, // [!code focus]
     }) // [!code focus]
 
     // [!code focus]
@@ -136,7 +139,7 @@ const buildAllMenus = (userData: UserData): void => {
     const menuRoutes = dynamicRoute.rootRoutes // [!code focus]
     const appHomePath = findFirstLeafPath(menuRoutes) // [!code focus]
     if (!appHomePath) {
-      console.warn('[Menu] 菜单路由树无叶子节点，跳过分组', {
+      console.error('[Menu] 菜单路由树无叶子节点，跳过分组', {
         menuKey: item.menuKey,
       })
       continue
@@ -155,6 +158,11 @@ const buildAllMenus = (userData: UserData): void => {
   }
 }
 ```
+
+这里有两个容易混淆的点：
+
+- `fallbackActiveRule` 来自微应用注册表里的 `activeRule`，用于在菜单 `url` 本身不带微应用前缀时兜底补齐
+- `registeredActiveRules` 仍然来自注册表里的 `activeRule` 列表，用于判断菜单 `url` 是否已经自带某个微应用前缀，避免重复拼接
 
 ::: tip DynamicRoute 与菜单分组的关系
 每个菜单分组拥有独立的 `DynamicRoute` 实例。这意味着不同分组（如餐饮管理、会员管理）的路由树相互隔离，各自维护自己的路由匹配器和路径祖先链。详见 [动态路由源码解析](/qiankun/dynamic-route)。
@@ -177,50 +185,50 @@ const buildAllMenus = (userData: UserData): void => {
 
 当前路由在菜单树中对应的 `MenuRoute`，跨模块匹配。未匹配到时为 `undefined`。
 
-::: details 示例：当前路由为 /crm/couponListTemp 时
+::: details 示例：当前路由为 /vue3-history/couponListTemp 时
 
 ```json
 {
-  "path": "/crm/couponListTemp",
+  "path": "/vue3-history/couponListTemp",
   "name": "CouponListTemp",
   "meta": {
     "name": "券模版",
     "code": "000200010001",
     "parentCode": "00020001",
-    "parentPath": "/crm/00020001",
+    "parentPath": "/vue3-history/00020001",
     "menuKey": "crmReadFunctionList",
     "filePath": "CouponListTemp",
-    "pathPrefix": "/crm/"
+    "activeRule": "/vue3-history/"
   },
   "children": [
     {
-      "path": "/crm/couponDetail",
+      "path": "/vue3-history/couponDetail",
       "name": "CouponDetail",
       "meta": {
         "name": "创建券模版",
         "code": "0002000100010002",
         "parentCode": "000200010001",
-        "parentPath": "/crm/couponListTemp",
+        "parentPath": "/vue3-history/couponListTemp",
         "menuKey": "crmReadFunctionList",
         "activeMenuPath": "/couponListTemp",
         "isHiddenMenu": true,
         "filePath": "CouponDetail",
-        "pathPrefix": "/crm/"
+        "activeRule": "/vue3-history/"
       }
     },
     {
-      "path": "/crm/creatCouponTemp",
+      "path": "/vue3-history/creatCouponTemp",
       "name": "CreatCouponTemp",
       "meta": {
         "name": "模版详情",
         "code": "0002000100010003",
         "parentCode": "000200010001",
-        "parentPath": "/crm/couponListTemp",
+        "parentPath": "/vue3-history/couponListTemp",
         "menuKey": "crmReadFunctionList",
         "activeMenuPath": "/couponListTemp",
         "isHiddenMenu": true,
         "filePath": "CreatCouponTemp",
-        "pathPrefix": "/crm/"
+        "activeRule": "/vue3-history/"
       }
     }
   ]

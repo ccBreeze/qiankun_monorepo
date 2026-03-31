@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "catalog:",
-    "@breeze/qiankun-shared": "workspace:*",
+    "@breeze/router": "workspace:*",
     "@breeze/utils": "workspace:*",
     "@vueuse/core": "catalog:",
     "ant-design-vue": "catalog:",

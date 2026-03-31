@@ -114,9 +114,6 @@ catalogs:
     prettier:
       specifier: ^3.7.4
       version: 3.7.4
-    qiankun:
-      specifier: ^2.10.16
-      version: 2.10.16
     sass:
       specifier: ^1.97.1
       version: 1.97.3
@@ -260,9 +257,9 @@ importers:
       '@ant-design/icons-vue':
         specifier: 'catalog:'
         version: 7.0.1(vue@3.5.25(typescript@5.9.3))
-      '@breeze/qiankun-shared':
+      '@breeze/router':
         specifier: workspace:*
-        version: link:../../packages/qiankun-shared
+        version: link:../../packages/router
       '@breeze/utils':
         specifier: workspace:*
         version: link:../../packages/utils
@@ -459,14 +456,11 @@ importers:
         specifier: 'catalog:'
         version: 8.49.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
 
-  packages/qiankun-shared:
+  packages/router:
     dependencies:
       path-to-regexp:
         specifier: 'catalog:'
         version: 6.3.0
-      qiankun:
-        specifier: 'catalog:'
-        version: 2.10.16
     devDependencies:
       '@breeze/eslint-config':
         specifier: workspace:*
@@ -3312,9 +3306,6 @@ packages:
     resolution: {integrity: sha512-TR3KfrTZTYLPB6jUjfx6MF9WcWrHL9su5TObK4ZkYgBdWKPOFoSoQIdEuTuR82pmtxH2spWG9h6etwfr1pLBqQ==}
     engines: {node: '>=6'}
 
-  import-html-entry@1.17.0:
-    resolution: {integrity: sha512-2SDsRlGlE8bqdnGqsOyiDPEWlzJR0jNW4LWopnZl5QE1Yd0nJ7fykWo2GaKUF7Jq7pR0g3dElhuJHyamTt1gPQ==}
-
   import-meta-resolve@4.2.0:
     resolution: {integrity: sha512-Iqv2fzaTQN28s/FwZAoFq0ZSs/7hMAHJVX+w8PZl3cY19Pxk6jFFalxQoIfW2826i/fDLXv8IiEZRIT0lDuWcg==}
 
@@ -4451,9 +4442,6 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
 
-  qiankun@2.10.16:
-    resolution: {integrity: sha512-Q3tSVUrPnzx8ckEOKIoPnhb5LE28FPKyan/r6jEuGJGqTbIy+3rp6E2/KfU82ZI4yZpef9LFTrnxdj49jAEsmw==}
-
   qified@0.5.3:
     resolution: {integrity: sha512-kXuQdQTB6oN3KhI6V4acnBSZx8D2I4xzZvn9+wFLLFCoBNQY/sFnCW6c43OL7pOQ2HvGV4lnWIXNmgfp7cTWhQ==}
     engines: {node: '>=20'}
@@ -4732,9 +4720,6 @@ packages:
   signal-exit@4.1.0:
     resolution: {integrity: sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==}
     engines: {node: '>=14'}
-
-  single-spa@5.9.5:
-    resolution: {integrity: sha512-9SQdmsyz4HSP+3gs6PJzhkaMEg+6zTlu9oxIghnwUX3eq+ajq4ft5egl0iyR55LAmO/UwvU8NgIWs/ZyQMa6dw==}
 
   sirv@3.0.2:
     resolution: {integrity: sha512-2wcC/oGxHis/BoHkkPwldgiPSYcpZK3JU28WoMVv55yHJgcZ8rlXvuG9iZggz+sU1d4bRgIGASwyWqjxu3FM0g==}
@@ -8527,10 +8512,6 @@ snapshots:
       parent-module: 1.0.1
       resolve-from: 4.0.0
 
-  import-html-entry@1.17.0:
-    dependencies:
-      '@babel/runtime': 7.28.4
-
   import-meta-resolve@4.2.0: {}
 
   imurmurhash@0.1.4: {}
@@ -9674,13 +9655,6 @@ snapshots:
 
   punycode@2.3.1: {}
 
-  qiankun@2.10.16:
-    dependencies:
-      '@babel/runtime': 7.28.4
-      import-html-entry: 1.17.0
-      lodash: 4.17.21
-      single-spa: 5.9.5
-
   qified@0.5.3:
     dependencies:
       hookified: 1.14.0
@@ -10019,8 +9993,6 @@ snapshots:
   signal-exit@3.0.7: {}
 
   signal-exit@4.1.0: {}
-
-  single-spa@5.9.5: {}
 
   sirv@3.0.2:
     dependencies:
