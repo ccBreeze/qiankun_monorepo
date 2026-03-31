@@ -5,8 +5,8 @@ import { microAppRegistry } from '@/views/MicroApp/utils/registry'
 
 /** 根据路由路径匹配对应的微应用配置 */
 const findMicroAppByPath = (path: string) => {
-  for (const [pathPrefix, microApp] of microAppRegistry) {
-    if (path.startsWith(pathPrefix)) {
+  for (const microApp of microAppRegistry.values()) {
+    if (path.startsWith(microApp.activeRule)) {
       return microApp
     }
   }

@@ -5,12 +5,12 @@ outline: [2, 4]
 
 # 动态路由源码解析
 
-本文档按"核心概念 → 文件职责"的顺序，说明 `packages/qiankun-shared/src/router` 如何把后端菜单数据转换成可渲染、可匹配、可回溯的路由结构。
+本文档按"核心概念 → 文件职责"的顺序，说明 `packages/router/src` 如何把后端菜单数据转换成可渲染、可匹配、可回溯的路由结构。
 
 ## 整体结构
 
 ```text
-packages/qiankun-shared/src/router/
+packages/router/src/
 ├── index.ts              ← 统一导出入口
 ├── types.ts              ← 领域类型定义
 ├── parsers.ts           ← URL 解析与路径规范化
@@ -34,7 +34,7 @@ packages/qiankun-shared/src/router/
 | `ResolvedRouteInfo`   | `resolveRoute` 的返回值，同时作为 `transformResolvedRoute` 的返回类型（纯路由字段，不含 `extraInfo`） |
 
 ::: details MenuRouteMeta 的组成
-`MenuRouteMeta` 继承自 `RawMenuItem`、`MenuExtra`、`Pick<ResolvedRouteInfo, 'pathPrefix' | 'filePath'>`，并额外补充运行时字段：
+`MenuRouteMeta` 继承自 `RawMenuItem`、`MenuExtra`、`Pick<ResolvedRouteInfo, 'activeRule' | 'filePath'>`，并额外补充运行时字段：
 
 - `parentPath`：父菜单路径，建树阶段填充
 - `menuKey`：菜单分组标识
@@ -54,7 +54,7 @@ packages/qiankun-shared/src/router/
 
 职责是把任意输入标准化成可用于匹配的 pathname：
 
-```ts [packages/qiankun-shared/src/router/parsers.ts]
+```ts [packages/router/src/parsers.ts]
 normalizePath('order/list') // => '/order/list'
 normalizePath('/order/list?id=1') // => '/order/list'
 normalizePath('/order//list/') // => '/order/list'
@@ -74,20 +74,20 @@ normalizePath('/order//list/') // => '/order/list'
 | `hiddenMenu` _(已废弃)_ | 旧版隐藏标记，自动归一化为 `isHiddenMenu`                       |
 | `routeBase` _(已废弃)_  | 菜单路径前缀（兜底），建议直接在 `url` 中拼接完整路径           |
 
-### `resolvePathPrefix(params)`
+### `resolveActiveRule(params)`
 
-解析路径前缀。优先从 url 中匹配已注册的微应用前缀（如 `/ocrm/#/`、`/crm/`），未匹配到时按优先级取兜底值 `routeBase` > `pathPrefix`。
+解析激活规则。优先从 url 中匹配已注册的微应用前缀（如 `/ocrm/#/`、`/crm/`），未匹配到时按优先级取兜底值 `routeBase` > `fallbackActiveRule`。
 
 ### `resolveRoute(params)`
 
-根据 url 解析路由信息。内部调用 `resolvePathPrefix` 确定前缀后，生成以下字段：
+根据 url 解析路由信息。内部调用 `resolveActiveRule` 确定前缀后，生成以下字段：
 
 | 输出字段     | 来源                                                                                                                                                 |
 | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `name`       | 基于去除前缀后的路径，各段首字母大写后直接拼接，PascalCase（如 `/user/profile` → `UserProfile`）。同时作为 vue-router 路由名称和 keep-alive 匹配标识 |
-| `path`       | `pathPrefix + url` 规范化后的完整路由路径                                                                                                            |
+| `path`       | `activeRule + url` 规范化后的完整路由路径                                                                                                            |
 | `filePath`   | 基于去除前缀后的路径，各段首字母大写后用 `/` 拼接（如 `/user/profile` → `User/Profile`）                                                             |
-| `pathPrefix` | 实际生效的路径前缀                                                                                                                                   |
+| `activeRule` | 实际生效的激活规则                                                                                                                                   |
 | `component`  | 默认不生成，交给 `transformResolvedRoute` 自定义                                                                                                     |
 
 ## RouteTreeBuilder.ts
@@ -107,10 +107,7 @@ normalizePath('/order//list/') // => '/order/list'
 支持泛型，业务方可以扩展返回类型：
 
 ```ts
-import type {
-  ResolvedRouteInfo,
-  TransformResolvedRoute,
-} from '@breeze/qiankun-shared'
+import type { ResolvedRouteInfo, TransformResolvedRoute } from '@breeze/router'
 
 interface MyParsedUrl extends ResolvedRouteInfo {
   customField: string
@@ -157,7 +154,7 @@ const myTransform: TransformResolvedRoute<MyParsedUrl> = (
 
 查找路由信息
 
-```ts [packages/qiankun-shared/src/router/RouteMatcher.ts]
+```ts [packages/router/src/RouteMatcher.ts]
 resolvePathToRoute(path) {
   if (!path) return undefined
   path = normalizePath(path)
@@ -174,7 +171,7 @@ resolvePathToRoute(path) {
 }
 ```
 
-`normalizePath()` 会去掉 query 和 hash，因此 `route.fullPath` 可以直接传入做菜单命中。
+`normalizePath()` 会去掉 query，但会保留 hash，因此 `route.fullPath` 可以直接传入做菜单命中，同时兼容 `/ocrm/#/` 这类 hash history 前缀。
 
 ### resolvePathToRouteAncestors 祖先链
 
@@ -186,7 +183,7 @@ resolvePathToRoute(path) {
 
 这是模块的门面类，也是推荐的唯一入口。
 
-```ts [packages/qiankun-shared/src/router/DynamicRoute.ts]
+```ts [packages/router/src/DynamicRoute.ts]
 const dynamicRoute = DynamicRoute.create(menuList, {
   menuKey: 'coms8ReadFunctionList',
 })

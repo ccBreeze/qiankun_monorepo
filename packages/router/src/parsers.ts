@@ -71,23 +71,23 @@ const formatPathSegment = (url: string, separator: string = '') => {
 }
 
 /**
- * 解析路径前缀
+ * 解析激活规则
  *
- * 优先从 url 中匹配已注册的微应用前缀（如 /coms/#/、/crm/），
- * 未匹配到时按优先级取兜底值 routeBase > pathPrefix。
+ * 优先从 url 中匹配已注册的微应用激活规则（如 /coms/#/、/crm/），
+ * 未匹配到时按优先级取兜底值 routeBase > fallbackActiveRule。
  */
-export function resolvePathPrefix(params: {
+export function resolveActiveRule(params: {
   url: string
-  pathPrefix?: string
+  fallbackActiveRule?: string
   routeBase?: string
-  registeredPrefixes?: string[]
+  registeredActiveRules?: string[]
 }): string {
   const url = normalizePath(params.url)
-  const matchedPrefix = params.registeredPrefixes?.find((prefix) =>
-    url.startsWith(prefix),
+  const matchedActiveRule = params.registeredActiveRules?.find((activeRule) =>
+    url.startsWith(activeRule),
   )
-  if (matchedPrefix) return matchedPrefix
-  return params.routeBase || params.pathPrefix || ''
+  if (matchedActiveRule) return matchedActiveRule
+  return params.routeBase || params.fallbackActiveRule || ''
 }
 
 /**
@@ -95,11 +95,11 @@ export function resolvePathPrefix(params: {
  */
 export function resolveRoute(params: ResolveRouteParams): ResolvedRouteInfo {
   const url = normalizePath(params.url)
-  const pathPrefix = resolvePathPrefix(params)
-  const path = normalizePath(pathPrefix + url)
+  const activeRule = resolveActiveRule(params)
+  const path = normalizePath(activeRule + url)
 
-  // 基于 path 计算，但需移除 pathPrefix
-  const pathWithoutPrefix = normalizePath(path.replace(pathPrefix, ''))
+  // 基于 path 计算，但需移除 activeRule
+  const pathWithoutPrefix = normalizePath(path.replace(activeRule, ''))
   const filePath = formatPathSegment(pathWithoutPrefix, '/')
   const name = formatPathSegment(pathWithoutPrefix)
 
@@ -107,6 +107,6 @@ export function resolveRoute(params: ResolveRouteParams): ResolvedRouteInfo {
     name,
     path,
     filePath,
-    pathPrefix,
+    activeRule,
   }
 }

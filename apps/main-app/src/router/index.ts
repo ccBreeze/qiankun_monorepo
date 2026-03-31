@@ -6,12 +6,12 @@ import { setupRouterGuard } from './guard'
 /**
  * 根据微应用注册表动态生成路由别名
  *
- * 将 pathPrefix（如 `/crm/`、`/ocrm/#/`）转换为
- * vue-router 通配别名（如 `/crm/:subPath*`、`/ocrm/:subPath*`）
+ * 将微应用激活规则（如 `/vue3-history/`、`/ocrm/#/`）转换为
+ * vue-router 通配别名（如 `/vue3-history/:subPath*`、`/ocrm/:subPath*`）
  */
-const microAppAliases = [...microAppRegistry.keys()].map((pathPrefix) => {
+const microAppAliases = [...microAppRegistry.values()].map(({ activeRule }) => {
   // `/ocrm/#/` → `ocrm`
-  const segment = pathPrefix.split('/')[1]
+  const segment = activeRule.split('/')[1]
   return `/${segment}/:subPath*`
 })
 

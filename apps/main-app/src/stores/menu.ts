@@ -3,13 +3,12 @@
  */
 import { defineStore } from 'pinia'
 import { shallowReactive } from 'vue'
-import { DynamicRoute, type MenuRoute } from '@breeze/qiankun-shared'
+import { DynamicRoute, type MenuRoute } from '@breeze/router'
 import type { UserData } from '@/types/user'
 import { useRoute } from 'vue-router'
 import {
   type MicroAppConfig,
   microAppRegistry,
-  resolvePathPrefix,
 } from '@/views/MicroApp/utils/registry'
 
 interface MenuModule {
@@ -34,7 +33,7 @@ const menuModuleConfigs = [
     menuKey: 'crmReadFunctionList',
     title: '会员管理',
     iconName: 'menu-membership-management',
-    packageName: 'breeze-crm',
+    packageName: 'vue3-history',
   },
 ] as const
 
@@ -74,25 +73,35 @@ export const useMenuStore = defineStore('menu', () => {
     resetMenus()
     if (Object.keys(userData).length === 0) return
 
+    const registeredActiveRules = [...microAppRegistry.values()].map(
+      (app) => app.activeRule,
+    )
     // 一次性构建所有菜单
-    // 通过 route.fullPath 判断属于哪个菜单
     for (const item of menuModuleConfigs) {
       const menuData = userData[item.menuKey]
       if (!menuData?.length) {
-        console.warn('[Menu] 菜单数据为空', { menuKey: item.menuKey })
+        console.error('[Menu] 菜单数据为空', { menuKey: item.menuKey })
         continue
       }
 
-      const pathPrefix = resolvePathPrefix(item.packageName)
+      const microApp = microAppRegistry.get(item.packageName)
+      if (!microApp) {
+        console.error('[Menu] 未找到对应的微应用配置', {
+          menuKey: item.menuKey,
+          packageName: item.packageName,
+        })
+        continue
+      }
+
       const dynamicRoute = DynamicRoute.create(menuData, {
         menuKey: item.menuKey,
-        pathPrefix,
-        registeredPrefixes: [...microAppRegistry.keys()],
+        fallbackActiveRule: microApp.activeRule,
+        registeredActiveRules,
       })
       const menuRoutes = dynamicRoute.rootRoutes
       const appHomePath = findFirstLeafPath(menuRoutes)
       if (!appHomePath) {
-        console.warn('[Menu] 菜单路由树无叶子节点，跳过分组', {
+        console.error('[Menu] 菜单路由树无叶子节点，跳过分组', {
           menuKey: item.menuKey,
         })
         continue

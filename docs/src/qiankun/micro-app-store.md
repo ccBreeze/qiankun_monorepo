@@ -15,8 +15,8 @@ title: 微应用状态管理
 ```ts [apps/main-app/src/stores/microApp.ts]
 /** 根据路由路径匹配对应的微应用配置 */
 const findMicroAppByPath = (path: string) => {
-  for (const [pathPrefix, microApp] of microAppRegistry) {
-    if (path.startsWith(pathPrefix)) {
+  for (const microApp of microAppRegistry.values()) {
+    if (path.startsWith(microApp.activeRule)) {
       return microApp
     }
   }
@@ -36,11 +36,11 @@ export const useMicroAppStore = defineStore('microApp', () => {
 
 遍历 `microAppRegistry` 的所有条目，对当前路由的 `fullPath` 执行**前缀匹配**：
 
-| 当前路径           | 匹配结果                           |
-| ------------------ | ---------------------------------- |
-| `/crm-v8/home`     | `breeze-crm-v8`（匹配 `/crm-v8/`） |
-| `/crm/member/list` | `breeze-crm`（匹配 `/crm/`）       |
-| `/login`           | `undefined`（无匹配）              |
+| 当前路径                       | 匹配结果                                |
+| ------------------------------ | --------------------------------------- |
+| `/crm-v8/home`                 | `breeze-crm-v8`（匹配 `/crm-v8/`）      |
+| `/vue3-history/couponListTemp` | `vue3-history`（匹配 `/vue3-history/`） |
+| `/login`                       | `undefined`（无匹配）                   |
 
 ### 这个匹配结果只能决定“微应用归属”
 
@@ -55,11 +55,11 @@ export const useMicroAppStore = defineStore('microApp', () => {
 这些问题由 [菜单状态管理](./menu-store.md) 负责，后者会遍历所有菜单分组里的 `DynamicRoute` 实例，按完整菜单路由表做匹配。
 
 ::: info 为什么不能直接用微应用前缀推导菜单分组
-因为菜单分组是业务概念，微应用前缀是技术概念。一个菜单分组下面可能同时出现多个不同 `pathPrefix` 的页面，所以 `route.fullPath` 的前缀最多只能定位到“微应用”，不能直接定位到“菜单分组”。
+因为菜单分组是业务概念，微应用前缀是技术概念。一个菜单分组下面可能同时出现多个不同微应用前缀的页面，所以 `route.fullPath` 的前缀最多只能定位到“微应用”，不能直接定位到“菜单分组”。
 :::
 
 ::: warning 注册顺序的影响
-`microAppRegistry` 是一个 `Map`，遍历顺序与插入顺序一致。如果存在路由前缀相互包含的情况（如 `/crm/` 和 `/crm-v8/`），需要确保更长的前缀排在前面，否则 `/crm-v8/home` 可能被 `/crm/` 错误匹配。当前配置中 `breeze-crm-v8` 排在 `breeze-crm` 之前，因此匹配顺序是正确的。
+`microAppRegistry` 是一个 `Map`，遍历顺序与插入顺序一致。如果未来出现路由前缀相互包含的情况，需要确保更长的前缀排在前面，否则可能发生误匹配。当前配置里 `/ocrm/#/`、`/vue3-history/`、`/crm-v8/` 彼此不重叠，因此没有这个问题。
 :::
 
 ## 被谁使用

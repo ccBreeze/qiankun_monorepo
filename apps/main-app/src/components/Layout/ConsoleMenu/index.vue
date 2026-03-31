@@ -18,7 +18,7 @@ import { computed, h, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useMenuStore } from '@/stores/menu'
 import SvgIcon from '@/components/SvgIcon/SvgIcon.vue'
-import { type MenuRoute } from '@breeze/qiankun-shared'
+import { type MenuRoute } from '@breeze/router'
 import type { MenuInfo } from 'ant-design-vue/es/menu/src/interface'
 
 interface MenuItem {

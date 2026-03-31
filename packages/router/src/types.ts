@@ -61,8 +61,8 @@ export interface ResolvedRouteInfo {
    * 补全 MenuRoute.component 后调用 router.addRoute 实现动态路由
    */
   filePath: string
-  /** 路由前缀（用于区分微应用） */
-  pathPrefix: string
+  /** 激活规则（用于区分微应用） */
+  activeRule: string
 }
 
 /**
@@ -78,19 +78,19 @@ export type TransformResolvedRoute<
  */
 export interface DynamicRouteOptions {
   /**
-   * @deprecated 应直接在 url 中拼接完整路径，无需单独指定 pathPrefix
+   * @deprecated 应直接在 url 中拼接完整路径，无需单独指定 fallbackActiveRule
    *
    * 主要为了兼容旧项目的配置
    */
-  pathPrefix?: string
+  fallbackActiveRule?: string
   /** 菜单分组标识，写入每条路由的 meta 中，主应用据此判断当前路由属于哪个菜单分组 */
   menuKey?: string
   /**
-   * 已注册的微应用路径前缀列表
+   * 已注册的微应用激活规则列表
    *
-   * 当菜单 url 已包含其中某个前缀时，不再拼接 pathPrefix（兜底值）
+   * 当菜单 url 已包含其中某个激活规则时，不再拼接 fallbackActiveRule（兜底值）
    */
-  registeredPrefixes?: string[]
+  registeredActiveRules?: string[]
   /**
    * 自定义 URL 解析结果转换函数
    * 在默认解析逻辑完成后调用，允许业务层完全自定义解析结果
@@ -104,7 +104,7 @@ export interface DynamicRouteOptions {
 export interface ResolveRouteParams
   extends
     Pick<RawMenuItem, 'url'>,
-    Pick<DynamicRouteOptions, 'pathPrefix' | 'registeredPrefixes'>,
+    Pick<DynamicRouteOptions, 'fallbackActiveRule' | 'registeredActiveRules'>,
     Pick<MenuExtra, 'routeBase'> {}
 
 /**
@@ -114,7 +114,7 @@ export interface MenuRouteMeta
   extends
     RawMenuItem,
     MenuExtra,
-    Pick<ResolvedRouteInfo, 'pathPrefix' | 'filePath'> {
+    Pick<ResolvedRouteInfo, 'activeRule' | 'filePath'> {
   /** 父菜单路径 */
   parentPath?: string
   menuKey: DynamicRouteOptions['menuKey']
