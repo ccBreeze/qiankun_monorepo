@@ -10,11 +10,7 @@ declare global {
   const acceptHMRUpdate: typeof import('pinia').acceptHMRUpdate
   const computed: typeof import('vue').computed
   const createApp: typeof import('vue').createApp
-  const createMemoryHistory: typeof import('vue-router').createMemoryHistory
   const createPinia: typeof import('pinia').createPinia
-  const createRouter: typeof import('vue-router').createRouter
-  const createWebHashHistory: typeof import('vue-router').createWebHashHistory
-  const createWebHistory: typeof import('vue-router').createWebHistory
   const customRef: typeof import('vue').customRef
   const defineAsyncComponent: typeof import('vue').defineAsyncComponent
   const defineComponent: typeof import('vue').defineComponent

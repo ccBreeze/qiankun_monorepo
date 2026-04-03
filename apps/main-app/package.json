@@ -17,6 +17,7 @@
     "@ant-design/icons-vue": "catalog:",
     "@breeze/router": "workspace:*",
     "@breeze/utils": "workspace:*",
+    "qiankun": "catalog:",
     "@vueuse/core": "catalog:",
     "ant-design-vue": "catalog:",
     "axios": "catalog:",

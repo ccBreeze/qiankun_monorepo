@@ -1,0 +1,25 @@
+{
+  "name": "@breeze/bridge-vue",
+  "version": "1.0.0",
+  "description": "Vue Router 适配层",
+  "type": "module",
+  "exports": {
+    ".": "./src/router/index.ts"
+  },
+  "scripts": {
+    "type-check": "tsc",
+    "lint": "eslint . --max-warnings=0 --cache",
+    "lint:fix": "eslint . --fix --cache"
+  },
+  "dependencies": {
+    "@breeze/router": "workspace:*"
+  },
+  "peerDependencies": {
+    "vue-router": "^4.6.3"
+  },
+  "devDependencies": {
+    "@breeze/eslint-config": "workspace:*",
+    "typescript": "catalog:",
+    "vue-router": "catalog:"
+  }
+}

@@ -1,16 +1,17 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import Home from '@/views/HomePage/index.vue'
-import { microAppRegistry } from '@/views/MicroApp/utils/registry'
-import { setupRouterGuard } from './guard'
+import { resolvedMicroApps } from '@/utils/microAppRegistry'
+import { createAuthGuard } from './guard/auth'
 
 /**
- * 根据微应用注册表动态生成路由别名
+ * 微应用路由别名列表，使主应用路由能匹配所有微应用的子路径。
  *
- * 将微应用激活规则（如 `/vue3-history/`、`/ocrm/#/`）转换为
- * vue-router 通配别名（如 `/vue3-history/:subPath*`、`/ocrm/:subPath*`）
+ * 从每个微应用的 activeRule 提取路径前缀，生成通配别名。
+ * @example
+ * activeRule: '/ocrm/#' → '/ocrm/:subPath*'
+ * activeRule: '/vue3-history' → '/vue3-history/:subPath*'
  */
-const microAppAliases = [...microAppRegistry.values()].map(({ activeRule }) => {
-  // `/ocrm/#/` → `ocrm`
+const microAppAliases = resolvedMicroApps.map(({ activeRule }) => {
   const segment = activeRule.split('/')[1]
   return `/${segment}/:subPath*`
 })
@@ -39,6 +40,6 @@ const router = createRouter({
   routes,
 })
 
-setupRouterGuard(router)
+createAuthGuard(router)
 
 export default router
