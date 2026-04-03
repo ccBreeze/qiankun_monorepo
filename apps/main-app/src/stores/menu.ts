@@ -6,15 +6,12 @@ import { shallowReactive } from 'vue'
 import { DynamicRoute, type MenuRoute } from '@breeze/router'
 import type { UserData } from '@/types/user'
 import { useRoute } from 'vue-router'
-import {
-  type MicroAppConfig,
-  microAppRegistry,
-} from '@/views/MicroApp/utils/registry'
+import { resolvedMicroApps } from '@/utils/microAppRegistry'
+import { MICRO_APP_ACTIVE_RULE } from '@/constant'
 
 interface MenuModule {
   title: string
   iconName: string
-  packageName: MicroAppConfig['packageName']
   /** 子应用首页路径 */
   appHomePath: string
   menuRoutes: MenuRoute[]
@@ -27,13 +24,13 @@ const menuModuleConfigs = [
     menuKey: 'coms8ReadFunctionList',
     title: '餐饮管理',
     iconName: 'menu-catering-management',
-    packageName: 'ocrm',
+    fallbackActiveRule: MICRO_APP_ACTIVE_RULE.OCRM,
   },
   {
     menuKey: 'crmReadFunctionList',
     title: '会员管理',
     iconName: 'menu-membership-management',
-    packageName: 'vue3-history',
+    fallbackActiveRule: MICRO_APP_ACTIVE_RULE.VUE3_HISTORY,
   },
 ] as const
 
@@ -56,6 +53,10 @@ export const useMenuStore = defineStore('menu', () => {
 
   /** 已构建的菜单缓存 */
   const menuMap = shallowReactive(new Map<MenuKey, MenuModule>())
+  /** 按微应用 activeRule 聚合后的授权路由表 */
+  const authorizedRoutesByActiveRule = shallowReactive(
+    new Map<string, MenuRoute[]>(),
+  )
 
   /** 首页（动态匹配）*/
   const homePath = computed(() => {
@@ -66,6 +67,7 @@ export const useMenuStore = defineStore('menu', () => {
   /** 清空菜单缓存 */
   const resetMenus = (): void => {
     menuMap.clear()
+    authorizedRoutesByActiveRule.clear()
   }
 
   /** 根据 menuModuleConfigs 解析用户菜单数据，构建路由树并缓存 */
@@ -73,9 +75,8 @@ export const useMenuStore = defineStore('menu', () => {
     resetMenus()
     if (Object.keys(userData).length === 0) return
 
-    const registeredActiveRules = [...microAppRegistry.values()].map(
-      (app) => app.activeRule,
-    )
+    const registeredActiveRules = resolvedMicroApps.map((app) => app.activeRule)
+
     // 一次性构建所有菜单
     for (const item of menuModuleConfigs) {
       const menuData = userData[item.menuKey]
@@ -84,20 +85,20 @@ export const useMenuStore = defineStore('menu', () => {
         continue
       }
 
-      const microApp = microAppRegistry.get(item.packageName)
-      if (!microApp) {
-        console.error('[Menu] 未找到对应的微应用配置', {
-          menuKey: item.menuKey,
-          packageName: item.packageName,
-        })
-        continue
-      }
-
       const dynamicRoute = DynamicRoute.create(menuData, {
         menuKey: item.menuKey,
-        fallbackActiveRule: microApp.activeRule,
+        fallbackActiveRule: item.fallbackActiveRule,
         registeredActiveRules,
       })
+      for (const [activeRule, routes] of dynamicRoute.routesByActiveRule) {
+        let existingRoutes = authorizedRoutesByActiveRule.get(activeRule)
+        if (!existingRoutes) {
+          existingRoutes = []
+          authorizedRoutesByActiveRule.set(activeRule, existingRoutes)
+        }
+        existingRoutes.push(...routes)
+      }
+
       const menuRoutes = dynamicRoute.rootRoutes
       const appHomePath = findFirstLeafPath(menuRoutes)
       if (!appHomePath) {
@@ -106,7 +107,6 @@ export const useMenuStore = defineStore('menu', () => {
         })
         continue
       }
-
       menuMap.set(item.menuKey, {
         ...item,
         appHomePath,
@@ -135,6 +135,7 @@ export const useMenuStore = defineStore('menu', () => {
 
   return {
     menuMap,
+    authorizedRoutesByActiveRule,
     homePath,
     activeMenuRoute,
     activeMenuKey,

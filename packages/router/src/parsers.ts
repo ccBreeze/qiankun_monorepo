@@ -86,8 +86,10 @@ export function resolveActiveRule(params: {
   const matchedActiveRule = params.registeredActiveRules?.find((activeRule) =>
     url.startsWith(activeRule),
   )
-  if (matchedActiveRule) return matchedActiveRule
-  return params.routeBase || params.fallbackActiveRule || ''
+  const activeRule =
+    matchedActiveRule ?? params.routeBase ?? params.fallbackActiveRule ?? ''
+  // 移除尾部斜杠，避免拼接路径时出现双斜杠：/vue3-history/ + /foo → //foo
+  return activeRule.replace(/\/$/, '')
 }
 
 /**

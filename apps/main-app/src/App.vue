@@ -11,9 +11,3 @@
 <script setup lang="ts">
 import AntConfigProvider from './views/AntConfigProvider/index.vue'
 </script>
-
-<style>
-body {
-  overflow: hidden !important;
-}
-</style>

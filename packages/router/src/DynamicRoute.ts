@@ -1,6 +1,6 @@
 import type { RawMenuItem, DynamicRouteOptions, MenuRoute } from './types'
 import { RouteMatcher } from './RouteMatcher'
-import { RouteTreeBuilder, type RouteTreeBuildResult } from './RouteTreeBuilder'
+import { RouteTreeBuilder } from './RouteTreeBuilder'
 
 /**
  * 动态路由类（外观模式）
@@ -10,6 +10,10 @@ import { RouteTreeBuilder, type RouteTreeBuildResult } from './RouteTreeBuilder'
 export class DynamicRoute {
   /** @see {@link RouteTreeBuildResult.rootRoutes} */
   rootRoutes: MenuRoute[] = []
+  /** @see {@link RouteTreeBuildResult.flatRoutes} */
+  flatRoutes: MenuRoute[] = []
+  /** @see {@link RouteTreeBuildResult.routesByActiveRule} */
+  routesByActiveRule: Map<string, MenuRoute[]> = new Map()
 
   /** 路由匹配器 */
   private matcher = new RouteMatcher()
@@ -18,8 +22,6 @@ export class DynamicRoute {
   private options: DynamicRouteOptions
 
   constructor(options: DynamicRouteOptions = {}) {
-    options.fallbackActiveRule =
-      options.fallbackActiveRule?.replace(/\/$/, '') ?? ''
     this.options = options
   }
 
@@ -37,14 +39,14 @@ export class DynamicRoute {
   /**
    * 根据菜单列表生成路由树
    * @param list - 后端返回的菜单列表
-   * @returns 路由树构建结果
    */
-  generateRoutes(list: RawMenuItem[]): RouteTreeBuildResult {
+  generateRoutes(list: RawMenuItem[]) {
     const result = new RouteTreeBuilder(this.options).build(list)
     this.matcher.registerAll(result.flatRoutes)
 
     this.rootRoutes = result.rootRoutes
-    return result
+    this.flatRoutes = result.flatRoutes
+    this.routesByActiveRule = result.routesByActiveRule
   }
 
   /** @see {@link RouteMatcher.resolvePathToRoute} */

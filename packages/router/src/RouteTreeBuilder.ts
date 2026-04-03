@@ -35,6 +35,12 @@ export interface RouteTreeBuildResult {
   rootRoutes: MenuRoute[]
   /** 扁平路由列表 */
   flatRoutes: MenuRoute[]
+  /**
+   * 按 activeRule 分组的路由映射
+   *
+   * 注意：多个菜单模块共享同一 activeRule 时，后构建的会覆盖先构建的。
+   */
+  routesByActiveRule: Map<string, MenuRoute[]>
 }
 
 /**
@@ -59,6 +65,7 @@ export class RouteTreeBuilder {
   build(list: RawMenuItem[]): RouteTreeBuildResult {
     const codeNodeMap: CodeNodeMap = new Map([[ROOT_CODE, { children: [] }]])
     const flatRoutes: MenuRoute[] = []
+    const routesByActiveRule = new Map<string, MenuRoute[]>()
 
     // 第一次遍历
     for (const item of list) {
@@ -70,9 +77,17 @@ export class RouteTreeBuilder {
       }
       // 创建节点
       const route = this.createRouteNode(item)
-      // 建立映射
+      // 建立 code -> 路由 映射
       codeNodeMap.set(item.code, route)
       flatRoutes.push(route)
+      // 建立 activeRule -> 路由列表 映射
+      const { activeRule } = route.meta
+      let activeRuleRoutes = routesByActiveRule.get(activeRule)
+      if (!activeRuleRoutes) {
+        activeRuleRoutes = []
+        routesByActiveRule.set(activeRule, activeRuleRoutes)
+      }
+      activeRuleRoutes.push(route)
     }
 
     // 第二次遍历
@@ -96,6 +111,7 @@ export class RouteTreeBuilder {
     return {
       rootRoutes,
       flatRoutes,
+      routesByActiveRule,
     }
   }
 

@@ -4,7 +4,7 @@ import { useAuthStore } from '@/stores/auth'
 import { LOGIN_PATH } from '@/constant'
 
 /** 未登录拦截：弹窗提示后跳转登录页 */
-const createAuthGuard = (router: Router): void => {
+export const createAuthGuard = (router: Router): void => {
   let isShowingAuthModal = false
 
   router.beforeEach((to) => {
@@ -25,9 +25,4 @@ const createAuthGuard = (router: Router): void => {
       return false
     }
   })
-}
-
-/** 注册所有路由守卫 */
-export const setupRouterGuard = (router: Router): void => {
-  createAuthGuard(router)
 }

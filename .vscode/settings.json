@@ -27,5 +27,6 @@
     "eslint.config.*": ".eslintcache, .eslintrc*, .prettier*, .editorconfig, stylelint.config.*, .stylelint*",
     "tsconfig.json": "tsconfig.*.json, *.tsbuildinfo, env.d.ts",
     "vite.config.*": "vitest.config.*, postcss.config.*, index.html"
-  }
+  },
+  "cSpell.words": ["Qiankun"]
 }

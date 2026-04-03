@@ -2,6 +2,9 @@
  * 菜单解析相关类型定义
  */
 
+/** import.meta.glob 返回的页面组件映射表类型 */
+export type GlobPages = Record<string, () => Promise<unknown>>
+
 /**
  * 后端返回的菜单（原始数据）
  * 对应 ocrmFunctionList / crmReadFunctionList 数据结构
