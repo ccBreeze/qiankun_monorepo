@@ -1,145 +1,184 @@
 ---
-title: 微应用注册表
+title: 子应用注册表
 ---
 
-# 微应用注册表
+# 子应用注册表
 
-本文档说明 `apps/main-app/src/views/MicroApp/utils/registry.ts` 的职责与实现。它是主应用识别和配置微应用的静态配置中心。
+本文档说明 `apps/main-app/src/utils/microAppRegistry.ts` 的职责与实现。它是主应用识别和配置子应用的静态配置中心。
 
 ## 职责
 
-微应用注册表维护一份 **packageName → RegistrableMicroApp** 的映射关系，供主应用在以下场景中复用：
+子应用注册表维护所有子应用的配置，供主应用在以下场景中复用：
 
-- 根据当前路由识别激活的微应用
+- 根据当前路由识别激活的子应用
 - 为菜单模块提供 `fallbackActiveRule`
-- 为主应用路由生成微应用别名
+- 为主应用路由生成子应用别名
+- 为各运行环境解析子应用入口 URL
 
-## 核心类型
+## 为什么单独一个文件，而不是放进 microApp store
 
-```ts [apps/main-app/src/views/MicroApp/utils/registry.ts]
-export interface MicroAppConfig {
-  /** 微应用包名，用于生成路由前缀 */
-  packageName: string
-  pathPrefix?: string
-}
+**原因一：Router 在 Pinia 之前初始化，无法调用 store**
 
-export interface RegistrableMicroApp extends MicroAppConfig {
-  /**
-   * 路由前缀
-   * - 主应用据此匹配微应用
-   * - 微应用需将其作为 createWebHistory 的 base
-   */
-  pathPrefix: string
-  /** 主应用与 qiankun 共用的激活规则 */
-  activeRule: string
-}
-```
-
-| 字段          | 说明                                                                                                                    |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `packageName` | 微应用唯一标识，同时也是 `microAppRegistry` 的 key                                                                      |
-| `pathPrefix`  | 路由前缀（如 `/vue3-history/`、`/ocrm/#/`），主应用通过它做前缀匹配，微应用也要把它作为 Vue Router 的 `base`            |
-| `activeRule`  | 主应用与 qiankun 共用的路由匹配规则，同时也复用于共享路由模块的 `fallbackActiveRule`。当前实现里它直接复用 `pathPrefix` |
-
-## 路由前缀生成规则
-
-`getPathPrefix` 函数将 `packageName` 转换为默认路由前缀：
-
-```ts [apps/main-app/src/views/MicroApp/utils/registry.ts]
-const getPathPrefix = (packageName: string) => {
-  const routeSegment = packageName.replace(/^breeze-/, '')
-  return `/${routeSegment}/`
-}
-```
-
-转换规则：移除 `breeze-` 前缀，加上前后斜杠。如果配置中显式指定了 `pathPrefix`，则直接使用，不走自动派生。
-
-| packageName     | pathPrefix（显式指定） | pathPrefix（最终） |
-| --------------- | ---------------------- | ------------------ |
-| `ocrm`          | `/ocrm/#/`             | `/ocrm/#/`         |
-| `vue3-history`  | —                      | `/vue3-history/`   |
-| `breeze-crm-v8` | —                      | `/crm-v8/`         |
-
-## 注册表条目是如何生成的
-
-每个 `MicroAppConfig` 会经过 `createRegistrableMicroApp()` 补全成 `RegistrableMicroApp`：
-
-```ts [apps/main-app/src/views/MicroApp/utils/registry.ts]
-const createRegistrableMicroApp = (
-  microAppConfig: MicroAppConfig,
-): RegistrableMicroApp => {
-  const pathPrefix =
-    microAppConfig.pathPrefix || getPathPrefix(microAppConfig.packageName)
-
-  return {
-    ...microAppConfig,
-    pathPrefix,
-    activeRule: pathPrefix,
-  }
-}
-```
-
-可以看到，当前实现里：
-
-- `pathPrefix` 是路由层的基础前缀
-- `activeRule` 是 qiankun 层的激活规则
-- 两者目前取值相同，但命名分别服务于不同上下文
-
-## 注册表结构
-
-最终导出 `microAppRegistry`，类型为 `Map<string, RegistrableMicroApp>`，key 是 `packageName`：
-
-```ts [apps/main-app/src/views/MicroApp/utils/registry.ts]
-export const microAppRegistry = new Map(
-  microAppConfigs.map((microAppConfig) => [
-    microAppConfig.packageName,
-    createRegistrableMicroApp(microAppConfig),
-  ]),
-)
-```
-
-当前注册的微应用：
-
-| packageName     | pathPrefix       | activeRule       |
-| --------------- | ---------------- | ---------------- |
-| `ocrm`          | `/ocrm/#/`       | `/ocrm/#/`       |
-| `vue3-history`  | `/vue3-history/` | `/vue3-history/` |
-| `breeze-crm-v8` | `/crm-v8/`       | `/crm-v8/`       |
-
-## 如何新增微应用
-
-在 `microAppConfigs` 数组中添加一项即可：
+路由别名在应用启动时静态生成，此时 Pinia 尚未挂载：
 
 ```ts
-const microAppConfigs = [
-  { packageName: 'ocrm', pathPrefix: '/ocrm/#/' },
-  { packageName: 'vue3-history' },
-  { packageName: 'breeze-crm-v8' },
-  { packageName: 'breeze-new-app' }, // 新增，pathPrefix 自动生成为 /new-app/
+// router/index.ts
+import { useMicroAppStore } from '@/stores/microApp' // ❌ Pinia 尚未初始化
+
+const { microApps } = useMicroAppStore() // 运行时报错：No active Pinia
+const microAppAliases = microApps.map(...)
+```
+
+**原因二：放进 store 会产生循环依赖**
+
+`menu store` 需要 `microApps` 来获取 `registeredActiveRules`；`microApp store` 需要 `menu store` 来读取 `authorizedRoutesByActiveRule`：
+
+```
+menu store  →  microApp store  →  menu store  → ♻️ 循环
+```
+
+提取为独立工具模块所有消费方直接 import，依赖方向保持单向，没有循环。
+
+## 类型
+
+```ts [apps/main-app/src/utils/microAppRegistry.ts]
+export interface MicroAppDefinition {
+  /**
+   * 激活规则（收窄为 string）
+   * - 主应用据此匹配子应用
+   * - 子应用需将其作为 createWebHistory 的 base
+   */
+  activeRule: string
+  /** 各运行环境的入口 URL 映射 */
+  entryMap: Partial<Record<RuntimeEnv, string>>
+}
+
+/**
+ * 子应用静态解析结果
+ *
+ * - `activeRule` 收窄为 `string`
+ * - `props` 由 `useMicroAppStore` 在运行时注入，不在此处定义
+ *
+ * @see https://qiankun.umijs.org/zh/api#registermicroappsapps-lifecycles
+ */
+export type ResolvedMicroApp = RegistrableApp<object> &
+  Pick<MicroAppDefinition, 'activeRule'> & {
+    container: string
+  }
+```
+
+## 静态配置
+
+语义化 key 引用各子应用的 `activeRule`，避免业务代码中出现**硬编码**路由字符串：
+
+```ts [apps/main-app/src/utils/microAppRegistry.ts]
+/** 子应用激活规则枚举 */
+export const MICRO_APP_ACTIVE_RULE = {
+  OCRM: '/ocrm/#',
+  VUE3_HISTORY: '/vue3-history',
+  BREEZE_CRM_V8: '/crm-v8',
+} as const
+```
+
+如果子应用使用 hash history 模式，`activeRule` 需包含 `#`（如 `/new-app/#`）。
+
+`microAppDefinitions` 直接引用枚举值，确保 activeRule 只有单一来源：
+
+```ts [apps/main-app/src/utils/microAppRegistry.ts]
+const microAppDefinitions: MicroAppDefinition[] = [
+  {
+    activeRule: MICRO_APP_ACTIVE_RULE.OCRM,
+    entryMap: {},
+  },
+  {
+    activeRule: MICRO_APP_ACTIVE_RULE.VUE3_HISTORY,
+    entryMap: {},
+  },
+  {
+    activeRule: MICRO_APP_ACTIVE_RULE.BREEZE_CRM_V8,
+    entryMap: {},
+  },
 ]
 ```
 
-如果微应用使用 hash history 模式，需显式指定含 `#` 的 `pathPrefix`；否则留空即可自动派生。
+## 注册表结构
 
-::: warning 微应用侧的配套要求
-新增微应用后，微应用自身需将 `pathPrefix`（如 `/new-app/`）配置为 Vue Router 的 `base`，否则主子应用的路由将无法对齐。
-:::
+静态配置补全，对外唯一接口：
 
-## 如何读取注册表
+```ts [apps/main-app/src/utils/microAppRegistry.ts]
+/**
+ * 从 activeRule 提取应用标识符
+ * @example '/ocrm/#' → 'ocrm'
+ * @example '/vue3-history' → 'vue3-history'
+ */
+const getPackageId = (activeRule: string) => {
+  return activeRule
+    .replace(/^\//, '') // 去掉开头的斜杠
+    .replace(/[/#].*$/, '') // 去掉第一个 /# 及其后的内容
+}
 
-当前代码统一通过 `packageName` 读取注册表条目：
-
-```ts
-const microApp = microAppRegistry.get(packageName)
+/** 将子应用静态配置补全 */
+export const microApps = microAppDefinitions.map((config): ResolvedMicroApp => {
+  const id = getPackageId(config.activeRule)
+  return {
+    activeRule: config.activeRule,
+    entry: config.entryMap[runtimeEnv]!,
+    name: id,
+    container: `#micro-container__${id}`,
+  }
+})
 ```
 
-典型用法有两类：
+<details>
+<summary>解析结果示例（DEV 环境）</summary>
 
-- 菜单构建时读取 `microApp.activeRule`，作为共享路由的 `fallbackActiveRule`
-- 批量遍历 `microAppRegistry.values()`，提取所有 `activeRule` 作为已注册微应用激活规则列表
+```json
+[
+  {
+    "activeRule": "/ocrm/#",
+    "name": "ocrm",
+    "entry": "http://localhost:8102",
+    "container": "#micro-container__ocrm"
+  },
+  {
+    "activeRule": "/vue3-history",
+    "name": "vue3-history",
+    "entry": "http://localhost:8101",
+    "container": "#micro-container__vue3-history"
+  }
+]
+```
 
-## 被谁使用
+</details>
 
-- **[菜单状态管理](./menu-store.md)**：读取 `microAppRegistry.get(item.packageName)!.activeRule` 作为 `fallbackActiveRule`，同时提取所有 `activeRule` 作为 `registeredActiveRules`
-- **[微应用状态管理](./micro-app-store.md)**：根据当前路由路径和 `microApp.activeRule` 查找激活的微应用配置
-- **主应用路由配置**：根据注册表里的 `activeRule` 为每个微应用生成对应的路由别名
+## 路由别名
+
+> 参考：[Vue Router 路由别名](https://router.vuejs.org/zh/guide/essentials/redirect-and-alias.html#%E5%88%AB%E5%90%8D)
+
+路由别名逻辑内联在主应用路由配置中，不再由注册表导出：
+
+```ts [apps/main-app/src/router/index.ts]
+/**
+ * 子应用路由别名列表，使主应用路由能匹配所有子应用的子路径。
+ *
+ * 从每个子应用的 activeRule 提取路径前缀，生成通配别名。
+ * @example
+ * activeRule: '/ocrm/#' → '/ocrm/:subPath*'
+ * activeRule: '/vue3-history' → '/vue3-history/:subPath*'
+ */
+const microAppAliases = microApps.map(({ activeRule }) => {
+  const segment = activeRule.split('/')[1]
+  return `/${segment}/:subPath*`
+})
+
+const routes: RouteRecordRaw[] = [
+  // ...
+  {
+    path: '/microApp',
+    name: 'microApp',
+    // ['/ocrm/:subPath*', '/vue3-history/:subPath*', '/crm-v8/:subPath*']
+    alias: microAppAliases, // 将所有子应用路径别名到同一个宿主路由
+    component: Home,
+  },
+]
+```

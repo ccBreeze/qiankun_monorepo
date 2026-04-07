@@ -12,7 +12,7 @@ outline: [2, 4]
 - 维护已打开标签页的列表，按访问顺序排列
 - 标签数据持久化到 `localStorage`，刷新后恢复
 - 关闭标签时自动跳转到相邻标签
-- 支持微应用通过 `history.state.tabName` 动态修改标签标题
+- 支持子应用通过 `history.state.tabName` 动态修改标签标题
 
 ## 核心类型
 
@@ -54,7 +54,7 @@ const tabs = useLocalStorage<Map<string, Tab>>('tabBar:tabs', new Map(), {
 添加新标签。从 `useMenuStore` 的 `activeMenuRoute` 获取当前路由对应的菜单记录，提取 `code` 和 `name` 作为标签信息：
 
 - 若 `fullPath` 已存在，不重复添加
-- 若 `window.history.state.tabName` 有值，用其覆盖标签标题——这是微应用动态设置标签名的通道
+- 若 `window.history.state.tabName` 有值，用其覆盖标签标题——这是子应用动态设置标签名的通道
 
 ### `removeTab({ fullPath, to? })`
 

@@ -1,9 +1,22 @@
 ---
-title: 动态路由源码解析
+title: '@breeze/router'
 outline: [2, 4]
 ---
 
-# 动态路由源码解析
+# @breeze/router
+
+## 职责
+
+`@breeze/router` 是主应用菜单体系的核心依赖，负责将后端下发的扁平菜单数据转换为可渲染、可匹配、可回溯的路由结构。
+
+- **路由树构建**：将无序的 `RawMenuItem[]` 解析为嵌套的 `MenuRoute[]`，补全 `path`、`name`、`activeRule`、`filePath` 等字段
+- **路径匹配**：支持精确匹配（静态路由）和动态路径匹配（含 `:param` / `*`），提供 `resolvePathToRoute` 供菜单激活判断
+- **路由聚合**：按 `activeRule` 将路由分组为 `routesByActiveRule`，为各子应用提供属于自己的授权路由表
+- **祖先链回溯**：提供 `resolvePathToRouteAncestors`，用于菜单侧边栏展开当前页的父级节点链
+
+该包不依赖 Vue Router，不持有任何运行时状态，所有能力通过 `DynamicRoute` 门面类对外暴露。
+
+---
 
 本文档按"核心概念 → 文件职责"的顺序，说明 `packages/router/src` 如何把后端菜单数据转换成可渲染、可匹配、可回溯的路由结构。
 
@@ -76,19 +89,54 @@ normalizePath('/order//list/') // => '/order/list'
 
 ### `resolveActiveRule(params)`
 
-解析激活规则。优先从 url 中匹配已注册的微应用前缀（如 `/ocrm/#/`、`/crm/`），未匹配到时按优先级取兜底值 `routeBase` > `fallbackActiveRule`。
+解析激活规则。优先从 url 中匹配已注册的子应用前缀（如 `/ocrm/#/`、`/crm/`），未匹配到时按优先级取兜底值 `routeBase` > `fallbackActiveRule`。
 
 ### `resolveRoute(params)`
 
 根据 url 解析路由信息。内部调用 `resolveActiveRule` 确定前缀后，生成以下字段：
 
-| 输出字段     | 来源                                                                                                                                                 |
-| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `name`       | 基于去除前缀后的路径，各段首字母大写后直接拼接，PascalCase（如 `/user/profile` → `UserProfile`）。同时作为 vue-router 路由名称和 keep-alive 匹配标识 |
-| `path`       | `activeRule + url` 规范化后的完整路由路径                                                                                                            |
-| `filePath`   | 基于去除前缀后的路径，各段首字母大写后用 `/` 拼接（如 `/user/profile` → `User/Profile`）                                                             |
-| `activeRule` | 实际生效的激活规则                                                                                                                                   |
-| `component`  | 默认不生成，交给 `transformResolvedRoute` 自定义                                                                                                     |
+| 输出字段     | 来源                                                                                                                             |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| `name`       | 去除前缀后各段首字母大写、以 `-` 拼接（如 `/user/profile` → `User-Profile`）。同时作为 vue-router 路由名称和 keep-alive 匹配标识 |
+| `path`       | `activeRule + url` 规范化后的完整路由路径                                                                                        |
+| `filePath`   | 去除前缀后各段首字母大写、以 `/` 拼接并保留前导斜杠（如 `/user/profile` → `/User/Profile`）                                      |
+| `activeRule` | 实际生效的激活规则                                                                                                               |
+| `component`  | 默认不生成，交给 `transformResolvedRoute` 自定义                                                                                 |
+
+::: details ⚠️ keep-alive：路由 name 与 Vue 自动生成的 `__name` 不一致
+
+Vue 3.2.34+ 的 `<script setup>` SFC 会根据文件名自动生成组件的 `__name`（源码见 [`@vue/compiler-sfc/src/compileScript.ts`](https://github.com/vuejs/vue/blob/main/packages/compiler-sfc/src/compileScript.ts)）：
+
+```typescript
+const match = filename.match(/([^/\\]+)\.\w+$/)
+if (match) {
+  runtimeOptions += `\n  __name: '${match[1]}',`
+}
+```
+
+规则：只取路径最后一段（basename），去掉扩展名，不做任何大小写转换。
+
+| 文件路径                                   | `resolveRoute` 生成的 `name`     | Vue 自动生成的 `__name` |
+| ------------------------------------------ | -------------------------------- | ----------------------- |
+| `views/CouponListTemp/CreatCouponTemp.vue` | `CouponListTemp-CreatCouponTemp` | `CreatCouponTemp`       |
+| `views/CouponListTemp/index.vue`           | `CouponListTemp`                 | `index`                 |
+
+**根因**：Vue 以文件维度定义 name（只取 basename），`resolveRoute` 以路径维度生成 name（拼接所有段保证唯一性），两套规则设计目标不同，存在结构性冲突。
+
+**解决方案**：在需要 keep-alive 的页面组件中，通过 `defineOptions` 显式声明 `name`，与路由 `name` 保持一致：
+
+```vue
+<script setup>
+// views/CouponListTemp/CreatCouponTemp.vue
+defineOptions({ name: 'CouponListTemp-CreatCouponTemp' })
+</script>
+```
+
+Vue 3.2.34+ 只有在未显式声明 `name` 时才自动从文件名生成 `__name`，显式声明后自动生成逻辑不会触发。
+
+参考：[Vue 官方文档 — KeepAlive include/exclude](https://cn.vuejs.org/guide/built-ins/keep-alive.html#include-exclude)
+
+:::
 
 ## RouteTreeBuilder.ts
 
@@ -188,7 +236,9 @@ const dynamicRoute = DynamicRoute.create(menuList, {
   menuKey: 'coms8ReadFunctionList',
 })
 
-dynamicRoute.rootRoutes
+dynamicRoute.rootRoutes // MenuRoute[]（树结构，供菜单组件渲染）
+dynamicRoute.flatRoutes // MenuRoute[]（扁平列表，便于遍历）
+dynamicRoute.routesByActiveRule // Map<string, MenuRoute[]>（按 activeRule 分组）
 dynamicRoute.resolvePathToRoute('/crm-v8/home')
 dynamicRoute.resolvePathToRouteAncestors('/crm-v8/user/profile')
 ```
@@ -196,7 +246,30 @@ dynamicRoute.resolvePathToRouteAncestors('/crm-v8/user/profile')
 它主要做三件事：
 
 1. 组装 `RouteTreeBuilder` 和 `RouteMatcher`
-2. 在 `generateRoutes()` 时负责清空旧状态、构建完整路由树并统一注册到匹配器
-3. 把 `rootRoutes` 挂到实例上，方便业务层直接消费
+2. 在 `generateRoutes()` 时构建完整路由树并统一注册到匹配器
+3. 将 `rootRoutes`、`flatRoutes`、`routesByActiveRule` 挂到实例上，方便业务层直接消费
+
+### 实例属性
+
+| 属性                 | 类型                       | 说明                                                                          |
+| -------------------- | -------------------------- | ----------------------------------------------------------------------------- |
+| `rootRoutes`         | `MenuRoute[]`              | 根级路由列表（树结构），供侧边菜单渲染                                        |
+| `flatRoutes`         | `MenuRoute[]`              | 扁平路由列表，包含所有层级的路由节点                                          |
+| `routesByActiveRule` | `Map<string, MenuRoute[]>` | 按 `meta.activeRule` 分组的扁平路由，由 `RouteTreeBuilder` 在第一次遍历时生成 |
+
+### routesByActiveRule
+
+`routesByActiveRule` 是菜单分组与子应用路由的桥梁：同一个菜单分组下可能混合多个子应用的路由，该 Map 按 `activeRule` 将它们分离，使每个子应用只拿到属于自己的那部分。
+
+```ts
+// 示例："会员管理"分组包含两个子应用的路由
+dynamicRoute.routesByActiveRule
+// Map {
+//   '/vue3-history/': [MenuRoute, MenuRoute, ...],
+//   '/crm-v8/':       [MenuRoute, ...],
+// }
+```
+
+`menu store` 的 `buildAllMenus` 会将所有菜单分组的 `routesByActiveRule` 合并到 `authorizedRoutesByActiveRule`，详见[菜单状态管理](./menu-store.md)。
 
 对于大多数调用方来说，看到这里就够了；只有在排查菜单层级或命中问题时，才需要继续往下看 `RouteTreeBuilder.ts` 和 `RouteMatcher.ts`。

@@ -26,17 +26,29 @@ export const sidebar: DefaultTheme.SidebarMulti = {
   ],
   '/qiankun/': [
     {
-      text: 'qiankun-shared',
-      items: [{ text: '动态路由源码解析', link: '/qiankun/dynamic-route' }],
+      text: 'Packages',
+      items: [
+        { text: '@breeze/router', link: '/qiankun/dynamic-route' },
+        { text: '@breeze/runtime', link: '/qiankun/runtime' },
+        { text: '@breeze/bridge-vue', link: '/qiankun/bridge-vue' },
+      ],
     },
     {
       text: '主应用（壳）',
       items: [
-        { text: '微应用注册表', link: '/qiankun/micro-app-registry' },
-        { text: '微应用状态管理', link: '/qiankun/micro-app-store' },
+        { text: '子应用注册表', link: '/qiankun/micro-app-registry' },
+        { text: '子应用状态管理', link: '/qiankun/micro-app-store' },
         { text: '菜单状态管理', link: '/qiankun/menu-store' },
         { text: '标签栏状态管理', link: '/qiankun/tab-bar-store' },
       ],
+    },
+    {
+      text: '架构',
+      items: [{ text: '路由机制', link: '/qiankun/routing-mechanism' }],
+    },
+    {
+      text: '其他',
+      items: [{ text: '常见问题与解决方案', link: '/qiankun/troubleshooting' }],
     },
   ],
 }
