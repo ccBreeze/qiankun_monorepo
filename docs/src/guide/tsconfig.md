@@ -197,8 +197,6 @@ structuredClone(data) // ❌ 仍然报错（需要 ESNext）
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    // 覆盖 base 的 noEmit: true，允许输出声明文件
-    "noEmit": false,
     "composite": true,
     // 增量构建
     "incremental": true,

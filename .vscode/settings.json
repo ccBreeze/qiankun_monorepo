@@ -12,9 +12,8 @@
     { "pattern": "packages/*" }
   ],
   "prettier.requireConfig": true,
-  "typescript.tsdk": "node_modules/typescript/lib",
+  "js/ts.tsdk.path": "node_modules/typescript/lib",
 
-  // Stylelint 配置
   "stylelint.enable": true,
   "stylelint.validate": ["css", "scss", "sass", "vue"],
   "stylelint.snippet": ["css", "scss", "sass", "vue"],
