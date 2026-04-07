@@ -1,5 +1,5 @@
 ---
-name: 生成-drawio-流程图
+name: generate-drawio
 description: 根据指定目录/模块的代码内容，分析架构与调用链，生成符合规范的 DrawIO 架构流程图（.drawio XML）。支持从代码自动生成、从图片还原、从需求描述创建。可通过 drawio MCP 服务器在浏览器中实时预览和交互式编辑。
 ---
 
@@ -136,12 +136,12 @@ description: 根据指定目录/模块的代码内容，分析架构与调用链
 
 当流程图用于 `docs/` 目录下的 VitePress 文档时，**必须**将 DrawIO XML 保存为独立的 `.drawio` 文件，然后在 Markdown 中通过 `DrawioViewer` 组件引用，**禁止**将 XML 内联到 Markdown 代码块中。
 
-1. 将生成的 XML 保存为与文档同目录的 `.drawio` 文件（如 `lint-workflow.drawio`）
+1. `.drawio` 文件必须存放在文档同级的 `drawio/` 子目录中（如 `docs/src/guide/drawio/`、`docs/src/qiankun/drawio/`），不要直接放在文档同级目录
 2. 在 Markdown 文件中使用以下方式引用：
 
 ```vue
 <script setup>
-import drawioXml from './lint-workflow.drawio?raw'
+import drawioXml from './drawio/lint-workflow.drawio?raw'
 </script>
 
 <ClientOnly>

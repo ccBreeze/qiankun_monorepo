@@ -132,6 +132,23 @@ import drawioXml from './drawio/xxx.drawio?raw'
 | `--max-warnings=0` | warning 视为失败 |
 ````
 
+### 行内文本强调
+
+使用 `<span>` 行内样式对**关键结论或危险后果**进行颜色突出，使其在段落中一眼可见：
+
+```markdown
+<span style="color: var(--vp-c-danger-1); font-weight: bold;">关键结论或危险后果</span>
+```
+
+使用原则：
+
+- 仅用于**需要读者特别注意的核心结论**，不用于普通强调（普通强调用 `**bold**`）
+- 优先使用 VitePress CSS 变量，可自动适配深色/浅色模式：
+  - `var(--vp-c-danger-1)` — 严重后果、不可逆操作（红色）
+  - `var(--vp-c-warning-1)` — 注意事项、容易踩坑（橙色）
+  - `var(--vp-c-tip-1)` — 推荐做法、正确结论（绿色）
+  - `var(--vp-c-brand-1)` — 关键概念、核心名词（品牌色）
+
 ### VitePress 容器
 
 使用 VitePress 自定义容器补充说明，按信息重要程度选择：
