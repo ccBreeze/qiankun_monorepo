@@ -16,6 +16,7 @@
   "dependencies": {
     "@ant-design/icons-vue": "catalog:",
     "@breeze/router": "workspace:*",
+    "@breeze/runtime": "workspace:*",
     "@breeze/utils": "workspace:*",
     "qiankun": "catalog:",
     "@vueuse/core": "catalog:",

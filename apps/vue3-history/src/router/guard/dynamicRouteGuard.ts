@@ -7,10 +7,10 @@ const pages = import.meta.glob([
   '!../../views/**/components/*',
 ])
 
-export const setupDynamicRoute = (router: Router, base?: string) =>
+export const setupDynamicRoute = (router: Router) =>
   createDynamicRouteGuard({
     router,
     pages,
-    getAuthorizedRoutes: () => microAppContext.getAuthorizedRoutes(),
-    base,
+    authorizedRoutes: microAppContext.authorizedRoutes,
+    activeRule: microAppContext.activeRule,
   })

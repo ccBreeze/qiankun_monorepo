@@ -2,9 +2,6 @@
  * 菜单解析相关类型定义
  */
 
-/** import.meta.glob 返回的页面组件映射表类型 */
-export type GlobPages = Record<string, () => Promise<unknown>>
-
 /**
  * 后端返回的菜单（原始数据）
  * 对应 ocrmFunctionList / crmReadFunctionList 数据结构
@@ -64,7 +61,7 @@ export interface ResolvedRouteInfo {
    * 补全 MenuRoute.component 后调用 router.addRoute 实现动态路由
    */
   filePath: string
-  /** 激活规则（用于区分微应用） */
+  /** 激活规则（用于区分子应用） */
   activeRule: string
 }
 
@@ -89,7 +86,7 @@ export interface DynamicRouteOptions {
   /** 菜单分组标识，写入每条路由的 meta 中，主应用据此判断当前路由属于哪个菜单分组 */
   menuKey?: string
   /**
-   * 已注册的微应用激活规则列表
+   * 已注册的子应用激活规则列表
    *
    * 当菜单 url 已包含其中某个激活规则时，不再拼接 fallbackActiveRule（兜底值）
    */

@@ -1,6 +1,8 @@
 import type { RawMenuItem, DynamicRouteOptions, MenuRoute } from './types'
 import { RouteMatcher } from './RouteMatcher'
 import { RouteTreeBuilder } from './RouteTreeBuilder'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { type RouteTreeBuildResult } from './RouteTreeBuilder'
 
 /**
  * 动态路由类（外观模式）

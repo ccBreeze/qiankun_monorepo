@@ -52,7 +52,7 @@ const selectedKeys = computed(() => {
  * 生成菜单项（使用 computed 缓存）
  */
 const menuItems = computed<MenuItem[]>(() => {
-  return generateMenu(activeMenuModule.value?.menuRoutes ?? [])
+  return generateMenu(activeMenuModule.value?.dynamicRoute.rootRoutes ?? [])
 })
 
 /** 生成菜单 */

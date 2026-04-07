@@ -1,9 +1,9 @@
 <template>
   <div class="micro-container">
     <div
-      v-for="app in qiankunApps"
+      v-for="app in microAppConfigs"
       v-show="app.name === activeMicroApp?.name"
-      :id="`micro-container__${app.name}`"
+      :id="app.container.slice(1)"
       :key="app.name"
     ></div>
   </div>
@@ -16,10 +16,9 @@ import type { MicroApp } from 'qiankun'
 import { storeToRefs } from 'pinia'
 import { useMicroAppStore } from '@/stores/microApp'
 
-const microAppStore = useMicroAppStore()
-const { activeMicroApp, qiankunApps } = storeToRefs(microAppStore)
+const { activeMicroApp, microAppConfigs } = storeToRefs(useMicroAppStore())
 
-/** 已加载的微应用实例，key 为应用 name */
+/** 已加载的子应用实例，key 为应用 name */
 const loadedApps = shallowRef(new Map<string, MicroApp>())
 
 watch(

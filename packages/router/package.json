@@ -12,10 +12,12 @@
     "lint:fix": "eslint . --fix --cache"
   },
   "dependencies": {
+    "lodash-es": "catalog:",
     "path-to-regexp": "catalog:"
   },
   "devDependencies": {
     "@breeze/eslint-config": "workspace:*",
+    "@types/lodash-es": "catalog:",
     "typescript": "catalog:"
   }
 }
