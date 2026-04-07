@@ -2,6 +2,7 @@
  * URL 解析工具函数
  * 提供路径规范化、URL 解析等纯函数
  */
+import { upperFirst } from 'lodash-es'
 import type { MenuExtra, ResolveRouteParams, ResolvedRouteInfo } from './types'
 
 /**
@@ -54,26 +55,10 @@ export function resolveExtraInfo(str: string | undefined | null): MenuExtra {
   }
 }
 
-const formatPathSegment = (url: string, separator: string = '') => {
-  return (
-    url
-      // 去掉前导斜杠，避免生成空的首段
-      // "/user/profile" -> "user/profile"
-      .replace(/^\//, '')
-      // 将每段首字母大写（文件夹名称必须首字母大写），并把路径分隔符替换为指定的 separator
-      // "user/profile" -> "User-Profile"
-      .replace(
-        /(\/)?(\w)(\w*)/g,
-        (_match, p1 = '', p2: string, p3: string) =>
-          (p1 ? separator : '') + p2.toUpperCase() + p3,
-      )
-  )
-}
-
 /**
  * 解析激活规则
  *
- * 优先从 url 中匹配已注册的微应用激活规则（如 /coms/#/、/crm/），
+ * 优先从 url 中匹配已注册的子应用激活规则（如 /coms/#/、/crm/），
  * 未匹配到时按优先级取兜底值 routeBase > fallbackActiveRule。
  */
 export function resolveActiveRule(params: {
@@ -100,10 +85,14 @@ export function resolveRoute(params: ResolveRouteParams): ResolvedRouteInfo {
   const activeRule = resolveActiveRule(params)
   const path = normalizePath(activeRule + url)
 
-  // 基于 path 计算，但需移除 activeRule
+  // 移除 activeRule 前缀
   const pathWithoutPrefix = normalizePath(path.replace(activeRule, ''))
-  const filePath = formatPathSegment(pathWithoutPrefix, '/')
-  const name = formatPathSegment(pathWithoutPrefix)
+  const segments = pathWithoutPrefix
+    .split('/')
+    .filter(Boolean) // 过滤掉空字符串
+    .map(upperFirst)
+  const filePath = '/' + segments.join('/')
+  const name = segments.join('-')
 
   return {
     name,

@@ -1,33 +1,39 @@
 import { RUNTIME_ENV, runtimeEnv, type RuntimeEnv } from '@breeze/utils/env'
-import { MICRO_APP_ACTIVE_RULE } from '@/constant'
+import type { RegistrableApp } from 'qiankun'
+
+/** 子应用激活规则枚举 */
+export const MICRO_APP_ACTIVE_RULE = {
+  OCRM: '/ocrm/#',
+  VUE3_HISTORY: '/vue3-history',
+  BREEZE_CRM_V8: '/crm-v8',
+} as const
 
 export interface MicroAppDefinition {
-  /** 微应用激活规则 */
+  /**
+   * 激活规则（收窄为 string）
+   * - 主应用据此匹配子应用
+   * - 子应用需将其作为 createWebHistory 的 base
+   */
   activeRule: string
-  /** 传递给子应用的菜单标识，仅业务用途，路由授权不依赖该字段 */
-  menuKey?: string
   /** 各运行环境的入口 URL 映射 */
   entryMap: Partial<Record<RuntimeEnv, string>>
 }
 
-export interface ResolvedMicroApp {
-  /**
-   * 激活规则
-   * - 主应用据此匹配微应用
-   * - 微应用需将其作为 createWebHistory 的 base
-   */
-  activeRule: string
-  /** 微应用名称，对应 qiankun 应用名 */
-  name: string
-  /** 当前环境入口 URL */
-  entry?: string
-  /** 容器选择器 */
-  container: string
-  menuKey?: string
-}
+/**
+ * 子应用静态解析结果
+ *
+ * - `activeRule` 收窄为 `string`
+ * - `props` 由 `useMicroAppStore` 在运行时注入，不在此处定义
+ *
+ * @see https://qiankun.umijs.org/zh/api#registermicroappsapps-lifecycles
+ */
+export type ResolvedMicroApp = RegistrableApp<object> &
+  Pick<MicroAppDefinition, 'activeRule'> & {
+    container: string
+  }
 
-/** 所有微应用的静态配置列表 */
-const microAppDefinitions = [
+/** 所有子应用的静态配置列表 */
+const microAppDefinitions: MicroAppDefinition[] = [
   {
     activeRule: MICRO_APP_ACTIVE_RULE.OCRM,
     entryMap: {
@@ -36,7 +42,6 @@ const microAppDefinitions = [
   },
   {
     activeRule: MICRO_APP_ACTIVE_RULE.VUE3_HISTORY,
-    menuKey: 'crmReadFunctionList',
     entryMap: {
       [RUNTIME_ENV.DEV]: 'http://localhost:8101',
     },
@@ -47,27 +52,26 @@ const microAppDefinitions = [
       [RUNTIME_ENV.DEV]: 'http://localhost:8103',
     },
   },
-] as const
+]
 
 /**
  * 从 activeRule 提取应用标识符
  * @example '/ocrm/#' → 'ocrm'
  * @example '/vue3-history' → 'vue3-history'
  */
-const getPackageId = (activeRule: string) =>
-  activeRule.replace(/^\//, '').replace(/[/#].*$/, '')
+const getPackageId = (activeRule: string) => {
+  return activeRule
+    .replace(/^\//, '') // 去掉开头的斜杠
+    .replace(/[/#].*$/, '') // 去掉第一个 /# 及其后的内容
+}
 
-/** 将微应用静态配置补全为可直接使用的解析结果 */
-const resolveMicroApp = (config: MicroAppDefinition): ResolvedMicroApp => {
+/** 将子应用静态配置补全 */
+export const microApps = microAppDefinitions.map((config): ResolvedMicroApp => {
   const id = getPackageId(config.activeRule)
   return {
     activeRule: config.activeRule,
+    entry: config.entryMap[runtimeEnv]!,
     name: id,
-    entry: config.entryMap[runtimeEnv],
     container: `#micro-container__${id}`,
-    menuKey: config.menuKey,
   }
-}
-
-export const resolvedMicroApps: ResolvedMicroApp[] =
-  microAppDefinitions.map(resolveMicroApp)
+})

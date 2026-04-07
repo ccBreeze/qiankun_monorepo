@@ -8,7 +8,7 @@ export const generateRouter = (base?: string) => {
     routes: [],
   })
 
-  setupDynamicRoute(router, base)
+  setupDynamicRoute(router)
 
   return router
 }

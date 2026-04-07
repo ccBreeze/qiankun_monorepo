@@ -4,7 +4,7 @@
   "description": "Vue Router 适配层",
   "type": "module",
   "exports": {
-    ".": "./src/router/index.ts"
+    ".": "./src/index.ts"
   },
   "scripts": {
     "type-check": "tsc",
@@ -12,7 +12,7 @@
     "lint:fix": "eslint . --fix --cache"
   },
   "dependencies": {
-    "@breeze/router": "workspace:*"
+    "@breeze/runtime": "workspace:*"
   },
   "peerDependencies": {
     "vue-router": "^4.6.3"

@@ -1,17 +1,18 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
-import Home from '@/views/HomePage/index.vue'
-import { resolvedMicroApps } from '@/utils/microAppRegistry'
+import { microApps } from '@/utils/microAppRegistry'
 import { createAuthGuard } from './guard/auth'
 
 /**
- * 微应用路由别名列表，使主应用路由能匹配所有微应用的子路径。
+ * 子应用路由别名列表，使主应用路由能匹配所有子应用的子路径。
  *
- * 从每个微应用的 activeRule 提取路径前缀，生成通配别名。
+ * 从每个子应用的 activeRule 提取路径前缀，生成通配别名。
  * @example
  * activeRule: '/ocrm/#' → '/ocrm/:subPath*'
  * activeRule: '/vue3-history' → '/vue3-history/:subPath*'
+ *
+ * @see https://router.vuejs.org/zh/guide/essentials/redirect-and-alias.html#别名
  */
-const microAppAliases = resolvedMicroApps.map(({ activeRule }) => {
+const microAppAliases = microApps.map(({ activeRule }) => {
   const segment = activeRule.split('/')[1]
   return `/${segment}/:subPath*`
 })
@@ -19,7 +20,6 @@ const microAppAliases = resolvedMicroApps.map(({ activeRule }) => {
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    name: 'home',
     redirect: '/login',
   },
   {
@@ -31,7 +31,7 @@ const routes: RouteRecordRaw[] = [
     path: '/microApp',
     name: 'microApp',
     alias: microAppAliases,
-    component: Home,
+    component: () => import('@/views/HomePage/index.vue'),
   },
 ]
 
