@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile>
+  <diagram id="routing-mechanism" name="路由分层模型">
+    <mxGraphModel dx="1900" dy="1500" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1700" pageHeight="1400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ==================== 标题 ==================== -->
+        <mxCell id="title" value="&lt;b&gt;路由分层模型 — 一次导航的完整流程&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=20;fillColor=none;strokeColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="350" y="30" width="1000" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== 用户请求（入口） ==================== -->
+        <mxCell id="user-request" value="&lt;b&gt;用户访问&lt;/b&gt;&lt;br&gt;/vue3-history/CouponListTemp" style="shape=mxgraph.flowchart.terminator;rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe0b2;strokeColor=#E65100;strokeWidth=3;shadow=1;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="660" y="100" width="300" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== 第一层：主应用路由层 ==================== -->
+        <mxCell id="layer1-container" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EBF2FF;strokeColor=#0A1A3C;strokeWidth=3;dashed=1;dashPattern=8 4;verticalAlign=top;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="150" y="200" width="1400" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="layer1-label" value="&lt;b&gt;第一层：主应用路由层（vue-router）&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontStyle=1;fontSize=15;fillColor=none;strokeColor=none;fontColor=#0A1A3C;" vertex="1" parent="1">
+          <mxGeometry x="170" y="205" width="350" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Auth Guard -->
+        <mxCell id="auth-guard" value="&lt;b&gt;Auth Guard&lt;/b&gt;&lt;br&gt;createAuthGuard&lt;br&gt;&lt;font color=&quot;#666&quot;&gt;检查 accessToken&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=3;fontStyle=1;fontSize=12;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="190" y="260" width="200" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Router Alias -->
+        <mxCell id="router-alias" value="&lt;b&gt;路由别名匹配&lt;/b&gt;&lt;br&gt;/vue3-history/:subPath*&lt;br&gt;&lt;font color=&quot;#666&quot;&gt;命中 /microApp 路由&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565C0;strokeWidth=3;fontStyle=1;fontSize=12;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="490" y="260" width="230" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Home Component -->
+        <mxCell id="home-component" value="&lt;b&gt;Home 组件&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#666&quot;&gt;侧边栏 + MicroApp 容器&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565C0;strokeWidth=3;fontStyle=1;fontSize=12;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="820" y="260" width="230" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Registry -->
+        <mxCell id="registry" value="&lt;b&gt;微应用注册表&lt;/b&gt;&lt;br&gt;registry.ts&lt;br&gt;&lt;font color=&quot;#666&quot;&gt;activeRule / entry / container&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1150" y="260" width="260" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Login redirect -->
+        <mxCell id="login-page" value="&lt;b&gt;/login&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F7FA;strokeColor=#90A4AE;strokeWidth=2;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="230" y="375" width="120" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== 第二层：微应用激活层 ==================== -->
+        <mxCell id="layer2-container" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF8E1;strokeColor=#E65100;strokeWidth=3;dashed=1;dashPattern=8 4;verticalAlign=top;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="150" y="500" width="1400" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="layer2-label" value="&lt;b&gt;第二层：微应用激活层（qiankun）&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontStyle=1;fontSize=15;fillColor=none;strokeColor=none;fontColor=#E65100;" vertex="1" parent="1">
+          <mxGeometry x="170" y="505" width="350" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- activeMicroApp -->
+        <mxCell id="active-micro-app" value="&lt;b&gt;activeMicroApp&lt;/b&gt;&lt;br&gt;microApp store&lt;br&gt;&lt;font color=&quot;#666&quot;&gt;fullPath.startsWith(activeRule)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe0b2;strokeColor=#E65100;strokeWidth=3;fontStyle=1;fontSize=12;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="260" y="560" width="280" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- loadMicroApp -->
+        <mxCell id="load-micro-app" value="&lt;b&gt;loadMicroApp()&lt;/b&gt;&lt;br&gt;MicroApp/index.vue&lt;br&gt;&lt;font color=&quot;#666&quot;&gt;v-show 切换 + 实例缓存&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe0b2;strokeColor=#E65100;strokeWidth=3;fontStyle=1;fontSize=12;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="650" y="560" width="260" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Menu Store -->
+        <mxCell id="menu-store" value="&lt;b&gt;菜单状态管理&lt;/b&gt;&lt;br&gt;menu store&lt;br&gt;&lt;font color=&quot;#666&quot;&gt;authorizedRoutesByActiveRule&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="560" width="260" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- createHostProps -->
+        <mxCell id="host-props" value="&lt;b&gt;createHostProps&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#666&quot;&gt;baseUrl + getAuthorizedRoutes&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565C0;strokeWidth=3;fontStyle=1;fontSize=12;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="490" y="680" width="270" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== 第三层：子应用路由层 ==================== -->
+        <mxCell id="layer3-container" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#2E7D32;strokeWidth=3;dashed=1;dashPattern=8 4;verticalAlign=top;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="150" y="810" width="1400" height="270" as="geometry" />
+        </mxCell>
+        <mxCell id="layer3-label" value="&lt;b&gt;第三层：子应用路由层（vue-router）&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontStyle=1;fontSize=15;fillColor=none;strokeColor=none;fontColor=#2E7D32;" vertex="1" parent="1">
+          <mxGeometry x="170" y="815" width="350" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- microAppContext -->
+        <mxCell id="micro-app-context" value="&lt;b&gt;microAppContext&lt;/b&gt;&lt;br&gt;@breeze/runtime&lt;br&gt;&lt;font color=&quot;#666&quot;&gt;setProps(props) 缓存上下文&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=3;fontStyle=1;fontSize=12;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="190" y="870" width="250" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- createWebHistory -->
+        <mxCell id="create-web-history" value="&lt;b&gt;createWebHistory(base)&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#666&quot;&gt;base = activeRule&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=3;fontStyle=1;fontSize=12;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="870" width="220" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- dynamicRouteGuard -->
+        <mxCell id="dynamic-route-guard" value="&lt;b&gt;createDynamicRouteGuard&lt;/b&gt;&lt;br&gt;@breeze/bridge-vue&lt;br&gt;&lt;font color=&quot;#666&quot;&gt;beforeEach → addRoute&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=3;fontStyle=1;fontSize=12;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="830" y="870" width="250" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Page Component -->
+        <mxCell id="page-component" value="&lt;b&gt;页面组件渲染&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#666&quot;&gt;import.meta.glob 匹配&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=3;fontStyle=1;fontSize=12;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="870" width="220" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- breeze/router -->
+        <mxCell id="breeze-router" value="&lt;b&gt;@breeze/router&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#666&quot;&gt;resolveRoute → path / name / filePath&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="480" y="985" width="300" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- Result -->
+        <mxCell id="render-result" value="&lt;b&gt;CouponListTemp/index.vue&lt;/b&gt;&lt;br&gt;渲染完成" style="shape=mxgraph.flowchart.terminator;rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe0b2;strokeColor=#E65100;strokeWidth=3;shadow=1;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="660" y="1140" width="300" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== 连接线 ==================== -->
+
+        <!-- 用户 → Auth Guard -->
+        <mxCell id="edge-user-to-auth" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#1565C0;endArrow=classic;exitX=0.25;exitY=1;entryX=0.5;entryY=0;" edge="1" source="user-request" target="auth-guard" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Auth Guard → Login -->
+        <mxCell id="edge-auth-to-login" value="&lt;font color=&quot;#b85450&quot;&gt;未登录&lt;/font&gt;" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=2;strokeColor=#90A4AE;endArrow=classic;dashed=1;dashPattern=8 4;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="auth-guard" target="login-page" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Auth Guard → Router Alias -->
+        <mxCell id="edge-auth-to-alias" value="&lt;b&gt;已登录&lt;/b&gt;" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#1565C0;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="auth-guard" target="router-alias" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Router Alias → Home -->
+        <mxCell id="edge-alias-to-home" value="&lt;b&gt;alias 命中&lt;/b&gt;" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#1565C0;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="router-alias" target="home-component" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Registry → Home (配置注入) -->
+        <mxCell id="edge-registry-to-home" value="&lt;font color=&quot;#6c8ebf&quot;&gt;注册表配置&lt;/font&gt;" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=2;strokeColor=#6c8ebf;endArrow=classic;dashed=1;dashPattern=8 4;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" source="registry" target="home-component" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Home → activeMicroApp -->
+        <mxCell id="edge-home-to-active" value="&lt;b&gt;route.fullPath&lt;/b&gt;" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#1565C0;endArrow=classic;exitX=0.25;exitY=1;entryX=0.5;entryY=0;" edge="1" source="home-component" target="active-micro-app" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- activeMicroApp → loadMicroApp -->
+        <mxCell id="edge-active-to-load" value="&lt;b&gt;watch 变化&lt;/b&gt;" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#E65100;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="active-micro-app" target="load-micro-app" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Menu Store → Host Props -->
+        <mxCell id="edge-menu-to-props" value="&lt;font color=&quot;#6c8ebf&quot;&gt;授权路由&lt;/font&gt;" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=2;strokeColor=#6c8ebf;endArrow=classic;exitX=0.3;exitY=1;entryX=1;entryY=0.5;" edge="1" source="menu-store" target="host-props" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- loadMicroApp → Host Props -->
+        <mxCell id="edge-load-to-props" value="&lt;b&gt;props 注入&lt;/b&gt;" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#E65100;endArrow=classic;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="load-micro-app" target="host-props" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Host Props → microAppContext -->
+        <mxCell id="edge-props-to-context" value="&lt;b&gt;qiankun mount()&lt;/b&gt;" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#1565C0;endArrow=classic;exitX=0.25;exitY=1;entryX=0.5;entryY=0;" edge="1" source="host-props" target="micro-app-context" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- microAppContext → createWebHistory -->
+        <mxCell id="edge-context-to-history" value="&lt;b&gt;baseUrl&lt;/b&gt;" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#2E7D32;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="micro-app-context" target="create-web-history" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- createWebHistory → dynamicRouteGuard -->
+        <mxCell id="edge-history-to-guard" value="&lt;b&gt;router 实例&lt;/b&gt;" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#2E7D32;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="create-web-history" target="dynamic-route-guard" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- dynamicRouteGuard → Page Component -->
+        <mxCell id="edge-guard-to-page" value="&lt;b&gt;addRoute&lt;/b&gt;" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#2E7D32;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="dynamic-route-guard" target="page-component" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- breeze/router → dynamicRouteGuard -->
+        <mxCell id="edge-breeze-to-guard" value="&lt;font color=&quot;#9673a6&quot;&gt;URL 解析&lt;/font&gt;" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=2;strokeColor=#9673a6;endArrow=classic;dashed=1;dashPattern=8 4;exitX=1;exitY=0;entryX=0.5;entryY=1;" edge="1" source="breeze-router" target="dynamic-route-guard" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Page Component → Result -->
+        <mxCell id="edge-page-to-result" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#2E7D32;endArrow=classic;exitX=0.5;exitY=1;entryX=0.75;entryY=0;" edge="1" source="page-component" target="render-result" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== 图例 ==================== -->
+        <mxCell id="legend-container" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#CCCCCC;strokeWidth=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="150" y="1240" width="750" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-title" value="&lt;b&gt;图例：&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontStyle=1;fontSize=11;fillColor=none;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="160" y="1250" width="50" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="legend-core" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565C0;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="215" y="1255" width="20" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-core-text" value="核心流程" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;fillColor=none;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="240" y="1250" width="60" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="legend-hub" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe0b2;strokeColor=#E65100;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="315" y="1255" width="20" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-hub-text" value="枢纽 / qiankun" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;fillColor=none;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="340" y="1250" width="90" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="legend-sub" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="445" y="1255" width="20" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-sub-text" value="子应用模块" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;fillColor=none;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="470" y="1250" width="70" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="legend-config" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="555" y="1255" width="20" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-config-text" value="配置 / 状态" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;fillColor=none;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="580" y="1250" width="70" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="legend-dashed-line" value="" style="endArrow=classic;dashed=1;dashPattern=8 4;strokeColor=#90A4AE;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="665" y="1265" as="sourcePoint" />
+            <mxPoint x="715" y="1265" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend-dashed-text" value="配置注入 / 辅助" style="text;html=1;align=left;verticalAlign=middle;fontSize=10;fillColor=none;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="720" y="1250" width="100" height="30" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

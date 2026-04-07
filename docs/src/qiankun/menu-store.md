@@ -12,6 +12,19 @@ outline: [2, 4]
 - 将后端 `UserData` 中的多个菜单字段（如 `coms8ReadFunctionList`、`crmReadFunctionList`）解析为独立的菜单分组
 - 维护 `MenuModule` 缓存，供菜单组件、标签栏等消费
 - 提供当前路由与菜单的匹配关系（激活菜单、激活分组）
+- 按 `activeRule` 聚合所有菜单分组的授权路由，供主应用通过 qiankun props 下发给各子应用
+
+## 核心约束：菜单分组与子应用不是一对一关系
+
+在阅读本文档前，需要先建立两个核心认知：
+
+::: warning
+
+- <span style="color: var(--vp-c-danger-1); font-weight: bold;"> `activeRule` 前缀只能判断路由属于哪个子应用，不能判断它属于哪个菜单分组。</span>菜单归属依赖 `DynamicRoute` 构建的完整路由表进行匹配，无法简化为 `pathPrefix → menuGroup` 的映射。
+- <span style="color: var(--vp-c-danger-1); font-weight: bold;">一个菜单分组里可以混合多个子应用的路由。</span>例如"会员管理"下面既可能有 `/vue3-history/memberList`，也可能有 `/crm-v8/memberCard`，它们分属不同子应用，但同属一个菜单分组。
+  :::
+
+这两个约束决定了菜单系统的核心设计：必须遍历所有菜单分组完成全量解析，并按 `meta.activeRule` 重新聚合授权路由，而不能直接用"菜单分组 → 子应用"的映射来派发。
 
 ## 菜单分组配置
 
@@ -23,80 +36,77 @@ const menuModuleConfigs = [
     menuKey: 'coms8ReadFunctionList',
     title: '餐饮管理',
     iconName: 'menu-catering-management',
-    packageName: 'ocrm',
+    fallbackActiveRule: MICRO_APP_ACTIVE_RULE.OCRM,
   },
   {
     menuKey: 'crmReadFunctionList',
     title: '会员管理',
     iconName: 'menu-membership-management',
-    packageName: 'vue3-history',
+    fallbackActiveRule: MICRO_APP_ACTIVE_RULE.VUE3_HISTORY,
   },
-] as const
+]
 ```
 
-| 字段          | 说明                                                                                                                                     |
-| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `menuKey`     | 对应 `UserData` 中的字段名，后端下发的菜单数据从此字段读取                                                                               |
-| `title`       | 菜单分组的显示名称                                                                                                                       |
-| `iconName`    | 菜单分组图标，用于顶部导航渲染                                                                                                           |
-| `packageName` | 微应用包名，通过 `microAppRegistry.get(packageName)` 读取对应微应用配置，其中 `activeRule` 作为 `fallbackActiveRule` 传给 `DynamicRoute` |
+| 字段                 | 说明                                                                         |
+| -------------------- | ---------------------------------------------------------------------------- |
+| `menuKey`            | 对应 `UserData` 中的字段名，后端下发的菜单数据从此字段读取                   |
+| `title`              | 菜单分组的显示名称                                                           |
+| `iconName`           | 菜单分组图标，用于顶部导航渲染                                               |
+| `fallbackActiveRule` | 仅表示当菜单 `path` 没有任何子应用 `activeRule` 前缀时，默认归属哪个子应用。 |
 
-### `menuModuleConfigs` 和 `microAppConfigs` 不是一回事
+### `menuModuleConfigs` 和 `microAppDefinitions` 区别
 
 先看代码：
 
 ```ts [apps/main-app/src/stores/menu.ts]
 const menuModuleConfigs = [
   {
+    // [!code focus]
     menuKey: 'coms8ReadFunctionList',
+    // [!code focus]
+    fallbackActiveRule: MICRO_APP_ACTIVE_RULE.OCRM,
     title: '餐饮管理',
     iconName: 'menu-catering-management',
-    packageName: 'ocrm',
   },
   {
+    // [!code focus]
     menuKey: 'crmReadFunctionList',
+    // [!code focus]
+    fallbackActiveRule: MICRO_APP_ACTIVE_RULE.VUE3_HISTORY,
     title: '会员管理',
     iconName: 'menu-membership-management',
-    packageName: 'vue3-history',
-  },
-] as const
-```
-
-```ts [apps/main-app/src/views/MicroApp/utils/registry.ts]
-const microAppConfigs = [
-  {
-    packageName: 'ocrm',
-    pathPrefix: '/ocrm/#/',
-  },
-  {
-    packageName: 'vue3-history',
-  },
-  {
-    packageName: 'breeze-crm-v8',
   },
 ]
 ```
 
-两者都和“路由”有关，但解决的问题完全不同：
+```ts [apps/main-app/src/utils/microAppRegistry.ts]
+const microAppDefinitions: MicroAppDefinition[] = [
+  {
+    // [!code focus]
+    activeRule: MICRO_APP_ACTIVE_RULE.OCRM,
+    entryMap: {},
+  },
+  {
+    // [!code focus]
+    activeRule: MICRO_APP_ACTIVE_RULE.VUE3_HISTORY,
+    entryMap: {},
+  },
+  {
+    // [!code focus]
+    activeRule: MICRO_APP_ACTIVE_RULE.BREEZE_CRM_V8,
+    entryMap: {},
+  },
+]
+```
 
-| 配置                | 关注维度              | 主要作用                                                                            |
-| ------------------- | --------------------- | ----------------------------------------------------------------------------------- |
-| `menuModuleConfigs` | 菜单分组 / 业务视角   | 决定当前路由属于哪个菜单分组                                                        |
-| `microAppConfigs`   | 微应用注册 / 技术视角 | 根据 `pathPrefix` 决定应该加载哪个微应用，并提供 qiankun 所需的 `activeRule` 等配置 |
+两者都和"路由"有关，但解决的问题完全不同：
 
-这两个问题不是一一对应关系。
+| 配置                  | 关注维度              | 主要作用                                                                       |
+| --------------------- | --------------------- | ------------------------------------------------------------------------------ |
+| `menuModuleConfigs`   | 菜单分组 / 业务视角   | 决定当前路由属于哪个菜单分组                                                   |
+| `microAppDefinitions` | 子应用注册 / 技术视角 | 根据 `activeRule` 决定应该加载哪个子应用，并提供 qiankun 所需的入口 URL 等配置 |
 
-::: warning 不能只靠 pathPrefix 判断菜单分组
-通过 `route.fullPath` 解析出的前缀，只能判断当前页面属于哪个微应用，不能直接推出它属于哪个菜单分组。因为一个菜单分组里，完全可能混合多个不同 `pathPrefix` 的页面，也就是混合多个不同子应用的路由。
-:::
-
-例如：
-
-- 顶部菜单“会员管理”是一个业务分组
-- 它下面既可能有 `/vue3-history/...` 的页面，也可能有 `/crm-v8/...` 的页面
-- 这两个前缀会命中不同的微应用，但在菜单层面仍然属于同一个菜单分组
-
-因此菜单归属不能只做前缀匹配，而要依赖 `DynamicRoute` 生成出来的完整菜单路由表进行匹配。
+因此**判断路由属于哪个菜单分组**，不能只做路由前缀匹配，而要在初始化阶段一次性构建所有菜单，依赖 `DynamicRoute` 生成的完整路由表进行匹配，详见[核心约束](#核心约束-菜单分组与子应用不是一对一关系)。
 
 ## 构建流程
 
@@ -104,69 +114,60 @@ const microAppConfigs = [
 
 ::: warning 为什么要一次性构建所有菜单
 
-- `activeMenuRoute` 根据当前 `route.fullPath` 在**所有菜单**里做匹配，判断这条路由到底属于哪个菜单
-- 仅靠 `route.fullPath` 的<span style="color: #d63384; font-weight: bold;">前缀只能判断属于哪个微应用，不能判断属于哪个菜单</span>，所以不能把菜单判断简化成 `pathPrefix -> menuGroup` 的映射
-
-:::
+- `activeMenuRoute` 需要根据当前 `route.fullPath` 在**所有菜单分组**里做匹配，才能判断这条路由属于哪个菜单。
+- 由于 `activeRule` 只能判断路由属于哪个子应用、不能判断菜单归属，因此不能按需懒加载某个分组，必须一次性构建全部菜单。
+  :::
 
 ```ts [apps/main-app/src/stores/menu.ts]
-const buildAllMenus = (userData: UserData): void => {
+const buildAllMenus = (userData: UserData) => {
   resetMenus()
   if (Object.keys(userData).length === 0) return
 
-  const registeredActiveRules = [...microAppRegistry.values()].map(
-    (app) => app.activeRule,
-  )
+  const registeredActiveRules = microApps.map((app) => app.activeRule)
 
   for (const item of menuModuleConfigs) {
-    const menuData = userData[item.menuKey]
-    if (!menuData?.length) {
-      console.error('[Menu] 菜单数据为空', { menuKey: item.menuKey })
+    const menuData = userData[item.menuKey as keyof UserData]
+    if (!Array.isArray(menuData) || !menuData.length) {
       continue
     }
 
-    // [!code focus]
     // 1. 创建 DynamicRoute 实例（内部完成路由树构建 + 匹配器注册）
-    // [!code focus]
     const dynamicRoute = DynamicRoute.create(menuData, {
-      menuKey: item.menuKey, // [!code focus]
-      fallbackActiveRule: microAppRegistry.get(item.packageName)!.activeRule, // [!code focus]
-      registeredActiveRules, // [!code focus]
-    }) // [!code focus]
+      menuKey: item.menuKey,
+      fallbackActiveRule: item.fallbackActiveRule,
+      registeredActiveRules,
+    })
 
-    // [!code focus]
-    // 2. 提取根级菜单路由和子应用首页
-    const menuRoutes = dynamicRoute.rootRoutes // [!code focus]
-    const appHomePath = findFirstLeafPath(menuRoutes) // [!code focus]
+    // 2. 将本分组的 routesByActiveRule 合并到全局 authorizedRoutesByActiveRule
+    for (const [activeRule, routes] of dynamicRoute.routesByActiveRule) {
+      let existingRoutes = authorizedRoutesByActiveRule.get(activeRule)
+      if (!existingRoutes) {
+        existingRoutes = []
+        authorizedRoutesByActiveRule.set(activeRule, existingRoutes)
+      }
+      existingRoutes.push(...routes)
+    }
+
+    // 3. 提取子应用首页，缓存到 menuMap
+    const appHomePath = findFirstLeafPath(dynamicRoute.rootRoutes)
     if (!appHomePath) {
-      console.error('[Menu] 菜单路由树无叶子节点，跳过分组', {
-        menuKey: item.menuKey,
-      })
       continue
     }
 
-    // [!code focus]
-    // 3. 缓存到 menuMap
-    // [!code focus]
     menuMap.set(item.menuKey, {
-      // [!code focus]
-      ...item, // [!code focus]
-      appHomePath, // [!code focus]
-      menuRoutes, // [!code focus]
-      dynamicRoute, // [!code focus]
-    }) // [!code focus]
+      ...item,
+      appHomePath,
+      dynamicRoute,
+    })
   }
 }
 ```
 
-这里有两个容易混淆的点：
+这里有几个容易混淆的点：
 
-- `fallbackActiveRule` 来自微应用注册表里的 `activeRule`，用于在菜单 `url` 本身不带微应用前缀时兜底补齐
-- `registeredActiveRules` 仍然来自注册表里的 `activeRule` 列表，用于判断菜单 `url` 是否已经自带某个微应用前缀，避免重复拼接
-
-::: tip DynamicRoute 与菜单分组的关系
-每个菜单分组拥有独立的 `DynamicRoute` 实例。这意味着不同分组（如餐饮管理、会员管理）的路由树相互隔离，各自维护自己的路由匹配器和路径祖先链。详见 [动态路由源码解析](/qiankun/dynamic-route)。
-:::
+- `fallbackActiveRule` 用于在菜单 `url` 本身不带子应用前缀时兜底补齐
+- `registeredActiveRules` 用于判断菜单 `url` 是否已经自带某个子应用前缀，避免重复拼接
+- `authorizedRoutesByActiveRule` 是跨分组聚合的结果，同一 `activeRule` 的路由来自多个菜单分组时会累积合并
 
 ## 计算属性
 
@@ -174,9 +175,9 @@ const buildAllMenus = (userData: UserData): void => {
 
 根据当前用户实际拥有的菜单权限，动态返回第一个菜单模块下首个页面的路径，作为登录后的首页。
 
-::: details 为什么不直接写死一个固定的首页路径？
+::: warning 为什么不直接写死一个固定的首页路径？
 
-- 不同账号配置的菜单权限不同，固定路径可能指向当前用户没有权限访问的页面。
+- 不同账号配置的**菜单权限**不同，固定路径可能指向当前用户没有权限访问的页面。
 
 - 通过动态取第一个可用叶子节点，确保任何账号登录后都能跳转到自己有权限的页面。
   :::
@@ -250,12 +251,42 @@ const buildAllMenus = (userData: UserData): void => {
 interface MenuModule {
   title: string
   iconName: string
-  packageName: MicroAppConfig['packageName']
   /** 子应用首页路径 */
   appHomePath: string
-  menuRoutes: MenuRoute[]
   dynamicRoute: DynamicRoute
 }
 ```
 
 每个 `MenuModule` 包含一个完整的 `DynamicRoute` 实例，具备独立的路由树构建和路径匹配能力。
+
+### authorizedRoutesByActiveRule
+
+`buildAllMenus` 在构建菜单的同时，会将所有菜单分组产出的路由按 `meta.activeRule` 聚合到 `authorizedRoutesByActiveRule`：
+
+```ts
+/** 按子应用 activeRule 聚合后的授权路由表 */
+const authorizedRoutesByActiveRule = shallowReactive(
+  new Map<string, MenuRoute[]>(),
+)
+```
+
+该 Map 的作用是让 `microApp store` 能够按 `activeRule` 取出对应子应用的全部授权路由，通过 qiankun `props` 下发给子应用。
+
+::: warning 为什么不能直接用"菜单分组 → 子应用"的映射来派发授权路由
+
+由于一个菜单分组可以混合多个子应用的路由（见[核心约束](#核心约束-菜单分组与子应用不是一对一关系)），必须**按 `meta.activeRule` 维度重新聚合**，将每条路由按自身的归属归入对应的桶，最终每个子应用拿到属于自己的**全量授权路由**，无论这些路由分散在哪个菜单分组中。
+:::
+
+::: details 示例：authorizedRoutesByActiveRule 的最终结构
+
+```ts
+Map {
+  '/ocrm/#' => [MenuRoute, MenuRoute, ...],
+  '/vue3-history/' => [MenuRoute, MenuRoute, ...],
+}
+```
+
+- key 是子应用的 `activeRule`
+- value 是**该子应用在所有菜单分组中**被授权的路由总和。
+
+:::

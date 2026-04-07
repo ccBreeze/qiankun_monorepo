@@ -1,68 +1,128 @@
 ---
-title: 微应用状态管理
+title: 子应用状态管理
 ---
 
-# 微应用状态管理
+# 子应用状态管理
 
-本文档说明 `apps/main-app/src/stores/microApp.ts` 的职责与实现。该 Store 负责根据当前路由自动识别激活的微应用。
+本文档说明 `apps/main-app/src/stores/microApp.ts` 的职责与实现。该 Store 负责构建 qiankun 应用配置列表，并根据当前路由自动识别激活的子应用。
 
 ## 职责
 
-根据浏览器当前路由路径，在[微应用注册表](./micro-app-registry.md)中查找匹配的微应用配置，向外暴露响应式的 `activeMicroApp`。
+- 将[子应用注册表](./micro-app-registry.md)中的 `ResolvedMicroApp` 补全为 qiankun 可用的应用配置（含 `props`）
+- 根据浏览器当前路由路径，响应式地暴露 `activeMicroApp`
+- 将主应用的授权路由和用户数据以静态值形式注入子应用 props
 
-## 实现
+## 类型
+
+在静态的 `ResolvedMicroApp` 基础上注入 `props`，并在消费侧收窄 `userData` 的类型：
 
 ```ts [apps/main-app/src/stores/microApp.ts]
-/** 根据路由路径匹配对应的微应用配置 */
-const findMicroAppByPath = (path: string) => {
-  for (const microApp of microAppRegistry.values()) {
-    if (path.startsWith(microApp.activeRule)) {
-      return microApp
-    }
+/** 运行时子应用配置 */
+type MicroAppConfig = ResolvedMicroApp & {
+  props: MicroAppHostProps & {
+    userData: UserData // 收窄类型
   }
 }
+```
 
-export const useMicroAppStore = defineStore('microApp', () => {
-  const route = useRoute()
+## microAppConfigs
 
-  /** 根据当前路由自动匹配激活的微应用 */
-  const activeMicroApp = computed(() => findMicroAppByPath(route.fullPath))
+扩展 `props` 的运行时配置，用于 qiankun `loadMicroApp` 手动加载子应用。
 
-  return { activeMicroApp }
+```ts [apps/main-app/src/stores/microApp.ts]
+const menuStore = useMenuStore()
+const userStore = useUserStore()
+
+const microAppConfigs = computed<MicroAppConfig[]>(() => {
+  return microApps.map((app) => ({
+    ...app,
+    props: {
+      activeRule: app.activeRule,
+      authorizedRoutes:
+        menuStore.authorizedRoutesByActiveRule.get(app.activeRule) ?? [],
+      userData: userStore.userData,
+    },
+  }))
 })
 ```
 
-## 匹配逻辑
+| props 字段         | 说明                                                      |
+| ------------------ | --------------------------------------------------------- |
+| `activeRule`       | 子应用路由前缀，子应用用于 `createWebHistory(activeRule)` |
+| `authorizedRoutes` | 子应用的授权路由列表                                      |
+| `userData`         | 当前登录用户数据                                          |
 
-遍历 `microAppRegistry` 的所有条目，对当前路由的 `fullPath` 执行**前缀匹配**：
+## activeMicroApp
 
-| 当前路径                       | 匹配结果                                |
-| ------------------------------ | --------------------------------------- |
-| `/crm-v8/home`                 | `breeze-crm-v8`（匹配 `/crm-v8/`）      |
-| `/vue3-history/couponListTemp` | `vue3-history`（匹配 `/vue3-history/`） |
-| `/login`                       | `undefined`（无匹配）                   |
+通过对 `route.fullPath` 做前缀匹配，从 `microAppConfigs` 中找出当前路由所属的子应用配置。
 
-### 这个匹配结果只能决定“微应用归属”
+```ts [apps/main-app/src/stores/microApp.ts]
+/** 根据当前路由自动匹配激活的子应用 */
+const activeMicroApp = computed(() => {
+  return microAppConfigs.value.find((app) =>
+    route.fullPath.startsWith(app.activeRule),
+  )
+})
+```
 
-`useMicroAppStore` 的前缀匹配，只回答一个问题：当前页面应该由哪个微应用承接。
+| 当前路径                       | 匹配结果                               |
+| ------------------------------ | -------------------------------------- |
+| `/crm-v8/home`                 | `breeze-crm-v8`（匹配 `/crm-v8`）      |
+| `/vue3-history/couponListTemp` | `vue3-history`（匹配 `/vue3-history`） |
+| `/login`                       | `undefined`（无匹配）                  |
 
-它**不负责**判断：
+## 在 MicroApp 视图中的使用
 
-- 当前页面属于哪个顶部菜单分组
-- 左侧菜单应该展示哪一组业务菜单
-- 标签栏标题应该采用哪条菜单记录
+`apps/main-app/src/views/MicroApp/index.vue` 是消费这两个值的核心视图。
 
-这些问题由 [菜单状态管理](./menu-store.md) 负责，后者会遍历所有菜单分组里的 `DynamicRoute` 实例，按完整菜单路由表做匹配。
+### 模板：用 microAppConfigs 预渲染所有容器
 
-::: info 为什么不能直接用微应用前缀推导菜单分组
-因为菜单分组是业务概念，微应用前缀是技术概念。一个菜单分组下面可能同时出现多个不同微应用前缀的页面，所以 `route.fullPath` 的前缀最多只能定位到“微应用”，不能直接定位到“菜单分组”。
+// TODO: 接入 Keep-alive 再完善文档
+
+```vue [apps/main-app/src/views/MicroApp/index.vue]
+<div
+  v-for="app in microAppConfigs"
+  v-show="app.name === activeMicroApp?.name"
+  :id="app.container.slice(1)"
+  :key="app.name"
+></div>
+```
+
+- `v-for` 遍历 `microAppConfigs`，为每个子应用创建一个挂载容器 `div`
+- `:id="app.container.slice(1)"` 去掉 `container` 字段的 `#` 前缀作为 DOM `id`，与 qiankun 的 CSS 选择器同源，确保始终匹配
+- `v-show` 根据 `activeMicroApp` 控制可见性：只显示当前激活应用的容器，其余隐藏
+
+这样做的好处是已加载的子应用在切换时不会被销毁，避免重复初始化。
+
+### 脚本：用 activeMicroApp 驱动按需加载
+
+```ts [apps/main-app/src/views/MicroApp/index.vue]
+const { activeMicroApp, microAppConfigs } = storeToRefs(useMicroAppStore())
+
+/** 已加载的子应用实例，key 为应用 name */
+const loadedApps = shallowRef(new Map<string, MicroApp>())
+
+watch(
+  activeMicroApp,
+  async (newApp, oldApp) => {
+    // 等待前一个应用挂载完成，防止切换过快导致加载失败
+    if (oldApp?.name) {
+      await loadedApps.value.get(oldApp.name)?.mountPromise
+    }
+
+    if (!newApp || loadedApps.value.has(newApp.name)) return
+    loadedApps.value.set(newApp.name, loadMicroApp(newApp))
+  },
+  { immediate: true },
+)
+```
+
+`watch(activeMicroApp)` 在每次路由切换后执行：
+
+1. **等待旧应用挂载完成**：若上一个应用仍在挂载中，先 `await mountPromise`，防止快速切换时的竞态问题
+2. **首次访问才加载**：`loadedApps` Map 记录已加载实例，`has(newApp.name)` 为真则跳过，实现懒加载
+3. **调用 `loadMicroApp(newApp)`**：将完整的 `MicroAppConfig`（含 `props`）传入 qiankun，完成子应用注册与挂载
+
+::: tip loadMicroApp 与 registerMicroApps 的区别
+此处使用 `loadMicroApp`（手动加载模式）而非 `registerMicroApps`，可以自主控制加载时机，也方便拿到每个应用的 `MicroApp` 实例（用于 `mountPromise` 等生命周期等待）。
 :::
-
-::: warning 注册顺序的影响
-`microAppRegistry` 是一个 `Map`，遍历顺序与插入顺序一致。如果未来出现路由前缀相互包含的情况，需要确保更长的前缀排在前面，否则可能发生误匹配。当前配置里 `/ocrm/#/`、`/vue3-history/`、`/crm-v8/` 彼此不重叠，因此没有这个问题。
-:::
-
-## 被谁使用
-
-- **微应用容器组件**：根据 `activeMicroApp` 判断需要加载哪个微应用
-- **ConsoleHeader**：根据是否存在 `activeMicroApp` 决定是否显示微应用相关的 UI 元素
