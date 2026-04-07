@@ -56,13 +56,16 @@ const microAppDefinitions: MicroAppDefinition[] = [
 
 /**
  * 从 activeRule 提取应用标识符
- * @example '/ocrm/#' → 'ocrm'
- * @example '/vue3-history' → 'vue3-history'
+ * @example
+ * getPackageId('/vue3-history')  // → 'vue3-history'
+ * getPackageId('/ocrm/#')  // → 'ocrm'
+ * getPackageId('/#/ocrm')       // → 'ocrm'（⚠️ 不推荐，hash 前缀无法生成独立路由别名）
  */
-const getPackageId = (activeRule: string) => {
-  return activeRule
-    .replace(/^\//, '') // 去掉开头的斜杠
-    .replace(/[/#].*$/, '') // 去掉第一个 /# 及其后的内容
+export const getPackageId = (activeRule: string) => {
+  const segments = activeRule
+    .split('/')
+    .filter((segment) => segment && segment !== '#')
+  return segments[0] ?? ''
 }
 
 /** 将子应用静态配置补全 */
