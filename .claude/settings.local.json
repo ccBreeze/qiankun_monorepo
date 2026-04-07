@@ -29,6 +29,5 @@
       "mcp__feishu-mcp__update-doc"
     ]
   },
-  "enabledMcpjsonServers": ["feishu-mcp", "drawio"],
-  "disabledMcpjsonServers": ["chrome-devtools", "figma"]
+  "enabledMcpjsonServers": []
 }
