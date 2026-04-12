@@ -2,6 +2,10 @@
 
 本文档记录从零创建 pnpm Monorepo 项目，并配置 TypeScript、ESLint、Prettier 的完整过程。
 
+## 学习视频
+
+- B 站视频：[从零搭建 qiankun Monorepo 项目](https://www.bilibili.com/video/BV1hp4y1L7Mr)
+
 ## 1. 创建 Monorepo 基础结构
 
 ### 1.1 初始化项目
