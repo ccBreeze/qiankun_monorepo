@@ -579,6 +579,9 @@ export const vue3: Linter.Config[] = [
       // 关闭与 Prettier 冲突但未被 eslint-config-prettier 覆盖的规则
       'vue/first-attribute-linebreak': 'off',
 
+      // 项目约定组件 name 格式为「目录名-文件名」（如 KeepAliveDemo-Detail），
+      'vue/component-definition-name-casing': 'off',
+
       // 组件名规则
       'vue/multi-word-component-names': [
         'error',
@@ -615,6 +618,19 @@ export const vue3: Linter.Config[] = [
 [`eslint-config-prettier`](https://github.com/prettier/eslint-config-prettier) 已经自动关闭了大部分与 Prettier 冲突的 Vue 格式规则，但 `vue/first-attribute-linebreak` **不在其覆盖范围内**。
 
 该规则控制组件第一个属性是否必须换行，与 Prettier 的格式化行为冲突——Prettier 会根据行宽自动决定是否换行，而该规则强制要求特定格式。因此需要手动设为 `'off'`。
+
+:::
+
+::: details 为什么要关闭 vue/component-definition-name-casing？
+
+`eslint-plugin-vue` 的 [`vue/component-definition-name-casing`](https://eslint.vuejs.org/rules/component-definition-name-casing.html) 只擅长约束比较标准的组件名风格，例如：
+
+- 纯 `PascalCase`
+- 纯 `kebab-case`
+
+但本项目里不少组件采用的是“目录名-文件名”的组合命名，例如 `KeepAliveDemo-Detail`。这种命名方式便于从 DevTools 或报错堆栈里直接定位到模块和文件，但它既不属于纯 PascalCase，也不属于纯 kebab-case，因此会被该规则误报。
+
+考虑到这是项目内明确接受的命名约定，我们将该规则关闭，避免为了迎合 lint 规则而放弃现有的组件命名语义。
 
 :::
 
