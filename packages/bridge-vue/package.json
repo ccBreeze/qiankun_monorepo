@@ -12,14 +12,17 @@
     "lint:fix": "eslint . --fix --cache"
   },
   "dependencies": {
+    "@breeze/router": "workspace:*",
     "@breeze/runtime": "workspace:*"
   },
   "peerDependencies": {
+    "vue": "^3.5.25",
     "vue-router": "^4.6.3"
   },
   "devDependencies": {
     "@breeze/eslint-config": "workspace:*",
     "typescript": "catalog:",
+    "vue": "catalog:",
     "vue-router": "catalog:"
   }
 }

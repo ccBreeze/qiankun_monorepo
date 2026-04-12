@@ -53,9 +53,8 @@ import { useScrollable } from './useScrollable'
 
 const route = useRoute()
 const router = useRouter()
-const tabBarStore = useTabBarStore()
-const { tabs } = storeToRefs(tabBarStore)
-const { removeTab } = tabBarStore
+const { tabs } = storeToRefs(useTabBarStore())
+const { addTab, removeTab } = useTabBarStore()
 
 const {
   isDisabledArrowLeft,
@@ -70,8 +69,8 @@ const {
 
 watch(
   () => route.fullPath,
-  async (fullPath: string) => {
-    tabBarStore.addTab(fullPath)
+  async (fullPath: string, oldFullPath?: string) => {
+    addTab(fullPath, oldFullPath)
     await checkTabsOverflow()
     await scrollToActiveTab(fullPath)
   },

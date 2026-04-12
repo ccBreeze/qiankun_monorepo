@@ -49,4 +49,8 @@ export class MicroAppContext<T extends MicroAppHostProps = MicroAppHostProps> {
   get authorizedRoutes() {
     return this._props.authorizedRoutes
   }
+
+  get container() {
+    return this._props.container
+  }
 }

@@ -43,6 +43,8 @@ export const vue3: Linter.Config[] = [
       // 关闭与 Prettier 冲突但未被 eslint-config-prettier 覆盖的规则
       'vue/first-attribute-linebreak': 'off',
 
+      // 项目约定组件 name 格式为「目录名-文件名」（如 KeepAliveDemo-Detail），
+      'vue/component-definition-name-casing': 'off',
       // 组件名规则
       'vue/multi-word-component-names': [
         'error',

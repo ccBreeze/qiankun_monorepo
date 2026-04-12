@@ -18,6 +18,7 @@
   "dependencies": {
     "@ant-design/icons-vue": "catalog:",
     "@breeze/bridge-vue": "workspace:*",
+    "@breeze/router": "workspace:*",
     "@breeze/runtime": "workspace:*",
     "ant-design-vue": "catalog:",
     "pinia": "catalog:",
