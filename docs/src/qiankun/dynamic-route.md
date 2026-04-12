@@ -65,15 +65,26 @@ packages/router/src/
 
 ### `normalizePath(path)`
 
-职责是把任意输入标准化成可用于匹配的 pathname：
+职责是把任意输入标准化成可用于匹配的路径。
 
-```ts [packages/router/src/parsers.ts]
+```ts
+// 确保路径以 `/` 开头
 normalizePath('order/list') // => '/order/list'
+
+// 移除 query 参数
 normalizePath('/order/list?id=1') // => '/order/list'
+
+// 合并连续斜杠
 normalizePath('/order//list/') // => '/order/list'
+
+// 移除末尾斜杠，但根路径 `/` 会保留
+normalizePath('/') // => '/'
+normalizePath('/list/') // => '/list'
 ```
 
-它不只是给 `resolveRoute` 用，也被 `RouteMatcher.resolvePathToRoute()` 复用，这意味着 query 不会影响菜单命中。注意 hash 不会被移除，以支持 hash history 模式的路由前缀（如 `/ocrm/#/`）。
+:::tip
+注意 `normalizePath()` 只移除 query，不会移除 hash，因此仍兼容 hash 模式前缀，例如 `/ocrm/#/`。
+:::
 
 ### `resolveExtraInfo(iconStr)`
 
@@ -91,17 +102,43 @@ normalizePath('/order//list/') // => '/order/list'
 
 解析激活规则。优先从 url 中匹配已注册的子应用前缀（如 `/ocrm/#/`、`/crm/`），未匹配到时按优先级取兜底值 `routeBase` > `fallbackActiveRule`。
 
+```ts
+resolveActiveRule({
+  url: '/vue3-history/order/list',
+  registeredActiveRules: ['/vue3-history/'],
+}) // => '/vue3-history'
+```
+
 ### `resolveRoute(params)`
 
 根据 url 解析路由信息。内部调用 `resolveActiveRule` 确定前缀后，生成以下字段：
 
-| 输出字段     | 来源                                                                                                                             |
-| ------------ | -------------------------------------------------------------------------------------------------------------------------------- |
-| `name`       | 去除前缀后各段首字母大写、以 `-` 拼接（如 `/user/profile` → `User-Profile`）。同时作为 vue-router 路由名称和 keep-alive 匹配标识 |
-| `path`       | `activeRule + url` 规范化后的完整路由路径                                                                                        |
-| `filePath`   | 去除前缀后各段首字母大写、以 `/` 拼接并保留前导斜杠（如 `/user/profile` → `/User/Profile`）                                      |
-| `activeRule` | 实际生效的激活规则                                                                                                               |
-| `component`  | 默认不生成，交给 `transformResolvedRoute` 自定义                                                                                 |
+| 输出字段     | 来源                                                                                        |
+| ------------ | ------------------------------------------------------------------------------------------- |
+| `name`       | 去除前缀后各段首字母大写、以 `-` 拼接（如 `/user/profile` → `User-Profile`）                |
+| `path`       | `activeRule + url` 规范化后的完整路由路径                                                   |
+| `filePath`   | 去除前缀后各段首字母大写、以 `/` 拼接并保留前导斜杠（如 `/user/profile` → `/User/Profile`） |
+| `activeRule` | 区分微应用。详情查看 [qiankun 入门教程](https://qiankun.umijs.org/zh/cookbook)              |
+| `component`  | 默认不生成，交给 `transformResolvedRoute` 自定义                                            |
+
+这里的 `name` 不再只是“路由名”，更准确地说是**组件名称标识**。它同时用于：
+
+- 页面组件 `defineOptions({ name })`
+- `KeepAlive` 的 `include` / `exclude` 匹配
+- `router.addRoute()` 注册动态路由时的 `name`
+
+例如：
+
+```ts
+resolveRoute({ url: '/vue3-history/KeepAliveDemo/Detail' })
+// =>
+// {
+//   name: 'KeepAliveDemo-Detail',
+//   path: '/vue3-history/KeepAliveDemo/Detail',
+//   filePath: '/KeepAliveDemo/Detail',
+//   activeRule: '/vue3-history'
+// }
+```
 
 ::: details ⚠️ keep-alive：路由 name 与 Vue 自动生成的 `__name` 不一致
 
@@ -137,6 +174,19 @@ Vue 3.2.34+ 只有在未显式声明 `name` 时才自动从文件名生成 `__na
 参考：[Vue 官方文档 — KeepAlive include/exclude](https://cn.vuejs.org/guide/built-ins/keep-alive.html#include-exclude)
 
 :::
+
+### `matchActiveRule(activeRule)`
+
+判断当前浏览器地址是否属于指定子应用。
+
+### `stripActiveRule(path, activeRule)`
+
+移除路径中的 `activeRule` 前缀
+
+```ts
+stripActiveRule('/vue3-history/CouponListTemp', '/vue3-history')
+// => '/CouponListTemp'
+```
 
 ## RouteTreeBuilder.ts
 
@@ -179,6 +229,20 @@ const myTransform: TransformResolvedRoute<MyParsedUrl> = (
 ::: info 关于 ROOT 虚拟根节点
 `ROOT` 是后端约定的一级菜单 `parentCode` 固定值。
 :::
+
+### routesByActiveRule
+
+`routesByActiveRule` 的分组逻辑实际发生在建树阶段：同一个菜单分组下可能混合多个子应用的路由，`RouteTreeBuilder` 会按 `activeRule` 将它们拆成 `Map<string, MenuRoute[]>`，供后续按子应用消费。详见[菜单状态管理](./menu-store.md#构建流程)
+
+```ts
+// 示例："会员管理"分组包含两个子应用的路由
+dynamicRoute.routesByActiveRule
+
+// Map {
+//   '/vue3-history/': [MenuRoute, MenuRoute, ...],
+//   '/crm-v8/':       [MenuRoute, ...],
+// }
+```
 
 ## RouteMatcher.ts
 
@@ -239,37 +303,10 @@ const dynamicRoute = DynamicRoute.create(menuList, {
 dynamicRoute.rootRoutes // MenuRoute[]（树结构，供菜单组件渲染）
 dynamicRoute.flatRoutes // MenuRoute[]（扁平列表，便于遍历）
 dynamicRoute.routesByActiveRule // Map<string, MenuRoute[]>（按 activeRule 分组）
-dynamicRoute.resolvePathToRoute('/crm-v8/home')
-dynamicRoute.resolvePathToRouteAncestors('/crm-v8/user/profile')
 ```
 
-它主要做三件事：
+主要做三件事：
 
 1. 组装 `RouteTreeBuilder` 和 `RouteMatcher`
 2. 在 `generateRoutes()` 时构建完整路由树并统一注册到匹配器
 3. 将 `rootRoutes`、`flatRoutes`、`routesByActiveRule` 挂到实例上，方便业务层直接消费
-
-### 实例属性
-
-| 属性                 | 类型                       | 说明                                                                          |
-| -------------------- | -------------------------- | ----------------------------------------------------------------------------- |
-| `rootRoutes`         | `MenuRoute[]`              | 根级路由列表（树结构），供侧边菜单渲染                                        |
-| `flatRoutes`         | `MenuRoute[]`              | 扁平路由列表，包含所有层级的路由节点                                          |
-| `routesByActiveRule` | `Map<string, MenuRoute[]>` | 按 `meta.activeRule` 分组的扁平路由，由 `RouteTreeBuilder` 在第一次遍历时生成 |
-
-### routesByActiveRule
-
-`routesByActiveRule` 是菜单分组与子应用路由的桥梁：同一个菜单分组下可能混合多个子应用的路由，该 Map 按 `activeRule` 将它们分离，使每个子应用只拿到属于自己的那部分。
-
-```ts
-// 示例："会员管理"分组包含两个子应用的路由
-dynamicRoute.routesByActiveRule
-// Map {
-//   '/vue3-history/': [MenuRoute, MenuRoute, ...],
-//   '/crm-v8/':       [MenuRoute, ...],
-// }
-```
-
-`menu store` 的 `buildAllMenus` 会将所有菜单分组的 `routesByActiveRule` 合并到 `authorizedRoutesByActiveRule`，详见[菜单状态管理](./menu-store.md)。
-
-对于大多数调用方来说，看到这里就够了；只有在排查菜单层级或命中问题时，才需要继续往下看 `RouteTreeBuilder.ts` 和 `RouteMatcher.ts`。

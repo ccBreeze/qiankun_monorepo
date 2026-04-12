@@ -5,11 +5,12 @@ outline: [2, 4]
 
 # 菜单状态管理
 
-本文档说明 `apps/main-app/src/stores/menu.ts` 的职责与实现。该 Store 负责将后端用户数据中的菜单字段转化为可渲染的菜单树，并提供当前路由的菜单匹配能力。
+本文档说明 `apps/main-app/src/stores/menu.ts` 与 `apps/main-app/src/stores/staticMenus.ts` 的职责与实现。该 Store 负责将后端用户数据中的菜单字段按菜单分组读取，并在需要时补充本地静态菜单，最终转化为可渲染的菜单树，同时提供当前路由的菜单匹配能力。
 
 ## 职责
 
 - 将后端 `UserData` 中的多个菜单字段（如 `coms8ReadFunctionList`、`crmReadFunctionList`）解析为独立的菜单分组
+- 按 `menuKey` 注入本地静态菜单，用于补充 DEMO/示例页面的菜单项
 - 维护 `MenuModule` 缓存，供菜单组件、标签栏等消费
 - 提供当前路由与菜单的匹配关系（激活菜单、激活分组）
 - 按 `activeRule` 聚合所有菜单分组的授权路由，供主应用通过 qiankun props 下发给各子应用
@@ -108,6 +109,70 @@ const microAppDefinitions: MicroAppDefinition[] = [
 
 因此**判断路由属于哪个菜单分组**，不能只做路由前缀匹配，而要在初始化阶段一次性构建所有菜单，依赖 `DynamicRoute` 生成的完整路由表进行匹配，详见[核心约束](#核心约束-菜单分组与子应用不是一对一关系)。
 
+## 补充本地静态菜单
+
+调用 `DynamicRoute.create()` 前，会先按 `menuKey` 读取对应静态数据，再与后端返回的菜单列表合并后统一建树。
+
+::: warning 仅用于 DEMO 演示
+
+当前这份静态菜单仅用于演示 `vue3-history` 子应用中的 KeepAlive 页面。在真实业务项目中，不建议把本地硬编码菜单和后端权限菜单长期混用，否则容易让权限来源、排序规则和菜单维护入口变得不清晰。
+
+:::
+
+```ts [apps/main-app/src/stores/staticMenus.ts]
+import type { RawMenuItem } from '@breeze/router'
+
+const vue3HistoryStaticMenuData: RawMenuItem[] = [
+  {
+    id: -10001, // [!code focus]
+    name: '开发示例',
+    code: 'STATIC_VUE3_HISTORY_EXAMPLES',
+    parentCode: 'ROOT', // [!code focus]
+    sort: -10000, // [!code focus]
+    manualSort: -10000, // [!code focus]
+    url: 'STATIC_VUE3_HISTORY_EXAMPLES',
+    icon: '',
+    status: 1,
+  },
+  {
+    id: -10002,
+    name: '页面缓存',
+    code: 'STATIC_VUE3_HISTORY_KEEP_ALIVE',
+    parentCode: 'STATIC_VUE3_HISTORY_EXAMPLES',
+    sort: -9999,
+    manualSort: -9999,
+    url: '/KeepAliveDemo',
+    icon: '',
+    status: 1,
+  },
+  {
+    id: -10003,
+    name: '页面缓存详情',
+    code: 'STATIC_VUE3_HISTORY_KEEP_ALIVE_DETAIL',
+    parentCode: 'STATIC_VUE3_HISTORY_KEEP_ALIVE',
+    sort: -9998,
+    manualSort: -9998,
+    url: '/KeepAliveDemo/Detail',
+    icon: '{"activeMenuPath":"/KeepAliveDemo"}', // [!code focus]
+    status: 1,
+  },
+]
+
+// [!code focus]
+const staticMenuDataByMenuKey: Record<string, RawMenuItem[]> = {
+  crmReadFunctionList: vue3HistoryStaticMenuData, // [!code focus]
+} // [!code focus]
+
+export const getStaticMenuDataByMenuKey = (menuKey: string): RawMenuItem[] =>
+  staticMenuDataByMenuKey[menuKey] ?? []
+```
+
+这里有几个关键点：
+
+- `staticMenuDataByMenuKey` 以 `menuKey` 为索引，说明静态菜单是“挂到某个菜单分组下”，而不是直接绑定到某个子应用
+- `id`、`sort`、`manualSort` 使用负数，是为了和后端真实菜单数据隔离，避免与正常主键或排序值冲突
+- `parentCode: 'ROOT'` 说明 `开发示例` 是一级菜单，后续节点再通过 `parentCode` 串成树
+
 ## 构建流程
 
 `buildAllMenus(userData)` 是菜单初始化的入口，通常在登录成功后调用。
@@ -128,17 +193,22 @@ const buildAllMenus = (userData: UserData) => {
   for (const item of menuModuleConfigs) {
     const menuData = userData[item.menuKey as keyof UserData]
     if (!Array.isArray(menuData) || !menuData.length) {
+      console.error('[Menu] 菜单数据为空', { menuKey: item.menuKey })
       continue
     }
 
-    // 1. 创建 DynamicRoute 实例（内部完成路由树构建 + 匹配器注册）
-    const dynamicRoute = DynamicRoute.create(menuData, {
+    // 1. 合并静态菜单数据（如有）与后端返回的菜单数据
+    const staticMenuData = getStaticMenuDataByMenuKey(item.menuKey)
+    const mergedMenuData = staticMenuData.concat(menuData)
+
+    // 2. 创建 DynamicRoute 实例（内部完成路由树构建 + 匹配器注册）
+    const dynamicRoute = DynamicRoute.create(mergedMenuData, {
       menuKey: item.menuKey,
       fallbackActiveRule: item.fallbackActiveRule,
       registeredActiveRules,
     })
 
-    // 2. 将本分组的 routesByActiveRule 合并到全局 authorizedRoutesByActiveRule
+    // 3. 将本分组的 routesByActiveRule 合并到全局 authorizedRoutesByActiveRule
     for (const [activeRule, routes] of dynamicRoute.routesByActiveRule) {
       let existingRoutes = authorizedRoutesByActiveRule.get(activeRule)
       if (!existingRoutes) {
@@ -148,9 +218,12 @@ const buildAllMenus = (userData: UserData) => {
       existingRoutes.push(...routes)
     }
 
-    // 3. 提取子应用首页，缓存到 menuMap
+    // 4. 提取子应用首页，缓存到 menuMap
     const appHomePath = findFirstLeafPath(dynamicRoute.rootRoutes)
     if (!appHomePath) {
+      console.error('[Menu] 菜单路由树无叶子节点，跳过分组', {
+        menuKey: item.menuKey,
+      })
       continue
     }
 

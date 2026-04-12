@@ -77,22 +77,40 @@ const activeMicroApp = computed(() => {
 
 ### 模板：用 microAppConfigs 预渲染所有容器
 
-// TODO: 接入 Keep-alive 再完善文档
+`MicroApp` 视图采用“先渲染全部挂载点，再按激活态切换可见性”的策略，而不是“命中路由才创建容器”。
 
 ```vue [apps/main-app/src/views/MicroApp/index.vue]
-<div
-  v-for="app in microAppConfigs"
-  v-show="app.name === activeMicroApp?.name"
-  :id="app.container.slice(1)"
-  :key="app.name"
-></div>
+<div class="micro-container">
+  <div
+    v-for="app in microAppConfigs"
+    v-show="app.name === activeMicroApp?.name"
+    :id="app.container.slice(1)"
+    :key="app.name"
+  ></div>
+</div>
 ```
 
-- `v-for` 遍历 `microAppConfigs`，为每个子应用创建一个挂载容器 `div`
-- `:id="app.container.slice(1)"` 去掉 `container` 字段的 `#` 前缀作为 DOM `id`，与 qiankun 的 CSS 选择器同源，确保始终匹配
-- `v-show` 根据 `activeMicroApp` 控制可见性：只显示当前激活应用的容器，其余隐藏
+- 外层 `.micro-container` 提供统一布局约束，配合子容器 `height: 100%` 让每个子应用填满可视区域
 
-这样做的好处是已加载的子应用在切换时不会被销毁，避免重复初始化。
+```scss [apps/main-app/src/views/MicroApp/index.vue]
+.micro-container {
+  height: 100%;
+
+  & > :deep(div) {
+    height: 100%;
+  }
+}
+```
+
+| 路由切换场景       | 容器层行为                    | 子应用实例行为           |
+| ------------------ | ----------------------------- | ------------------------ |
+| 首次进入 A 应用    | 所有容器已存在，仅 A 容器可见 | 创建并挂载 A             |
+| A 切到 B（首次）   | A 容器隐藏，B 容器显示        | A 保留；创建并挂载 B     |
+| B 切回 A（已加载） | B 容器隐藏，A 容器显示        | 直接复用 A，不重复初始化 |
+
+::: tip 为什么这里用 v-show 而不是 v-if
+详情见 [子应用切换 KeepAlive 保活](./keep-alive-micro-app-switch.md)
+:::
 
 ### 脚本：用 activeMicroApp 驱动按需加载
 
@@ -116,13 +134,3 @@ watch(
   { immediate: true },
 )
 ```
-
-`watch(activeMicroApp)` 在每次路由切换后执行：
-
-1. **等待旧应用挂载完成**：若上一个应用仍在挂载中，先 `await mountPromise`，防止快速切换时的竞态问题
-2. **首次访问才加载**：`loadedApps` Map 记录已加载实例，`has(newApp.name)` 为真则跳过，实现懒加载
-3. **调用 `loadMicroApp(newApp)`**：将完整的 `MicroAppConfig`（含 `props`）传入 qiankun，完成子应用注册与挂载
-
-::: tip loadMicroApp 与 registerMicroApps 的区别
-此处使用 `loadMicroApp`（手动加载模式）而非 `registerMicroApps`，可以自主控制加载时机，也方便拿到每个应用的 `MicroApp` 实例（用于 `mountPromise` 等生命周期等待）。
-:::
