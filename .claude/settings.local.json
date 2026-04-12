@@ -21,6 +21,7 @@
       "WebFetch(domain:github.com)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "WebFetch(domain:www.npmjs.com)",
+      "WebFetch(domain:router.vuejs.org)",
 
       "mcp__drawio__*",
       "mcp__chrome-devtools__*",
@@ -29,5 +30,6 @@
       "mcp__feishu-mcp__update-doc"
     ]
   },
-  "enabledMcpjsonServers": []
+  "enableAllProjectMcpServers": true,
+  "disabledMcpjsonServers": ["figma", "feishu-mcp", "drawio", "chrome-devtools"]
 }
