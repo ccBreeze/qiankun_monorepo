@@ -10,4 +10,7 @@
 
 <script setup lang="ts">
 import AntConfigProvider from './views/AntConfigProvider/index.vue'
+import { setupRuntimeChannels } from '@/utils/channel'
+
+setupRuntimeChannels()
 </script>

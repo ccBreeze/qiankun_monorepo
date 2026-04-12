@@ -25,7 +25,18 @@ function renderApp() {
   app.use(router)
   app.use(Antd)
 
-  app.mount(`#${import.meta.env.VITE_APP_NAME}`)
+  /**
+   * 注意：子应用的根组件必须在主应用指定的 DOM 节点上查找，否则会导致子应用无法正常卸载。
+   *
+   * [Vue warn]: There is already an app instance mounted on the host container.
+   * If you want to mount another app on the same host container, you need to unmount the previous app by calling `app.unmount()` first.
+   *
+   * @see https://qiankun.umijs.org/zh/faq#application-died-in-status-not_mounted-target-container-with-container-not-existed-after-xxx-mounted
+   */
+  const rootId = `#${import.meta.env.VITE_APP_NAME}`
+  const rootContainer =
+    microAppContext.container?.querySelector(rootId) || rootId
+  app.mount(rootContainer)
 }
 
 // 独立运行时

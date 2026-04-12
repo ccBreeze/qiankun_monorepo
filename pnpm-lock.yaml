@@ -385,6 +385,9 @@ importers:
       '@breeze/bridge-vue':
         specifier: workspace:*
         version: link:../../packages/bridge-vue
+      '@breeze/router':
+        specifier: workspace:*
+        version: link:../../packages/router
       '@breeze/runtime':
         specifier: workspace:*
         version: link:../../packages/runtime
@@ -458,6 +461,9 @@ importers:
 
   packages/bridge-vue:
     dependencies:
+      '@breeze/router':
+        specifier: workspace:*
+        version: link:../router
       '@breeze/runtime':
         specifier: workspace:*
         version: link:../runtime
@@ -468,6 +474,9 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
+      vue:
+        specifier: 'catalog:'
+        version: 3.5.25(typescript@5.9.3)
       vue-router:
         specifier: 'catalog:'
         version: 4.6.4(vue@3.5.25(typescript@5.9.3))

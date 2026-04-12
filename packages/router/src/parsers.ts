@@ -101,3 +101,29 @@ export function resolveRoute(params: ResolveRouteParams): ResolvedRouteInfo {
     activeRule,
   }
 }
+
+/**
+ * 判断当前页面是否属于指定 activeRule 的子应用
+ */
+export const matchActiveRule = (activeRule?: string) => {
+  // 未配置 activeRule 时默认匹配（兼容独立运行模式）
+  if (!activeRule) return true
+  return window.location.pathname.startsWith(activeRule)
+}
+
+/**
+ * 移除路径中的 activeRule 前缀
+ *
+ * createWebHistory(activeRule) 已将 activeRule 作为路由基础路径，
+ * addRoute 注册时 path 需要是相对于 activeRule 的路径。
+ *
+ * @example
+ * stripActiveRule('/vue3-history/CouponListTemp', '/vue3-history') // → '/CouponListTemp'
+ */
+export const stripActiveRule = (path: string, activeRule?: string) => {
+  if (!activeRule) return path
+  if (path.startsWith(activeRule)) {
+    return path.slice(activeRule.length) || '/'
+  }
+  return path
+}

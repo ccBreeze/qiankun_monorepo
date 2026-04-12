@@ -1,4 +1,5 @@
-import type { Router } from 'vue-router'
+import type { Router, RouteMeta } from 'vue-router'
+import { matchActiveRule, stripActiveRule } from '@breeze/router'
 import type { MicroAppHostProps } from '@breeze/runtime'
 
 /** import.meta.glob 返回的页面组件映射表类型 */
@@ -31,21 +32,6 @@ const resolveComponent = (
   return key && pages[key]
 }
 
-/**
- * 移除路径中的 activeRule 前缀
- *
- * createWebHistory(activeRule) 已将 activeRule 作为路由基础路径，
- * addRoute 注册时 path 需要是相对于 activeRule 的路径。
- * 例如 activeRule="/vue3-history"，原始 path="/vue3-history/CouponListTemp" → "/CouponListTemp"
- */
-const stripBase = (path: string, activeRule?: string) => {
-  if (!activeRule) return path
-  if (path.startsWith(activeRule)) {
-    return path.slice(activeRule.length) || '/'
-  }
-  return path
-}
-
 /** 注册动态路由 */
 const registerDynamicRoutes = (options: DynamicRouteGuardOptions) => {
   const { router, pages, authorizedRoutes, activeRule } = options
@@ -55,8 +41,9 @@ const registerDynamicRoutes = (options: DynamicRouteGuardOptions) => {
     if (!component) continue
 
     router.addRoute({
-      path: stripBase(route.path, activeRule),
+      path: stripActiveRule(route.path, activeRule),
       name: route.name,
+      meta: route.meta as unknown as RouteMeta,
       component,
     })
   }
@@ -80,9 +67,7 @@ export const createDynamicRouteGuard = (options: DynamicRouteGuardOptions) => {
   let initialized = false
   router.beforeEach((to) => {
     // qiankun 多应用场景：当前 URL 不属于本应用（其他子应用的路由），直接放行无需注册
-    // 注意：to.fullPath 已由 createWebHistory(activeRule) 去除了 activeRule 前缀，
-    // 需通过 window.location.pathname 还原完整路径进行比对
-    if (activeRule && !window.location.pathname.startsWith(activeRule)) return
+    if (!matchActiveRule(activeRule)) return
 
     if (!authorizedRoutes.length) return
 

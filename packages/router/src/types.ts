@@ -42,11 +42,14 @@ export interface MenuExtra {
  */
 export interface ResolvedRouteInfo {
   /**
-   * 路由名称（PascalCase，如 UserProfile）
+   * 组件名称
    *
    * 用途：
-   * 1. vue-router addRoute 注册动态路由的 name
-   * 2. vue keep-alive 的 include/exclude 匹配标识
+   * - 组件名 defineOptions({ name })
+   * - KeepAlive 的 include/exclude 匹配标识
+   * - router.addRoute() 注册动态路由的 name
+   *
+   * @example '/vue3-history/KeepAliveDemo/Detail' -> 'KeepAliveDemo-Detail'
    */
   name: string
   /** 路由路径（含前缀），用于 router 跳转 */

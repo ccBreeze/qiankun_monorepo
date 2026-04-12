@@ -14,7 +14,7 @@
     },
     "drawio": {
       "command": "npx",
-      "args": ["-y", "drawio-mcp-server", "--editor"]
+      "args": ["@next-ai-drawio/mcp-server@latest"]
     }
   }
 }
