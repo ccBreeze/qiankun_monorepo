@@ -163,7 +163,7 @@ const stripBase = (path: string, activeRule?: string) => {
 }
 ```
 
-> 为什么用 `createWebHistory(activeRule)` 而不用嵌套路由？详见[路由机制 — 常见问题](./routing-mechanism.html#q-为什么不用嵌套路由替代-createwebhistory-activerule-的-base)。
+> 为什么用 `createWebHistory(activeRule)` 而不用嵌套路由？详见[路由协作机制 — 常见问题](./routing-mechanism.html#q-为什么不用嵌套路由替代-createwebhistory-activerule-的-base)。
 
 #### 第三步：根路径重定向
 
@@ -199,13 +199,16 @@ const registerDynamicRoutes = (options: DynamicRouteGuardOptions) => {
 
 ### 子应用接入示例
 
+在子应用创建路由实例时注册。
+
 ```ts [apps/vue3-history/src/router/guard/dynamicRouteGuard.ts]
+import type { Router } from 'vue-router'
 import { createDynamicRouteGuard } from '@breeze/bridge-vue'
 import { microAppContext } from '@/utils/microAppContext'
 
 const pages = import.meta.glob([
   '../../views/**/*.vue',
-  '!../../views/**/components/*', // 排除组件目录
+  '!../../views/**/components/*',
 ])
 
 export const setupDynamicRoute = (router: Router) =>
@@ -217,11 +220,19 @@ export const setupDynamicRoute = (router: Router) =>
   })
 ```
 
-```ts [apps/vue3-history/src/main.ts]
-export async function mount(props: QiankunLifecycleProps) {
-  microAppContext.setProps(props)
-  const router = createRouter({ history: createWebHistory(props.activeRule) })
-  setupDynamicRoute(router)
-  // ...
+```ts [apps/vue3-history/src/router/index.ts]
+import { createRouter, createWebHistory } from 'vue-router'
+import { setupDynamicRoute } from './guard/dynamicRouteGuard'
+
+/** 创建路由实例 */
+export const generateRouter = (base?: string) => {
+  const router = createRouter({
+    history: createWebHistory(base),
+    routes: [],
+  })
+
+  setupDynamicRoute(router) // [!code focus]
+
+  return router
 }
 ```

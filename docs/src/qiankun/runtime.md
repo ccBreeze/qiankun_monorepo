@@ -11,7 +11,8 @@ outline: [2, 4]
 
 - 定义主应用通过 qiankun `props` 传入子应用的标准字段类型（`MicroAppHostProps`）
 - 提供 `MicroAppContext` 基类，子应用直接实例化或继承扩展，通过 `setProps` / `reset` 管理 props 生命周期
-- 维护 `window.QiankunRuntime` 全局单例，为未来主子应用事件通信预留通道
+- 维护 `window.QiankunRuntime` 全局单例，通过 `channel`（EventEmitter2）实现主子应用双向事件通信
+- 定义 `RUNTIME_EVENTS` 事件契约与类型安全的 Payload 接口，统一主子应用通信协议
 
 ## MicroAppContext
 
@@ -45,7 +46,7 @@ if (!qiankunWindow.__POWERED_BY_QIANKUN__) {
 }
 ```
 
-### MicroAppHostProps
+### Type
 
 主应用通过 `loadMicroApp({ props })` 传入子应用的标准业务字段：
 
@@ -151,8 +152,23 @@ export const microAppContext = new MyMicroAppContext()
 `QiankunRuntime` 是挂载在 `window` 上的全局运行时对象。
 
 ```ts [packages/runtime/src/instance.ts]
-// 模块加载时自动创建（或复用已有的）全局实例
-export const QiankunRuntimeInstance = createContext()
+import { QiankunRuntime } from './QiankunRuntime'
+
+declare global {
+  interface Window {
+    QiankunRuntime: QiankunRuntime
+  }
+}
+
+export const createContext = () => {
+  if (typeof window === 'undefined') {
+    throw new Error('[QiankunRuntime] 浏览器环境不可用')
+  }
+
+  return (window.QiankunRuntime ??= new QiankunRuntime()) // [!code focus]
+}
+
+createContext() // [!code focus]
 ```
 
 ```ts [packages/runtime/src/QiankunRuntime.ts]
@@ -161,10 +177,12 @@ export class QiankunRuntime {
 }
 ```
 
-| 字段      | 说明                                                                |
-| --------- | ------------------------------------------------------------------- |
-| `channel` | 基于 `eventemitter2` 的事件总线，预留给未来主子应用双向通信场景使用 |
-
 ::: info 全局单例的设计意图
-`window.QiankunRuntime` 保证主应用与所有子应用共享同一个 `channel` 实例。无论谁先执行，`window.QiankunRuntime ??= new QiankunRuntime()` 都只会创建一次。
+`window.QiankunRuntime` 保证主应用与所有子应用共享同一个 `channel` 实例。无论谁先执行，都只会创建一次实例。
+
+模块加载时自动调用 `createContext()`，消费方直接通过 `window.QiankunRuntime.channel` 访问事件总线，无需再导入实例变量。
 :::
+
+## RUNTIME_EVENTS
+
+应用间的通信的详细说明请参阅 [应用间的通信（RUNTIME_EVENTS）](./runtime-events.md)。

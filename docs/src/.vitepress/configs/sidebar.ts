@@ -29,8 +29,8 @@ export const sidebar: DefaultTheme.SidebarMulti = {
       text: 'Packages',
       items: [
         { text: '@breeze/router', link: '/qiankun/dynamic-route' },
-        { text: '@breeze/runtime', link: '/qiankun/runtime' },
         { text: '@breeze/bridge-vue', link: '/qiankun/bridge-vue' },
+        { text: '@breeze/runtime', link: '/qiankun/runtime' },
       ],
     },
     {
@@ -44,11 +44,22 @@ export const sidebar: DefaultTheme.SidebarMulti = {
     },
     {
       text: '架构',
-      items: [{ text: '路由机制', link: '/qiankun/routing-mechanism' }],
+      items: [
+        { text: '路由协作机制', link: '/qiankun/routing-mechanism' },
+        { text: '应用间的通信', link: '/qiankun/runtime-events' },
+        { text: '子应用 KeepAlive 缓存机制', link: '/qiankun/keep-alive' },
+        {
+          text: '子应用切换 KeepAlive 保活',
+          link: '/qiankun/keep-alive-micro-app-switch',
+        },
+      ],
     },
     {
       text: '其他',
-      items: [{ text: '常见问题与解决方案', link: '/qiankun/troubleshooting' }],
+      items: [
+        { text: 'CSS 样式隔离', link: '/qiankun/style-isolation' },
+        { text: '常见问题与解决方案', link: '/qiankun/troubleshooting' },
+      ],
     },
   ],
 }

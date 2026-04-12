@@ -28,3 +28,25 @@ build: {
 ```
 
 这样 CSS 会随 JS 一起被 qiankun 沙箱管理，避免 `<link>` 标签逃逸到主应用。
+
+## Vue 警告：宿主容器已有应用实例挂载
+
+### 问题
+
+在 qiankun 环境下，`app.mount('#app')` 直接传字符串选择器时，Vue 会在**全局 document** 范围内查找目标节点：
+
+此时可能命中页面上已经被挂载过的同名 ID 节点，导致以下警告：
+
+![alt text](./imgs/Application_died_in_status_NOT_MOUNTED.png)
+
+### 解决方案
+
+优先从 `props.container` 内部查找挂载节点，仅在独立运行时回退到字符串选择器：
+
+```ts
+const rootId = `#${import.meta.env.VITE_APP_NAME}`
+const rootContainer = microAppContext.container?.querySelector(rootId) || rootId
+app.mount(rootContainer)
+```
+
+> 参考：[qiankun 官方 FAQ](https://qiankun.umijs.org/zh/faq#application-died-in-status-not_mounted-target-container-with-container-not-existed-after-xxx-mounted)
