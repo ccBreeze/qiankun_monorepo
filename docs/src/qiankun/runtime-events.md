@@ -55,9 +55,12 @@ export interface TabRemovePayload {
 
 ## Tab 管理通信
 
-Tab 管理是目前唯一的通信场景，由子应用发起请求、主应用响应并反向通知。
+Tab 管理目前包含两类通信：
 
-### 完整通信流程
+- 子应用请求主应用打开 / 跳转到某个目标路由
+- 子应用请求主应用关闭某个 tab，主应用关闭后再通知子应用清理 KeepAlive 缓存
+
+### 关闭 tab 通信流程
 
 <ClientOnly>
   <DrawioViewer :data="runtimeEventsCompleteFlowXml" />
@@ -73,6 +76,15 @@ const channel = window.QiankunRuntime.channel
 
 /** 注册主应用运行时通信监听 */
 export const setupRuntimeChannels = () => {
+  channel.on(
+    RUNTIME_EVENTS.TAB_NAVIGATE_REQUEST,
+    ({ fullPath, tabName }: TabNavigateRequestPayload) => {
+      router.options.history.push(fullPath, {
+        tabName,
+      })
+    },
+  )
+
   channel.on(
     RUNTIME_EVENTS.TAB_REMOVE_REQUEST,
     (payload: TabRemoveRequestPayload) => {
@@ -91,15 +103,50 @@ export const emitTabRemove = (payload: TabRemovePayload) => {
 
 子应用通过 `@breeze/bridge-vue` 提供的封装函数收发事件，无需直接操作 `window.QiankunRuntime.channel`。
 
-#### `requestRemoveTab`
+#### `requestNavigateTab`
 
-最底层的封装，直接向 channel 发出事件：
+子应用请求主应用执行跨应用跳转时，直接通过共享事件总线发出 `TAB_NAVIGATE_REQUEST`：
 
 ```ts [packages/bridge-vue/src/hostBridge/tab.ts]
-export const requestRemoveTab = (payload: TabRemoveRequestPayload) => {
-  window.QiankunRuntime.channel.emit(RUNTIME_EVENTS.TAB_REMOVE_REQUEST, payload)
+/** 按子应用路由位置请求主应用跳转 / 打开 tab */
+export const requestNavigateTab = (payload: TabNavigateRequestPayload) => {
+  window.QiankunRuntime.channel.emit(
+    RUNTIME_EVENTS.TAB_NAVIGATE_REQUEST,
+    payload,
+  )
 }
 ```
+
+`fullPath` 必须是主应用视角下可识别的完整路径，例如：
+
+- History 模式子应用：`/vue3-history/KeepAliveDemo`
+- Hash 模式子应用：`/ocrm/#/index/datainput/brand/42`
+
+主应用收到事件后，会直接执行：
+
+```ts [apps/main-app/src/utils/channel.ts]
+router.options.history.push(fullPath, {
+  tabName,
+})
+```
+
+::: details KeepAliveDemo 中的跨应用示例
+
+演示从 `vue3-history` 跳转到 OCRM：
+
+```ts [apps/vue3-history/src/views/KeepAliveDemo/index.vue]
+import { MICRO_APP_ACTIVE_RULE } from '@breeze/runtime'
+import { requestNavigateTab } from '@breeze/bridge-vue'
+
+const crossAppExampleFullPath = `${MICRO_APP_ACTIVE_RULE.OCRM}/index/datainput/brand/42`
+
+requestNavigateTab({
+  fullPath: crossAppExampleFullPath,
+  tabName: '品牌详情 #42',
+})
+```
+
+:::
 
 #### `requestRemoveTabByRoute`
 
@@ -112,7 +159,7 @@ export const requestRemoveTabByRoute = ({
 }: RequestRemoveTabByRouteOptions) => {
   // 默认关闭当前路由 // [!code focus]
   fullPath ??= router.currentRoute.value.fullPath // [!code focus]
-  requestRemoveTab({
+  window.QiankunRuntime.channel.emit(RUNTIME_EVENTS.TAB_REMOVE_REQUEST, {
     fullPath: router.resolve(fullPath).href, // [!code focus]
     ...payload,
   })

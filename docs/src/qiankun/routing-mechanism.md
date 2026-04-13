@@ -216,9 +216,9 @@ export const generateRouter = (base?: string) => {
 | vue-router base | 子应用 `createWebHistory(base)` | 子应用路由以此为基准路径                                  |
 | 路由分组 key    | `@breeze/router`                | `routesByActiveRule` 按此分组，确保路由下发到正确的子应用 |
 
-`activeRule` 的单一来源是 `MICRO_APP_ACTIVE_RULE` 枚举：
+`activeRule` 的单一来源是 `@breeze/runtime` 导出的 `MICRO_APP_ACTIVE_RULE` 枚举：
 
-```ts [apps/main-app/src/utils/microAppRegistry.ts]
+```ts [packages/runtime/src/microApps.ts]
 export const MICRO_APP_ACTIVE_RULE = {
   OCRM: '/ocrm/#',
   VUE3_HISTORY: '/vue3-history',
@@ -313,7 +313,7 @@ else if (to.path && /#/.test(to.path)) {
 
 **1. 修改 `activeRule`，并确保应用标识仍然能解析出 `ocrm`**
 
-```ts [apps/main-app/src/utils/microAppRegistry.ts]
+```ts [packages/runtime/src/microApps.ts]
 export const MICRO_APP_ACTIVE_RULE = {
   OCRM: '/ocrm/#', // [!code --]
   OCRM: '/#/ocrm', // [!code ++]
@@ -519,7 +519,7 @@ export const generateRouter = (base?: string) => {
 
 Hash 模式下 `activeRule` 带有 `#`，主应用生成别名时通过 `activeRule.split('/')[1]` 只截取 `ocrm` 用于路由匹配，但在 `startsWith` 判断和路由分组时使用完整的 `/ocrm/#`，从而让两种模式的子应用可以共存。
 
-```ts [apps/main-app/src/utils/microAppRegistry.ts]
+```ts [packages/runtime/src/microApps.ts]
 export const MICRO_APP_ACTIVE_RULE = {
   OCRM: '/ocrm/#', // Hash 模式：activeRule 包含 #
   VUE3_HISTORY: '/vue3-history', // HTML5 模式：纯路径前缀

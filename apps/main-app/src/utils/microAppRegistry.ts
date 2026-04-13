@@ -1,12 +1,6 @@
 import { RUNTIME_ENV, runtimeEnv, type RuntimeEnv } from '@breeze/utils/env'
+import { MICRO_APP_ACTIVE_RULE } from '@breeze/runtime'
 import type { RegistrableApp } from 'qiankun'
-
-/** 子应用激活规则枚举 */
-export const MICRO_APP_ACTIVE_RULE = {
-  OCRM: '/ocrm/#',
-  VUE3_HISTORY: '/vue3-history',
-  BREEZE_CRM_V8: '/crm-v8',
-} as const
 
 export interface MicroAppDefinition {
   /**

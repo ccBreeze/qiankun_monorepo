@@ -4,9 +4,10 @@
 import { defineStore } from 'pinia'
 import { shallowReactive } from 'vue'
 import { DynamicRoute, type MenuRoute } from '@breeze/router'
+import { MICRO_APP_ACTIVE_RULE } from '@breeze/runtime'
 import type { UserData } from '@/types/user'
 import { useRoute } from 'vue-router'
-import { microApps, MICRO_APP_ACTIVE_RULE } from '@/utils/microAppRegistry'
+import { microApps } from '@/utils/microAppRegistry'
 import { getStaticMenuDataByMenuKey } from './staticMenus'
 
 interface MenuModule {

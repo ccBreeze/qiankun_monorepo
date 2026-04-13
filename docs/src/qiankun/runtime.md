@@ -13,6 +13,7 @@ outline: [2, 4]
 - 提供 `MicroAppContext` 基类，子应用直接实例化或继承扩展，通过 `setProps` / `reset` 管理 props 生命周期
 - 维护 `window.QiankunRuntime` 全局单例，通过 `channel`（EventEmitter2）实现主子应用双向事件通信
 - 定义 `RUNTIME_EVENTS` 事件契约与类型安全的 Payload 接口，统一主子应用通信协议
+- 提供 `MICRO_APP_ACTIVE_RULE` 等共享静态常量，避免主应用和子应用各自维护一份 `activeRule`
 
 ## MicroAppContext
 
@@ -186,3 +187,22 @@ export class QiankunRuntime {
 ## RUNTIME_EVENTS
 
 应用间的通信的详细说明请参阅 [应用间的通信（RUNTIME_EVENTS）](./runtime-events.md)。
+
+## MICRO_APP_ACTIVE_RULE
+
+`@breeze/runtime` 现在同时承载主子应用共享的静态路由常量：
+
+```ts [packages/runtime/src/microApps.ts]
+export const MICRO_APP_ACTIVE_RULE = {
+  OCRM: '/ocrm/#',
+  VUE3_HISTORY: '/vue3-history',
+  BREEZE_CRM_V8: '/crm-v8',
+} as const
+```
+
+- 主应用用它构建 `microAppDefinitions`、菜单 `fallbackActiveRule`；
+- 子应用则可直接用它拼接跨应用跳转目标路径：
+
+```ts [apps/vue3-history/src/views/KeepAliveDemo/index.vue]
+const crossAppExampleFullPath = `${MICRO_APP_ACTIVE_RULE.OCRM}/index/datainput/brand/42`
+```

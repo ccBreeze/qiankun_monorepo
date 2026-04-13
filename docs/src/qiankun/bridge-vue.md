@@ -11,11 +11,16 @@ outline: [2, 4]
 
 ```
 packages/bridge-vue/src/
-├── dynamicRouteGuard.ts    # 动态路由注册守卫
-└── index.ts                # 包入口，统一导出
+├── hostBridge/            # 主子应用运行时桥接
+│   └── tab.ts             # tab 导航 / 关闭相关封装
+├── router/                # 路由相关桥接
+│   └── dynamicRouteGuard.ts
+├── hooks/                 # 通用 hooks
+│   └── useKeepAlive.ts
+└── index.ts               # 包入口，统一导出
 ```
 
-> 后续随着接入场景增多，`src/` 下会按模块扩展（如 `store/`、`directive/` 等），功能增多时再按职责建子目录。
+当前已按职责拆分为 `router`、`hostBridge`、`hooks` 三类模块。
 
 ## router 模块
 
@@ -236,3 +241,13 @@ export const generateRouter = (base?: string) => {
   return router
 }
 ```
+
+## hostBridge 模块
+
+`hostBridge` 负责封装主子应用间基于 `window.QiankunRuntime.channel` 的运行时通信，当前主要覆盖：
+
+- 子应用请求主应用打开 / 跳转到目标路由
+- 子应用请求主应用关闭 tab
+- 子应用监听主应用关闭 tab 后的反向通知，并清理本地 KeepAlive 缓存
+
+这一部分和运行时事件、主应用监听、子应用调用示例强相关，详细说明统一放在 [应用间的通信（runtime-events）](./runtime-events.md) 中，避免在两处文档重复维护。
