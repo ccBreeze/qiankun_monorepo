@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed, onActivated, onDeactivated, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { requestRemoveTabByRoute } from '@breeze/bridge-vue'
+import { MICRO_APP_ACTIVE_RULE } from '@breeze/runtime'
+import { requestNavigateTab, requestRemoveTabByRoute } from '@breeze/bridge-vue'
 
 defineOptions({
   name: 'KeepAliveDemo',
@@ -80,6 +81,19 @@ const goDetailWithTabName = () => {
     path: '/KeepAliveDemo/Detail',
     state: { tabName: '自定义标签名' },
   })
+}
+
+// ─── 宿主桥接跳转演示 ────────────────────────────────────────────────────────────
+
+const crossAppExampleFullPath = `${MICRO_APP_ACTIVE_RULE.OCRM}/index/datainput/brand/42`
+const crossAppExampleTabName = '品牌详情 #42'
+
+const requestCrossAppNavigate = () => {
+  requestNavigateTab({
+    fullPath: crossAppExampleFullPath,
+    tabName: crossAppExampleTabName,
+  })
+  pushLog(`[hostBridge] 跨应用跳转: ${crossAppExampleFullPath}`)
 }
 
 const requestCloseTabByOrder = (order: 'a' | 'b') => {
@@ -243,6 +257,61 @@ watch(
             {{ counter }}
           </strong>
         </article>
+      </section>
+
+      <section class="page-surface p-6">
+        <div
+          class="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <div>
+            <h2 class="text-[1.1rem] font-semibold">跨应用跳转案例</h2>
+            <p class="mt-2 text-sm text-[#5a738e]">
+              现在只保留跨应用场景。子应用通过 `QiankunRuntime.channel` 发送
+              `fullPath +
+              tabName`，主应用收到后会直接按这个完整路径打开目标应用页面。
+            </p>
+          </div>
+          <span class="text-sm text-[#5a738e]">
+            点击后观察主应用 tab 标题和地址切换
+          </span>
+        </div>
+
+        <div class="mb-4 flex flex-wrap gap-3">
+          <button
+            class="primary-button"
+            type="button"
+            @click="requestCrossAppNavigate"
+          >
+            宿主打开跨应用示例
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 xl:grid-cols-2">
+          <div class="rounded-[18px] bg-[#f4f8ff] p-[18px]">
+            <p class="text-sm font-semibold text-[#20466d]">当前示例调用</p>
+            <p class="mt-3 font-mono text-[0.85rem] leading-7 text-[#5a738e]">
+              requestNavigateTab({ router, fullPath:
+              <span class="text-[#20466d]">'{{ crossAppExampleFullPath }}'</span
+              >, tabName: '{{ crossAppExampleTabName }}' })
+            </p>
+          </div>
+
+          <div class="rounded-[18px] bg-[#f4f8ff] p-[18px]">
+            <p class="text-sm font-semibold text-[#20466d]">当前实现要点</p>
+            <p class="mt-3 text-[0.95rem] text-[#5a738e]">
+              `fullPath`
+              必须是主应用可识别的完整目标路径，不能只传子应用内部的相对路由。
+            </p>
+            <p class="mt-3 font-mono text-[0.85rem] leading-7 text-[#5a738e]">
+              main-app: router.options.history.push(fullPath, { tabName })
+            </p>
+            <p class="mt-3 text-[0.95rem] text-[#5a738e]">
+              当前按钮会跳到 OCRM 的品牌详情示例：`{{
+                crossAppExampleFullPath
+              }}`
+            </p>
+          </div>
+        </div>
       </section>
 
       <section class="grid grid-cols-1 gap-5 xl:grid-cols-2">

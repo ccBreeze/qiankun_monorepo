@@ -69,9 +69,9 @@ export type ResolvedMicroApp = RegistrableApp<object> &
 
 ## 静态配置
 
-语义化 key 引用各子应用的 `activeRule`，避免业务代码中出现**硬编码**路由字符串：
+语义化 key 引用各子应用的 `activeRule`，避免业务代码中出现**硬编码**路由字符串。当前这份枚举已提升到共享包 `@breeze/runtime`，主应用和子应用共用同一份定义：
 
-```ts [apps/main-app/src/utils/microAppRegistry.ts]
+```ts [packages/runtime/src/microApps.ts]
 /** 子应用激活规则枚举 */
 export const MICRO_APP_ACTIVE_RULE = {
   OCRM: '/ocrm/#',
@@ -85,6 +85,8 @@ export const MICRO_APP_ACTIVE_RULE = {
 `microAppDefinitions` 直接引用枚举值，确保 activeRule 只有单一来源：
 
 ```ts [apps/main-app/src/utils/microAppRegistry.ts]
+import { MICRO_APP_ACTIVE_RULE } from '@breeze/runtime'
+
 const microAppDefinitions: MicroAppDefinition[] = [
   {
     activeRule: MICRO_APP_ACTIVE_RULE.OCRM,

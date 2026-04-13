@@ -4,6 +4,7 @@ import { matchActiveRule, stripActiveRule } from '@breeze/router'
 import {
   RUNTIME_EVENTS,
   type MicroAppContext,
+  type TabNavigateRequestPayload,
   type TabRemovePayload,
   type TabRemoveRequestPayload,
 } from '@breeze/runtime'
@@ -37,9 +38,12 @@ export const useTabRemoveListener = (
   })
 }
 
-/** @see {@link RUNTIME_EVENTS.TAB_REMOVE_REQUEST} */
-export const requestRemoveTab = (payload: TabRemoveRequestPayload) => {
-  window.QiankunRuntime.channel.emit(RUNTIME_EVENTS.TAB_REMOVE_REQUEST, payload)
+/** 按子应用路由位置请求主应用跳转 / 打开 tab */
+export const requestNavigateTab = (payload: TabNavigateRequestPayload) => {
+  window.QiankunRuntime.channel.emit(
+    RUNTIME_EVENTS.TAB_NAVIGATE_REQUEST,
+    payload,
+  )
 }
 
 /** 按子应用路由位置请求主应用关闭 tab */
@@ -50,14 +54,8 @@ export const requestRemoveTabByRoute = ({
 }: RequestRemoveTabByRouteOptions) => {
   // 默认关闭当前路由
   fullPath ??= router.currentRoute.value.fullPath
-  requestRemoveTab({
+  window.QiankunRuntime.channel.emit(RUNTIME_EVENTS.TAB_REMOVE_REQUEST, {
     fullPath: router.resolve(fullPath).href,
     ...payload,
   })
 }
-
-// TODO: 如何跨应用跳转
-// const _router = qiankunStore.props.router
-// _router.options.history.push(`/ocrm/#/index/datainput/brand/${id}`, {
-//   tabName: id && t('views.brandList.brandDetails'),
-// })

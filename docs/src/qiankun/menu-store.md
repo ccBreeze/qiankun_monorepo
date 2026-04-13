@@ -32,6 +32,8 @@ outline: [2, 4]
 `menuModuleConfigs` 定义了菜单分组与后端数据字段的对应关系：
 
 ```ts [apps/main-app/src/stores/menu.ts]
+import { MICRO_APP_ACTIVE_RULE } from '@breeze/runtime'
+
 const menuModuleConfigs = [
   {
     menuKey: 'coms8ReadFunctionList',
@@ -60,6 +62,8 @@ const menuModuleConfigs = [
 先看代码：
 
 ```ts [apps/main-app/src/stores/menu.ts]
+import { MICRO_APP_ACTIVE_RULE } from '@breeze/runtime'
+
 const menuModuleConfigs = [
   {
     // [!code focus]
@@ -81,6 +85,8 @@ const menuModuleConfigs = [
 ```
 
 ```ts [apps/main-app/src/utils/microAppRegistry.ts]
+import { MICRO_APP_ACTIVE_RULE } from '@breeze/runtime'
+
 const microAppDefinitions: MicroAppDefinition[] = [
   {
     // [!code focus]
