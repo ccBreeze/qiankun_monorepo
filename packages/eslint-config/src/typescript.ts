@@ -15,7 +15,7 @@ export const typescript: Linter.Config[] = [
     languageOptions: {
       parserOptions: {
         projectService: {
-          allowDefaultProject: ['*.js', '*.mjs', '*.cjs'],
+          allowDefaultProject: ['*.js', '*.mjs', '*.cjs', 'scripts/*.mjs'],
         },
       },
     },

@@ -13,6 +13,16 @@ export default [
     },
   },
   {
+    // 根目录脚本与配置文件运行在 Node 环境，需要显式声明常用全局变量
+    files: ['scripts/**/*.mjs', '*.config.js', '*.config.mjs'],
+    languageOptions: {
+      globals: {
+        console: 'readonly',
+        process: 'readonly',
+      },
+    },
+  },
+  {
     // 只 lint 根目录的文件，子项目使用各自的配置
     ignores: ['apps/**', 'packages/**', 'docs/**', '.claude'],
   },

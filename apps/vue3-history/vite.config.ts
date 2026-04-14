@@ -9,14 +9,38 @@ import qiankun from 'vite-plugin-qiankun'
 const resolvePath = (relativePath: string) =>
   fileURLToPath(new URL(relativePath, import.meta.url))
 
-// https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd())
 
   return {
-    build: {
-      // 解决 CSS link 标签插入到主应用 head 问题
-      cssCodeSplit: false,
+    // base: 'http://localhost:8101', // 生产环境需要指定运行域名
+    experimental: {
+      /**
+       * 替代静态 base 配置，将资源路径解析推迟到运行时。
+       *
+       * 主应用需在加载子应用前注入 window.__assetsPath。
+       * @see apps/main-app/src/views/MicroApp/runtime/assetsPath.ts
+       */
+      renderBuiltUrl(filename, { hostType }) {
+        // CSS 中引用的图片保持相对路径
+        // async chunk CSS 以 <link> 加载，url() 相对 CSS 文件自身 URL 解析，无需改写
+        if (
+          hostType === 'css' &&
+          /\.(png|jpe?g|gif|svg|webp)$/i.test(filename)
+        ) {
+          return { relative: true }
+        }
+        // JS/CSS 运行时动态路径
+        if (hostType === 'js' || hostType === 'css') {
+          return {
+            runtime: `window.__assetsPath(
+              ${JSON.stringify(env.VITE_APP_NAME)},
+              ${JSON.stringify(filename)}
+            )`,
+          }
+        }
+        return { relative: true }
+      },
     },
     plugins: [
       vue(),
@@ -43,6 +67,9 @@ export default defineConfig(({ mode }) => {
       port: 8101,
       cors: true,
       origin: 'http://localhost:8101',
+    },
+    preview: {
+      port: 8101,
     },
   }
 })
