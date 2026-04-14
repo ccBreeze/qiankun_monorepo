@@ -3,12 +3,12 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useMenuStore } from '@/stores/menu'
 import { useUserStore } from '@/stores/user'
-import { microApps, type ResolvedMicroApp } from '@/utils/microAppRegistry'
+import { microApps, type ResolvedMicroApp } from '@/utils/microApp/registry'
 import type { MicroAppHostProps } from '@breeze/runtime'
 import type { UserData } from '@/types/user'
 
 /** 运行时子应用配置 */
-type MicroAppConfig = ResolvedMicroApp & {
+export type MicroAppConfig = ResolvedMicroApp & {
   props: MicroAppHostProps & {
     userData: UserData // 收窄类型
   }

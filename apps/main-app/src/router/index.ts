@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
-import { microApps } from '@/utils/microAppRegistry'
+import { microApps } from '@/utils/microApp/registry'
 import { createAuthGuard } from './guard/auth'
 
 /**

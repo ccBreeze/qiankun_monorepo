@@ -1,6 +1,8 @@
 import { RUNTIME_ENV, runtimeEnv, type RuntimeEnv } from '@breeze/utils/env'
 import { MICRO_APP_ACTIVE_RULE } from '@breeze/runtime'
-import type { RegistrableApp } from 'qiankun'
+import type { FrameworkConfiguration, RegistrableApp } from 'qiankun'
+import { processDynamicImport } from './htmlProcessor'
+import { cssFetchInterceptor } from './cssProcessor'
 
 export interface MicroAppDefinition {
   /**
@@ -11,6 +13,8 @@ export interface MicroAppDefinition {
   activeRule: string
   /** 各运行环境的入口 URL 映射 */
   entryMap: Partial<Record<RuntimeEnv, string>>
+  /** 可选：覆盖该应用的 qiankun 运行时配置，优先级高于全局默认值 */
+  configuration?: Partial<FrameworkConfiguration>
 }
 
 /**
@@ -22,8 +26,9 @@ export interface MicroAppDefinition {
  * @see https://qiankun.umijs.org/zh/api#registermicroappsapps-lifecycles
  */
 export type ResolvedMicroApp = RegistrableApp<object> &
-  Pick<MicroAppDefinition, 'activeRule'> & {
+  Omit<MicroAppDefinition, 'entryMap'> & {
     container: string
+    entry: string
   }
 
 /** 所有子应用的静态配置列表 */
@@ -32,18 +37,21 @@ const microAppDefinitions: MicroAppDefinition[] = [
     activeRule: MICRO_APP_ACTIVE_RULE.OCRM,
     entryMap: {
       [RUNTIME_ENV.DEV]: 'http://localhost:8102',
+      [RUNTIME_ENV.PROD]: 'http://localhost:8102',
     },
   },
   {
     activeRule: MICRO_APP_ACTIVE_RULE.VUE3_HISTORY,
     entryMap: {
       [RUNTIME_ENV.DEV]: 'http://localhost:8101',
+      [RUNTIME_ENV.PROD]: 'http://localhost:8101',
     },
   },
   {
     activeRule: MICRO_APP_ACTIVE_RULE.BREEZE_CRM_V8,
     entryMap: {
       [RUNTIME_ENV.DEV]: 'http://localhost:8103',
+      [RUNTIME_ENV.PROD]: 'http://localhost:8103',
     },
   },
 ]
@@ -64,11 +72,16 @@ export const getPackageId = (activeRule: string) => {
 
 /** 将子应用静态配置补全 */
 export const microApps = microAppDefinitions.map((config): ResolvedMicroApp => {
-  const id = getPackageId(config.activeRule)
+  const name = getPackageId(config.activeRule)
   return {
+    name,
     activeRule: config.activeRule,
     entry: config.entryMap[runtimeEnv]!,
-    name: id,
-    container: `#micro-container__${id}`,
+    container: `#micro-container__${name}`,
+    configuration: {
+      getTemplate: (tpl: string) => processDynamicImport(tpl, name),
+      fetch: cssFetchInterceptor,
+      ...config.configuration,
+    },
   }
 })

@@ -34,6 +34,17 @@ const vue3HistoryStaticMenuData: RawMenuItem[] = [
     icon: '{"activeMenuPath":"/KeepAliveDemo"}',
     status: 1,
   },
+  {
+    id: -10004,
+    name: '资源路径测试',
+    code: 'STATIC_VUE3_HISTORY_ASSET_PATH_TEST',
+    parentCode: 'STATIC_VUE3_HISTORY_EXAMPLES',
+    sort: -9997,
+    manualSort: -9997,
+    url: '/AssetPathTest',
+    icon: '',
+    status: 1,
+  },
 ]
 
 const staticMenuDataByMenuKey: Record<string, RawMenuItem[]> = {

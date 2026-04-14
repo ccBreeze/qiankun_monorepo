@@ -11,6 +11,7 @@ dist-ssr
 coverage
 cache
 *.local
+*.output
 
 # Editor directories and files
 .idea

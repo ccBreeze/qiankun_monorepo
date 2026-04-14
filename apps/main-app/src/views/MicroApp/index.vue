@@ -15,11 +15,14 @@ import { loadMicroApp } from 'qiankun'
 import type { MicroApp } from 'qiankun'
 import { storeToRefs } from 'pinia'
 import { useMicroAppStore } from '@/stores/microApp'
+import { installMicroAppAssetRuntime } from '@/utils/microApp/assetsPath'
 
 const { activeMicroApp, microAppConfigs } = storeToRefs(useMicroAppStore())
 
 /** 已加载的子应用实例，key 为应用 name */
 const loadedApps = shallowRef(new Map<string, MicroApp>())
+
+installMicroAppAssetRuntime()
 
 const clearMicroApp = async (appName: string) => {
   const app = loadedApps.value.get(appName)
@@ -42,7 +45,7 @@ watch(
 
     if (!newApp || loadedApps.value.has(newApp.name)) return
     try {
-      const microApp = loadMicroApp(newApp)
+      const microApp = loadMicroApp(newApp, newApp.configuration)
       loadedApps.value.set(newApp.name, microApp)
       await microApp.mountPromise
     } catch (error) {
