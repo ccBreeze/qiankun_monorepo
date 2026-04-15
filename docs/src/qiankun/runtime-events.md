@@ -69,7 +69,7 @@ Tab 管理目前包含两类通信：
 ### 主应用
 
 - 主应用在 `App.vue` 启动时调用 `setupRuntimeChannels()` 注册监听。
-- `removeTab()` 在删除 tab 后，会调用 `emitTabRemove()` 通知子应用清理对应页面的 KeepAlive 缓存。详见 [标签栏状态管理](./tab-bar-store.md#removetab)。
+- `removeTab()` 在删除 tab 后，会先调用 `emitTabRemove()` 通知子应用清理对应页面的 KeepAlive 缓存，再按 `activeRule` 判断是否需要回收整个子应用实例。详见 [标签栏状态管理](./tab-bar-store.md#removetab)。
 
 ```ts [apps/main-app/src/utils/channel.ts]
 const channel = window.QiankunRuntime.channel
@@ -207,7 +207,7 @@ export const useTabRemoveListener = (
 ) => {
   const handler = ({ fullPath }: TabRemovePayload) => {
     const { activeRule } = context
-    if (!matchActiveRule(activeRule)) return // [!code focus]
+    if (!matchActiveRule({ activeRule, fullPath })) return // [!code focus]
     onRemove(stripActiveRule(fullPath, activeRule)) // [!code focus]
   }
 
@@ -222,5 +222,7 @@ export const useTabRemoveListener = (
 
 `useTabRemoveListener` 做了两件关键的事：
 
-1. **过滤**：多个子应用共享同一个 channel，每个子应用收到事件后先检查 `activeRule` 是否与当前 URL 匹配，非本应用的事件直接忽略
+1. **过滤**：多个子应用共享同一个 channel，每个子应用收到事件后先检查“事件里的 `fullPath` 是否属于自己的 `activeRule`”，非本应用的事件直接忽略
 2. **路径还原**：主应用发出的 `fullPath` 带有 `activeRule` 前缀（如 `/vue3-history/KeepAliveDemo`），还原为子应用内的本地路径（如 `/KeepAliveDemo`）
+
+这里显式把 `payload.fullPath` 传给 `matchActiveRule()` 很重要：关闭 tab 的通知是广播事件，不能依赖“当前浏览器正停留在哪个 URL”来做过滤，而要以事件本身携带的目标路径为准。

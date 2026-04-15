@@ -294,9 +294,9 @@ Node.js 环境的基础配置（用于 Vite 配置文件、构建脚本等），
 
 ::: tip 为什么不开启 allowJs？
 
-- 开启 `allowJs` 后，继承此配置的 `tsconfig.node.json` 会将 `eslint.config.js` 等 `.js` 文件纳入 TypeScript 项目范围。这会与共享 ESLint 配置中的 `allowDefaultProject` 冲突——同一个文件不能同时被 project service 和 `allowDefaultProject` 匹配，否则 ESLint 会报错。
+- 开启 `allowJs` 后，继承此配置的 `tsconfig.node.json` 会将 `eslint.config.js` 等 `.js` 文件纳入 TypeScript 项目范围；若再把仓库级 `.mjs` 脚本一并纳入，也会与共享 ESLint 配置中的 `allowDefaultProject` 冲突——同一个文件不能同时被 project service 和 `allowDefaultProject` 匹配，否则 ESLint 会报错。
 
-- 本项目统一由 `allowDefaultProject` 处理 JS 配置文件的类型解析，`tsconfig.node.json` 仅负责 `.ts` 构建配置（如 `vite.config.ts`）。
+- 本项目统一由 `allowDefaultProject` 处理 JS / MJS 配置文件与仓库脚本的类型解析，`tsconfig.node.json` 仅负责 `.ts` 构建配置（如 `vite.config.ts`）。
   :::
 
 ::: details 为什么要覆盖 module 和 moduleResolution？
@@ -350,7 +350,7 @@ describe('test', () => {}) // ❌ 类型错误 — jest 类型未加载
 
 ### tsconfig.json
 
-仓库根目录的入口文件，继承 `tsconfig.node.base.json` 以提供 Node.js 环境类型（根目录的配置文件运行在 Node.js 环境）。`.js` 配置文件的类型解析由 ESLint 共享配置中的 `allowDefaultProject` 负责。
+仓库根目录的入口文件，继承 `tsconfig.node.base.json` 以提供 Node.js 环境类型（根目录的配置文件运行在 Node.js 环境）。`.js` 配置文件与 `scripts/*.mjs` 这类仓库脚本的类型解析由 ESLint 共享配置中的 `allowDefaultProject` 负责。
 
 ```jsonc [tsconfig.json]
 {
@@ -422,7 +422,7 @@ describe('test', () => {}) // ❌ 类型错误 — jest 类型未加载
 
 #### tsconfig.node.json
 
-构建配置文件的类型检查（Node.js 环境）。仅覆盖 `.ts` 构建配置，`.js` 配置文件由 ESLint 的 `allowDefaultProject` 处理。
+构建配置文件的类型检查（Node.js 环境）。仅覆盖 `.ts` 构建配置，`.js` 配置文件与仓库级 `.mjs` 脚本由 ESLint 的 `allowDefaultProject` 处理。
 
 ```jsonc [apps/main-app/tsconfig.node.json]
 {
@@ -606,7 +606,6 @@ TypeScript 只做类型检查，不产出任何文件（`.js`、`.d.ts`、`.map`
 | 临时跳过历史文件   | `// @ts-nocheck`          | 仅建议短期使用                  |
 
 ```js [eslint.config.js]
-// eslint.config.js
 // @ts-check
 ```
 

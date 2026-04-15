@@ -27,8 +27,8 @@ packages/bridge-vue/src/
 ### 职责
 
 - 提供 `createDynamicRouteGuard`，封装"首次进入时注册动态路由"的完整逻辑
-- **多应用隔离**：守卫内通过 `window.location.pathname` 比对 `activeRule`，当前 URL 不属于本应用时直接放行，避免跨应用路由干扰
-- 处理 qiankun 模式下的 `activeRule` 前缀剥离（`stripBase`），使 vue-router 只感知子应用内的相对路径
+- **多应用隔离**：守卫内通过 `matchActiveRule({ activeRule })` 过滤非本应用 URL，避免跨应用路由干扰
+- 处理 qiankun 模式下的 `activeRule` 前缀剥离（`stripActiveRule`），使 vue-router 只感知子应用内的相对路径
 - 通过 `import.meta.glob` 的组件映射（`endsWith`）自动解析页面组件
 
 ### beforeEach 守卫机制
@@ -55,9 +55,7 @@ export const createDynamicRouteGuard = (options: DynamicRouteGuardOptions) => {
   let initialized = false
   router.beforeEach((to) => {
     // qiankun 多应用场景：当前 URL 不属于本应用（其他子应用的路由），直接放行无需注册
-    // 注意：to.fullPath 已由 createWebHistory(activeRule) 去除了 activeRule 前缀，
-    // 需通过 window.location.pathname 还原完整路径进行比对
-    if (activeRule && !window.location.pathname.startsWith(activeRule)) return
+    if (!matchActiveRule({ activeRule })) return
 
     if (!authorizedRoutes.length) return
 
@@ -159,12 +157,12 @@ qiankun 模式下，`createWebHistory(activeRule)` 已将 `activeRule` 作为路
 ```ts
 // activeRule = "/vue3-history"
 // "/vue3-history/CouponListTemp"  →  "/CouponListTemp"
-const stripBase = (path: string, activeRule?: string) => {
-  if (!activeRule) return path
-  if (path.startsWith(activeRule)) {
-    return path.slice(activeRule.length) || '/'
+const stripActiveRule = (fullPath: string, activeRule?: string) => {
+  if (!activeRule) return fullPath
+  if (fullPath.startsWith(activeRule)) {
+    return fullPath.slice(activeRule.length) || '/'
   }
-  return path
+  return fullPath
 }
 ```
 
@@ -184,14 +182,14 @@ const registerDynamicRoutes = (options: DynamicRouteGuardOptions) => {
     if (!component) continue
 
     router.addRoute({
-      path: stripBase(route.path, activeRule),
+      path: stripActiveRule(route.path, activeRule),
       name: route.name,
       component,
     })
   }
 
   // 根路径重定向到第一个有效路由
-  // 路由注册时已执行 stripBase，path 无需再次处理
+  // 路由注册时已执行 stripActiveRule，path 无需再次处理
   // [!code focus]
   const firstRoutePath = router.getRoutes()[0]?.path
   // [!code focus]

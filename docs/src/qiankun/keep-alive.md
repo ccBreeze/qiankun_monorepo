@@ -74,6 +74,11 @@ Vue 的 `<KeepAlive>` 组件以**组件名**（`component.name`）作为缓存 k
 - 主应用 `tabBar.tabs` 的 key → 详见[标签栏状态管理 · addTab](./tab-bar-store#addtab)
 - 运行时事件 `payload.fullPath` → 详见[应用间的通信 · Tab 管理通信](./runtime-events#tab-管理通信)
 - 子应用 `tabSet` / `wrapperMap` 的 key → 详见本文 [useKeepAlive 实现](#usekeepalive-实现)
+
+需要注意，`fullPath` 在这里同时服务于两层回收：
+
+- 子应用层：删除指定页面的 KeepAlive wrapper 与缓存
+- 主应用层：当某个 `activeRule` 已无任何 tab 时，进一步卸载整个子应用实例，详见[子应用状态管理](./micro-app-store.md#按-tab-生命周期回收实例)
   :::
 
 ## useKeepAlive 实现
@@ -92,7 +97,7 @@ const include = computed(() => Array.from(tabSet.value))
 watch(
   () => route.fullPath,
   (fullPath) => {
-    if (!matchActiveRule(microAppContext?.activeRule)) return // [!code focus]
+    if (!matchActiveRule({ activeRule: microAppContext?.activeRule })) return // [!code focus]
     if (!route.name) return // [!code focus]
     if (tabSet.value.has(fullPath)) return
     tabSet.value.add(fullPath)
@@ -171,7 +176,7 @@ const wrapKeepAliveComponent = (component: VNode | null | undefined) => {
 ```ts [packages/bridge-vue/src/router/dynamicRouteGuard.ts]
 router.beforeEach((to) => {
   // 当前 URL 不属于本应用，直接放行无需注册
-  if (!matchActiveRule(activeRule)) return
+  if (!matchActiveRule({ activeRule })) return
   // ...
 })
 ```
