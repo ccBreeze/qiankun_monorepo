@@ -26,7 +26,7 @@ export default defineConfig(({ mode }) => {
         // async chunk CSS 以 <link> 加载，url() 相对 CSS 文件自身 URL 解析，无需改写
         if (
           hostType === 'css' &&
-          /\.(png|jpe?g|gif|svg|webp)$/i.test(filename)
+          /\.(png|jpe?g|gif|svg|webp|woff2?|ttf|otf|eot)$/i.test(filename)
         ) {
           return { relative: true }
         }
