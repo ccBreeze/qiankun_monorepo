@@ -26,6 +26,31 @@
       </button>
       <LazyDetail v-if="lazyLoaded" class="test-section__result" />
     </section>
+
+    <!-- 场景三：数字与英文专用字体 -->
+    <section class="test-section">
+      <h3 class="test-section__heading">
+        场景三：数字与英文专用字体（<code>@font-face</code>）
+      </h3>
+      <p class="test-section__desc">
+        通过
+        <code>unicode-range</code>
+        将字体限定在数字与英文字母，中文仍走系统字体。
+      </p>
+      <div class="num-font-demo">
+        <p class="num-font-demo__line">默认：订单金额 12,345,678.90 元</p>
+        <p class="num-font-demo__line digit-font">
+          数字字体：订单金额 12,345,678.90 元
+        </p>
+        <p class="num-font-demo__line">默认：批次号 CRM-ABCD-20260415</p>
+        <p class="num-font-demo__line digit-font">
+          字体生效：批次号 CRM-ABCD-20260415
+        </p>
+        <p class="num-font-demo__line digit-font">
+          统计：Growth 18.62 / Loss 2.08 / RunAt 2026-04-14 10:08:59
+        </p>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -73,6 +98,19 @@ const loadLazy = () => {
   }
 }
 
+.num-font-demo {
+  padding: 12px 16px;
+  background: #fafafa;
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+
+  &__line {
+    margin: 0;
+    line-height: 1.9;
+    color: #262626;
+  }
+}
+
 /* 通过 CSS url() 引用图片，验证 processLoadAssetInCss 路径修正 */
 .bg-demo {
   width: 522px;
@@ -96,5 +134,15 @@ const loadLazy = () => {
     background: #d9d9d9;
     border-color: #d9d9d9;
   }
+}
+
+.digit-font {
+  font-family:
+    AssetPathDigits, 'Microsoft YaHei', '微软雅黑', 'Helvetica Neue', Helvetica,
+    Arial, sans-serif;
+  font-feature-settings:
+    'tnum' 1,
+    'lnum' 1;
+  font-variant-numeric: tabular-nums;
 }
 </style>
