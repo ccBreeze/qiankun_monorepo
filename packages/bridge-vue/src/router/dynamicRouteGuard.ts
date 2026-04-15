@@ -67,7 +67,7 @@ export const createDynamicRouteGuard = (options: DynamicRouteGuardOptions) => {
   let initialized = false
   router.beforeEach((to) => {
     // qiankun 多应用场景：当前 URL 不属于本应用（其他子应用的路由），直接放行无需注册
-    if (!matchActiveRule(activeRule)) return
+    if (!matchActiveRule({ activeRule })) return
 
     if (!authorizedRoutes.length) return
 

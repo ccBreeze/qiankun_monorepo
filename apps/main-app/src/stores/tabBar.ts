@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import type { RouteLocationRaw } from 'vue-router'
 import type { TabRemoveRequestPayload } from '@breeze/runtime'
 import { useMenuStore } from '@/stores/menu'
+import { useMicroAppStore } from '@/stores/microApp'
 import { emitTabRemove } from '@/utils/channel'
 
 type Tab = {
@@ -15,6 +16,8 @@ type Tab = {
    * @example '/vue3-history/KeepAliveDemo?id=1&type=coupon#abc'
    */
   fullPath: string
+  /** 子应用激活规则（用于应用维度的 tab 回收判定） */
+  activeRule?: string
   /** 创建此 tab 时的来源路由（携带 activeRule） */
   source?: string
 }
@@ -37,6 +40,7 @@ const normalizeFullPath = (path: string) =>
 export const useTabBarStore = defineStore('tabBar', () => {
   const route = useRoute()
   const router = useRouter()
+  const microAppStore = useMicroAppStore()
   const { activeMenuRoute } = storeToRefs(useMenuStore())
 
   const tabs = useLocalStorage<Map<string, Tab>>('tabBar:tabs', new Map(), {
@@ -54,6 +58,7 @@ export const useTabBarStore = defineStore('tabBar', () => {
         // 子应用通过 router.push({ state: { tabName } }) 传递动态标题
         title: history.state?.tabName ?? routeRecord.meta.name,
         fullPath,
+        activeRule: routeRecord.meta.activeRule,
         source: previousFullPath,
       }
       // key 为 fullPath，同一路由的不同参数（如 /user/123、/user/456）会产生多个同名 tab
@@ -98,18 +103,33 @@ export const useTabBarStore = defineStore('tabBar', () => {
     return list[nextIndex] // 只剩一个 tab 时返回 undefined，不跳转
   }
 
-  const removeTab = ({ fullPath, ...options }: RemoveTabOptions) => {
+  const removeTab = async ({ fullPath, ...options }: RemoveTabOptions) => {
     fullPath = normalizeFullPath(fullPath)
     const tab = tabs.value.get(fullPath)
     if (!tab) return
 
     if (fullPath === route.fullPath) {
       const target = resolveTabCloseTarget({ tab, ...options })
-      if (target) router.push(target)
+      if (target) {
+        await router.push(target)
+
+        // 当前先依赖 ConsoleTabs 内的 route watcher 调用 addTab()。
+        // 若后续发现关闭当前 tab 后，releaseMicroAppIfOrphaned 拿到的 tabs
+        // 快照偶发缺少目标页，可重新启用这里的显式补录逻辑。
+
+        // 这里读取的 route.fullPath 来自 await router.push(target) 之后，
+        // 因此是跳转完成后的最终路由。
+        // const currentFullPath = normalizeFullPath(route.fullPath)
+        // if (tabs.value.has(currentFullPath)) return
+        // addTab(currentFullPath, fullPath)
+      }
     }
 
     tabs.value.delete(fullPath)
     emitTabRemove({ fullPath })
+    await microAppStore.releaseMicroAppIfOrphaned(tab.activeRule, [
+      ...tabs.value.values(),
+    ])
   }
 
   const clearTabs = () => {

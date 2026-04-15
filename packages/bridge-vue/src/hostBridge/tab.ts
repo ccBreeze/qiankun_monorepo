@@ -26,7 +26,7 @@ export const useTabRemoveListener = (
 ) => {
   const handler = ({ fullPath }: TabRemovePayload) => {
     const { activeRule } = context
-    if (!matchActiveRule(activeRule)) return
+    if (!matchActiveRule({ activeRule, fullPath })) return
     onRemove(stripActiveRule(fullPath, activeRule))
   }
 

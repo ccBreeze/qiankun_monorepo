@@ -57,7 +57,7 @@ export const useKeepAlive = (microAppContext?: KeepAliveContext) => {
   watch(
     () => route.fullPath,
     (fullPath) => {
-      if (!matchActiveRule(microAppContext?.activeRule)) return
+      if (!matchActiveRule({ activeRule: microAppContext?.activeRule })) return
       if (!route.name) return
       if (tabSet.value.has(fullPath)) return
 
