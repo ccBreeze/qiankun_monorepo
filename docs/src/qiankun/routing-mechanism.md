@@ -24,7 +24,7 @@ title: 路由协作机制
 
 例如：`/vue3-history`、`/vue3-history/CouponListTemp`。
 
-相关工具函数（`normalizePath`、`stripBase` 等）均以此为前提，处理时无需额外兼容尾部斜杠。
+相关工具函数（`normalizePath`、`stripActiveRule` 等）均以此为前提，处理时无需额外兼容尾部斜杠。
 :::
 
 ::: warning 菜单与子应用的归属关系
@@ -116,9 +116,9 @@ import drawioXml from './drawio/routing-mechanism.drawio?raw'
 
 组件模板会预先渲染所有子应用容器，只用 `v-show` 控制当前显示哪个容器（详见 [子应用状态管理 — 在 MicroApp 视图中的使用](./micro-app-store.md#在-microapp-视图中的使用)）。
 
-### 第 3 步：首次命中时，主应用调用 `loadMicroApp` 加载子应用
+### 第 3 步：首次命中时，主应用在 Store 中调用 `loadMicroApp` 加载子应用
 
-`MicroApp/index.vue` 监听 `activeMicroApp`，首次进入某个子应用时调用 `loadMicroApp(newApp)`，已加载过的实例直接复用（详见 [子应用状态管理 — 脚本：用 activeMicroApp 驱动按需加载](./micro-app-store.md#脚本-用-activemicroapp-驱动按需加载)）。
+`useMicroAppStore()` 内部监听 `activeMicroApp`，首次进入某个子应用时调用 `loadMicroApp(newApp)`，已加载过的实例直接复用；若该应用的最后一个 tab 被关闭，则进一步执行实例回收（详见 [子应用状态管理](./micro-app-store.md)）。
 
 传给 `loadMicroApp` 的 `newApp` 就是主应用前面准备好的完整 qiankun 配置（`entry`、`container`、`props`）。因此 qiankun 在拉起 `vue3-history` 时，不只知道”把资源挂到哪里”，也知道”这个子应用当前应该以哪个路由前缀运行，以及它被授权了哪些页面”。
 
@@ -180,8 +180,8 @@ export const generateRouter = (base?: string) => {
 
 随后 `setupDynamicRoute(router)` 将 `authorizedRoutes` 和 `activeRule` 交给 `@breeze/bridge-vue` 的 `createDynamicRouteGuard()`。首次导航进入守卫时，它会做三件事：
 
-1. 用 `window.location.pathname.startsWith(activeRule)` 判断当前 URL 是否属于本子应用，避免多个已挂载子应用互相误注册路由；
-2. 遍历 `authorizedRoutes`，通过 `stripBase` 剥离 `activeRule` 前缀后调用 `router.addRoute()` 注册路由；
+1. 用 `matchActiveRule({ activeRule })` 判断当前 URL 是否属于本子应用，避免多个已挂载子应用互相误注册路由；
+2. 遍历 `authorizedRoutes`，通过 `stripActiveRule` 剥离 `activeRule` 前缀后调用 `router.addRoute()` 注册路由；
 3. 注册完成后返回 `to.fullPath`，让当前地址重新走一遍匹配流程。
 
 守卫机制与注册流程的完整代码详见 [@breeze/bridge-vue — router 模块](./bridge-vue.md#router-模块)。
@@ -189,7 +189,7 @@ export const generateRouter = (base?: string) => {
 对 `/vue3-history/CouponListTemp` 这个例子来说：
 
 - 主应用下发的授权路由 `route.path` 是 `/vue3-history/CouponListTemp`
-- `stripBase(route.path, '/vue3-history')` 之后，子应用实际注册的路径变成 `/CouponListTemp`
+- `stripActiveRule(route.path, '/vue3-history')` 之后，子应用实际注册的路径变成 `/CouponListTemp`
 - `route.meta.filePath` 是 `/CouponListTemp`
 - `resolveComponent()` 最终会命中 `apps/vue3-history/src/views/CouponListTemp/index.vue`
 

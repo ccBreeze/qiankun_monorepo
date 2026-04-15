@@ -20,6 +20,8 @@ type Tab = {
   code?: string
   title: string
   fullPath: string
+  /** 子应用激活规则（用于应用维度的 tab 回收判定） */
+  activeRule?: string
   /** 创建此 tab 时的来源路由（携带 activeRule） */
   source?: string
 }
@@ -29,12 +31,13 @@ const tabs = useLocalStorage<Map<string, Tab>>('tabBar:tabs', new Map(), {
 })
 ```
 
-| 字段       | 说明                                                                                            |
-| ---------- | ----------------------------------------------------------------------------------------------- |
-| `code`     | 菜单编码，来自 `MenuRoute.meta.code`                                                            |
-| `title`    | 标签显示标题（支持动态覆盖）                                                                    |
-| `fullPath` | 完整路由路径，作为 Map 的 key（含 query 和 hash）<br/>如 `/vue3-history/KeepAliveDemo?id=1#abc` |
-| `source`   | 首次打开此 tab 时的来源路由，用于 `goToSource` 跳转                                             |
+| 字段         | 说明                                                                                            |
+| ------------ | ----------------------------------------------------------------------------------------------- |
+| `code`       | 菜单编码，来自 `MenuRoute.meta.code`                                                            |
+| `title`      | 标签显示标题（支持动态覆盖）                                                                    |
+| `fullPath`   | 完整路由路径，作为 Map 的 key（含 query 和 hash）<br/>如 `/vue3-history/KeepAliveDemo?id=1#abc` |
+| `activeRule` | 该 tab 归属的子应用前缀                                                                         |
+| `source`     | 首次打开此 tab 时的来源路由，用于 `goToSource` 跳转                                             |
 
 ::: tip
 `Map` 不能直接被 `JSON.stringify` 序列化。直接使用 VueUse 内置的 [StorageSerializers.map](https://vueuse.org/core/useStorage/#custom-serialization)。
@@ -69,6 +72,7 @@ const addTab = (fullPath: string, previousFullPath?: string) => {
       code: routeRecord.meta.code,
       title: history.state?.tabName ?? routeRecord.meta.name, // [!code focus]
       fullPath,
+      activeRule: routeRecord.meta.activeRule, // [!code focus]
       source: previousFullPath, // [!code focus]
     }
     tabs.value.set(fullPath, tab)
@@ -90,6 +94,7 @@ const addTab = (fullPath: string, previousFullPath?: string) => {
   :::
 
 - **首次创建记录**：`source`、`title` 等信息均只在首次创建时记录，后续访问相同 `fullPath` 时不会覆盖。
+- **应用归属记录**：`activeRule` 标识 tab 属于哪个子应用。
 
 - **子应用动态标题**：子应用可以通过 `router.push({ state: { tabName } })` 传递动态标题。`addTab` 会优先使用 `history.state.tabName` 作为标签标题，这是子应用设置标签名的唯一方式。
 
@@ -104,24 +109,35 @@ const addTab = (fullPath: string, previousFullPath?: string) => {
 关闭标签不仅是从列表中删除一项那么简单，还需要决定关闭后页面应该跳转到哪里。
 
 ```ts [apps/main-app/src/stores/tabBar.ts]
-const removeTab = ({ fullPath, ...options }: RemoveTabOptions) => {
+const removeTab = async ({ fullPath, ...options }: RemoveTabOptions) => {
   fullPath = normalizeFullPath(fullPath)
   const tab = tabs.value.get(fullPath)
   if (!tab) return
 
   if (fullPath === route.fullPath) {
     const target = resolveTabCloseTarget({ tab, ...options })
-    if (target) router.push(target)
+    if (target) {
+      await router.push(target)
+    }
   }
 
   tabs.value.delete(fullPath)
   emitTabRemove({ fullPath }) // [!code focus]
+  await microAppStore.releaseMicroAppIfOrphaned(
+    tab.activeRule, // [!code focus]
+    [...tabs.value.values()], // [!code focus]
+  )
 }
 ```
 
 ::: tip
 关闭标签时，还需要通知对应的子应用清除 KeepAlive 缓存。详情查看 [子应用 KeepAlive 缓存机制](./keep-alive)。
 :::
+
+关闭动作现在分成两层：
+
+- 页面层：`emitTabRemove({ fullPath })` 通知子应用清理对应页面的 KeepAlive 缓存
+- 应用层：`releaseMicroAppIfOrphaned(tab.activeRule, tabs)` 判断该子应用是否还存在其他 tab，若没有则卸载整个 qiankun 实例
 
 #### normalizeFullPath()
 
@@ -140,6 +156,8 @@ const normalizeFullPath = (path: string) =>
 2. **跳回来源页**：如果调用方传入了 `goToSource: true`，跳转回首次打开此标签时的来源页面（即使该标签已关闭也会重新打开）。代码示例参见 [`requestRemoveTabByRoute`](./runtime-events#requestremovetabbyroute)。
 3. **显式指定目标**：如果指定了 `to` 参数，跳转到该目标路径。
 4. **相邻标签**：以上两个条件都不满足时，自动跳转到相邻标签——优先右侧，如果已是最后一个则跳到左侧。当列表中只剩一个标签时，不执行跳转。
+
+当前实现里，若关闭的是“当前激活 tab”，会先 `await router.push(target)` 再删除 tab。这样做是为了让目标页先完成路由切换，再基于最新的 tab 快照执行后续清缓存和实例回收，避免把“即将保留的子应用”误判成孤儿实例。
 
 ::: details 示例：关闭标签时的几种场景
 

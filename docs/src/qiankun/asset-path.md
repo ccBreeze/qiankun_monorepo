@@ -1,17 +1,21 @@
 # Vite 动态修改 base
 
-本文说明 qiankun 场景下子应用静态资源（图片、JS chunk、CSS）路径失效的根因，以及本项目的完整解决方案。
+本文说明 qiankun 场景下子应用静态资源（图片、字体、JS chunk、CSS）路径失效的根因，以及本项目的完整解决方案。
 
 ## 整体结构
 
 ```
 apps/
+├── main-app/src/assets/scss/
+│   ├── fonts.scss        ← 声明 @font-face，验证字体资源路径
+│   └── index.scss        ← 引入全局字体样式入口
 ├── main-app/src/utils/microApp/
 │   ├── registry.ts        ← 注册表，组装 frameworkConfiguration
 │   ├── assetsPath.ts      ← 注入 window.__assetsPath
 │   ├── cssProcessor.ts    ← 拦截 CSS fetch，改写 url() 路径
 │   └── htmlProcessor.ts   ← 改写 HTML 模板中的动态 import() 路径
 └── vue3-history/
+    ├── src/views/AssetPathTest/index.vue ← 资源路径验证页（含字体示例）
     └── vite.config.ts     ← renderBuiltUrl：构建时输出运行时路径表达式
 ```
 
@@ -61,7 +65,7 @@ qiankun 会改写 HTML 模板中 `<script src="...">` 的绝对路径，但对 *
 
 ---
 
-**问题二：CSS 中的图片路径**
+**问题二：CSS 中的图片 / 字体路径**
 
 Vite 默认开启 [`build.cssCodeSplit`](https://cn.vitejs.dev/config/build-options#build-csscodesplit)，异步 chunk 关联的 CSS 会被单独提取，由 Vite 运行时（`__vitePreload`）在懒加载触发时动态创建 `<link rel="stylesheet">` 元素插入 `document.head`。**这类 CSS 不经过 qiankun 的 fetch 流程**，不会被内联。
 
@@ -69,8 +73,8 @@ Vite 默认开启 [`build.cssCodeSplit`](https://cn.vitejs.dev/config/build-opti
 
 ::: warning 内联 `<style>` 与外链 `<link>` 的 url() 解析差异
 
-- **外链 `<link>`**：浏览器知道样式表的 origin，`url(./image.png)` 相对于 CSS 文件地址解析 → 正确。
-- **内联 `<style>`**：没有自身 URL，浏览器以**主应用页面 URL** 为基准，`url(./image.png)` 变成主应用目录下的路径 → 404。
+- **外链 `<link>`**：浏览器知道样式表的 origin，`url(...)` 相对于 CSS 文件地址解析 → 正确。
+- **内联 `<style>`**：没有自身 URL，浏览器以**主应用页面 URL** 为基准，`url(...)` 变成主应用目录下的路径 → 404。
 
 :::
 
@@ -115,7 +119,7 @@ export default defineConfig({
 | 子应用构建     | `vite.config.ts`   | `renderBuiltUrl`：JS/CSS 路径输出运行时表达式 |
 | 主应用运行时   | `assetsPath.ts`    | 注入 `window.__assetsPath` 的实现             |
 | HTML 模板处理  | `htmlProcessor.ts` | 改写 HTML 中漏掉的动态 `import()` 路径        |
-| CSS fetch 拦截 | `cssProcessor.ts`  | 改写 CSS 文本中的图片相对路径                 |
+| CSS fetch 拦截 | `cssProcessor.ts`  | 改写 CSS 文本中的图片 / 字体相对路径          |
 
 ### 子应用：配置 Vite renderBuiltUrl
 
@@ -160,7 +164,7 @@ experimental: {
 },
 ```
 
-CSS 中的图片保持相对路径有两层原因：
+CSS 中的图片和字体都保持相对路径，有两层原因：
 
 1. **技术限制**：`renderBuiltUrl` 输出的 runtime 表达式只能嵌入 JS 中执行，CSS 文本里无法运行 JS。
 2. **无需改写**：Vite 默认启用 `cssCodeSplit`，每个异步 chunk 的 CSS 单独提取为独立文件，由 Vite 运行时（`__vitePreload`）以 `<link href="http://sub-app.com/assets/xxx.css">` 的形式加载。该 `href` 由 `renderBuiltUrl` 保证是绝对 URL，浏览器对 `<link>` 样式表内部的 `url()` 会相对于 **CSS 文件自身的 URL** 解析，而非页面 URL，路径天然正确。

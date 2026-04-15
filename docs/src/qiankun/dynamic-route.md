@@ -175,17 +175,33 @@ Vue 3.2.34+ 只有在未显式声明 `name` 时才自动从文件名生成 `__na
 
 :::
 
-### `matchActiveRule(activeRule)`
+### `matchActiveRule({ activeRule, fullPath })`
 
-判断当前浏览器地址是否属于指定子应用。
+判断某个完整路径是否属于指定子应用。
 
-### `stripActiveRule(path, activeRule)`
+- `activeRule` 未传时默认返回 `true`，兼容独立运行模式
+- `fullPath` 可选；省略时默认使用 `location.pathname + location.search + location.hash`
+- 在路由守卫里通常只传 `activeRule`
+- 在运行时事件里会显式传入 `payload.fullPath`，用于按事件目标路径做过滤
 
-移除路径中的 `activeRule` 前缀
+```ts [packages/router/src/parsers.ts]
+matchActiveRule({ activeRule: '/vue3-history' })
+matchActiveRule({
+  activeRule: '/vue3-history',
+  fullPath: '/vue3-history/KeepAliveDemo?id=1',
+})
+```
+
+### `stripActiveRule(fullPath, activeRule)`
+
+移除路径中的 `activeRule` 前缀，保留剩余的 path / query / hash 片段。
 
 ```ts
 stripActiveRule('/vue3-history/CouponListTemp', '/vue3-history')
 // => '/CouponListTemp'
+
+stripActiveRule('/ocrm/#/index/datainput/brand/42?tab=base', '/ocrm/#')
+// => '/index/datainput/brand/42?tab=base'
 ```
 
 ## RouteTreeBuilder.ts

@@ -113,7 +113,7 @@ export default defineConfigWithVueTs(...vue3, {
 ```typescript [packages/eslint-config/src/typescript.ts]
 parserOptions: {
   projectService: {
-    allowDefaultProject: ['*.js', '*.mjs', '*.cjs'],
+    allowDefaultProject: ['*.js', '*.mjs', '*.cjs', 'scripts/*.mjs'],
   },
 }
 ```
@@ -383,8 +383,8 @@ export const typescript: Linter.Config[] = [
         // 使用 Project Service API（v8+ 推荐）
         // 自动查找最近的 tsconfig.json，无需 monorepo 特殊配置
         projectService: {
-          // 为不在 tsconfig 范围内的 JS 配置文件提供类型解析兜底
-          allowDefaultProject: ['*.js', '*.mjs', '*.cjs'],
+          // 为不在 tsconfig 范围内的 JS / MJS 配置文件与仓库脚本提供类型解析兜底
+          allowDefaultProject: ['*.js', '*.mjs', '*.cjs', 'scripts/*.mjs'],
         },
       },
     },
@@ -449,7 +449,7 @@ Consider either including it in the tsconfig.json or including it in allowDefaul
 
 **先看结论**
 
-- 只想让少量 JS 配置文件（如 `eslint.config.js`）支持 ESLint 类型感知规则，且不想改各项目 tsconfig：用 `allowDefaultProject`（本项目采用）。
+- 只想让少量 JS / MJS 配置文件或仓库脚本（如 `eslint.config.js`、`scripts/dev.mjs`）支持 ESLint 类型感知规则，且不想改各项目 tsconfig：用 `allowDefaultProject`（本项目采用）。
 - 想让这些 JS 文件成为 TypeScript 项目成员（`tsc`/IDE 也完整接管）：用 `allowJs + include`。
 - 两种方式不能同时命中同一文件。
 
@@ -464,11 +464,13 @@ Consider either including it in the tsconfig.json or including it in allowDefaul
 
 ```ts
 projectService: {
-  allowDefaultProject: ['*.js', '*.mjs', '*.cjs'],
+  allowDefaultProject: ['*.js', '*.mjs', '*.cjs', 'scripts/*.mjs'],
 }
 ```
 
 `allowDefaultProject` 匹配到的文件会通过 `defaultProject`（默认 `tsconfig.json`）获取类型信息；路径相对于 `tsconfigRootDir` 解析。
+
+额外加入 `scripts/*.mjs` 的原因是：仓库根目录的 Node 脚本并不属于某个子包的 `tsconfig`，但同样希望它们能启用 `@typescript-eslint/await-thenable` 这类类型感知规则。当前典型例子就是 [scripts/dev.mjs](/Users/xingfengli/Desktop/work/github/qiankun_monorepo/scripts/dev.mjs)。
 
 由于每个 `eslint.config.js` 都设置了 `tsconfigRootDir: import.meta.dirname`，默认项目会自动落到各自目录：
 
@@ -760,7 +762,7 @@ Project Service 无法判断该用哪个，会报 **"multiple candidate TSConfig
 
 ::: details 为什么不需要 // @ts-check？
 
-共享 ESLint 配置中的 `allowDefaultProject: ['*.js', '*.mjs', '*.cjs']` 会为 JS 配置文件通过 `defaultProject`（默认 `tsconfig.json`）提供类型信息，ESLint 的类型感知规则已可正常工作，因此无需额外添加 `// @ts-check` 注释。
+共享 ESLint 配置中的 `allowDefaultProject: ['*.js', '*.mjs', '*.cjs', 'scripts/*.mjs']` 会为 JS 配置文件和仓库级 `.mjs` 脚本通过 `defaultProject`（默认 `tsconfig.json`）提供类型信息，ESLint 的类型感知规则已可正常工作，因此无需额外添加 `// @ts-check` 注释。
 
 :::
 
