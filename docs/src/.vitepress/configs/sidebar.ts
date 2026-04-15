@@ -15,6 +15,17 @@ export const sidebar: DefaultTheme.SidebarMulti = {
       ],
     },
   ],
+  '/optimization/': [
+    {
+      text: '优化相关',
+      items: [
+        {
+          text: 'font 字体加载优化',
+          link: '/optimization/font-loading-optimization',
+        },
+      ],
+    },
+  ],
   '/packages/utils/': [
     {
       text: 'utils',
@@ -57,6 +68,8 @@ export const sidebar: DefaultTheme.SidebarMulti = {
     {
       text: '其他',
       items: [
+        { text: 'Vite 动态修改 base', link: '/qiankun/asset-path' },
+        { text: 'OCRM 接入问题排查', link: '/qiankun/ocrm-troubleshooting' },
         { text: 'CSS 样式隔离', link: '/qiankun/style-isolation' },
         { text: '常见问题与解决方案', link: '/qiankun/troubleshooting' },
       ],
