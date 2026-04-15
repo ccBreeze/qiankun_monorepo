@@ -32,7 +32,9 @@ outline: [2, 3]
 更具体的讨论可参考以下资料：
 
 - [qiankun 应用保活方案的一种思路](https://juejin.cn/post/7127082488114970631#heading-3)
-- [微前端缓存与保活相关讨论](https://juejin.cn/post/6856569463950639117#heading-14)
 - [qiankun 场景下的 KeepAlive / 缓存实践](https://juejin.cn/post/7237425413873713209)
 - [qiankun issue #361：相关社区讨论](https://github.com/umijs/qiankun/issues/361)
 - [基于 Vue 3 + Monorepo + 微前端的中后台前端项目框架全景解析](https://juejin.cn/post/7565423807570362374)
+- [微前端缓存与保活相关讨论](https://juejin.cn/post/6856569463950639117#heading-14)
+- [微前端 qiankun 理论与实践指北](https://juejin.cn/post/7069566144750813197)
+- [qiankun 微前端实践总结（二）](https://juejin.cn/post/6856569463950639117)

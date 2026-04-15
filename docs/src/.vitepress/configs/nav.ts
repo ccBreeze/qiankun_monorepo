@@ -10,6 +10,10 @@ export const nav: DefaultTheme.NavItem[] = [
     link: '/qiankun/dynamic-route',
   },
   {
+    text: '优化相关',
+    link: '/optimization/font-loading-optimization',
+  },
+  {
     text: 'Packages',
     items: [
       {
