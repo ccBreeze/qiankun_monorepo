@@ -1,0 +1,4 @@
+interface:
+  display_name: 'Doc Writer'
+  short_description: '编写和维护 docs/src 下的技术文档与配套资源'
+  default_prompt: 'Use $doc-writer to create or update docs/src documentation, including VitePress page structure, DrawIO references, and related image organization when needed.'

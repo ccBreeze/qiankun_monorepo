@@ -6,23 +6,20 @@
       "Bash(wc:*)",
       "Bash(mkdir:*)",
       "Bash(mv:*)",
-
       "Bash(git mv:*)",
       "Bash(gh api repos:*)",
-
+      "Bash(gh issue:*)",
+      "Bash(grep:*)",
       "Bash(pnpm:*)",
       "Bash(npm view:*)",
       "Bash(npx tsc:*)",
       "Bash(npx eslint:*)",
       "Bash(npx stylelint:*)",
       "Bash(npx prettier:*)",
-
-      "WebSearch",
       "WebFetch(domain:github.com)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "WebFetch(domain:www.npmjs.com)",
       "WebFetch(domain:router.vuejs.org)",
-
       "mcp__drawio__*",
       "mcp__chrome-devtools__*",
       "mcp__figma__*",

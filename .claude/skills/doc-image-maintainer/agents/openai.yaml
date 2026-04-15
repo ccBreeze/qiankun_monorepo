@@ -1,0 +1,4 @@
+interface:
+  display_name: 'Doc Image Maintainer'
+  short_description: '统一管理文档图片资源，自动迁移、重命名并校验引用一致性'
+  default_prompt: 'Use $doc-image-maintainer to migrate markdown image assets into per-markdown ./imgs folders, delete unused files, and safely rewrite references.'
