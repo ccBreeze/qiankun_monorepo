@@ -4,6 +4,8 @@ import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 import qiankun from 'vite-plugin-qiankun'
 
 const resolvePath = (relativePath: string) =>
@@ -53,6 +55,16 @@ export default defineConfig(({ mode }) => {
           filepath: './.eslintrc-auto-import.json',
         },
         vueTemplate: true,
+      }),
+      Components({
+        dirs: [],
+        dts: 'src/types/components.d.ts',
+        resolvers: [
+          AntDesignVueResolver({
+            importStyle: false,
+            resolveIcons: true,
+          }),
+        ],
       }),
       qiankun(env.VITE_APP_NAME, {
         useDevMode: true,

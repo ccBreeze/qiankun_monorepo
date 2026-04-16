@@ -3,10 +3,10 @@
     v-model:open="open"
     placement="bottomRight"
     color="#fff"
-    destroy-tooltip-on-hide
+    destroyTooltipOnHide
     trigger="click"
-    overlay-class-name="user-avatar-tooltip"
-    :get-popup-container="getPopupContainer"
+    overlayClassName="user-avatar-tooltip"
+    :getPopupContainer="getPopupContainer"
   >
     <div class="avatar-container">
       <img src="../images/avatar_female.png" class="avatar" />
