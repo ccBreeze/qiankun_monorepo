@@ -70,6 +70,24 @@ export default defineConfig(({ mode }) => {
         useDevMode: true,
       }),
     ],
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (!id.includes('node_modules')) return
+            if (/node_modules\/(vue|vue-router|pinia)\//.test(id)) {
+              return 'vue-vendor'
+            }
+            if (
+              /node_modules\/(ant-design-vue|@ant-design\/icons-vue)\//.test(id)
+            ) {
+              return 'antd'
+            }
+            return 'vendor'
+          },
+        },
+      },
+    },
     resolve: {
       alias: {
         '@': resolvePath('./src'),

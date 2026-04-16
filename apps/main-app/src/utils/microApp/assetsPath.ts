@@ -1,12 +1,5 @@
+import { normalizeMicroAppEntryBase } from './entryBase'
 import { microApps } from './registry'
-
-/** 格式化子应用入口 URL */
-export const normalizeMicroAppEntryBase = (entry: string) => {
-  if (!entry) return ''
-  return entry
-    .replace(/\/[^/]*\.html$/, '') // 'https://app/index.html' -> 'https://app'
-    .replace(/\/$/, '') //'https://app/' -> 'https://app'
-}
 
 const microAppAssetBaseMap = microApps.reduce<Record<string, string>>(
   (map, app) => {

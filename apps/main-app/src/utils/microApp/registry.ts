@@ -73,13 +73,14 @@ export const getPackageId = (activeRule: string) => {
 /** 将子应用静态配置补全 */
 export const microApps = microAppDefinitions.map((config): ResolvedMicroApp => {
   const name = getPackageId(config.activeRule)
+  const entry = config.entryMap[runtimeEnv]!
   return {
     name,
     activeRule: config.activeRule,
-    entry: config.entryMap[runtimeEnv]!,
+    entry,
     container: `#micro-container__${name}`,
     configuration: {
-      getTemplate: (tpl: string) => processDynamicImport(tpl, name),
+      getTemplate: (tpl: string) => processDynamicImport(tpl, entry),
       fetch: cssFetchInterceptor,
       ...config.configuration,
     },
