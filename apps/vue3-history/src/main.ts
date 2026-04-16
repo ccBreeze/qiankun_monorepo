@@ -3,7 +3,6 @@ import './assets/scss/index.scss'
 import { createApp } from 'vue'
 import type { App } from 'vue'
 import { createPinia } from 'pinia'
-import Antd from 'ant-design-vue'
 import {
   renderWithQiankun,
   qiankunWindow,
@@ -23,7 +22,6 @@ function renderApp() {
 
   app.use(createPinia())
   app.use(router)
-  app.use(Antd)
 
   /**
    * 注意：子应用的根组件必须在主应用指定的 DOM 节点上查找，否则会导致子应用无法正常卸载。

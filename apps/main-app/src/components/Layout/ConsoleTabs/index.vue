@@ -39,12 +39,6 @@
 </template>
 
 <script setup lang="ts">
-import {
-  CloseOutlined,
-  LeftOutlined,
-  RightOutlined,
-} from '@ant-design/icons-vue'
-
 import { watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRoute, useRouter } from 'vue-router'

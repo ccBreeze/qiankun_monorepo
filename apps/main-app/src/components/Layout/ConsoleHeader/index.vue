@@ -6,10 +6,10 @@
       <ShuntMenuButton
         v-for="[menuKey, menu] in menuMap"
         :key="menuKey"
-        :icon-name="menu.iconName ?? ''"
+        :iconName="menu.iconName ?? ''"
         :title="menu.title ?? ''"
         :href="menu.appHomePath"
-        :is-active="menuKey === activeMenuKey"
+        :isActive="menuKey === activeMenuKey"
       />
     </div>
 

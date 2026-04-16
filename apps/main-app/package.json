@@ -18,12 +18,12 @@
     "@breeze/router": "workspace:*",
     "@breeze/runtime": "workspace:*",
     "@breeze/utils": "workspace:*",
-    "qiankun": "catalog:",
     "@vueuse/core": "catalog:",
     "ant-design-vue": "catalog:",
     "axios": "catalog:",
     "pinia": "catalog:",
     "pinyin-pro": "catalog:",
+    "qiankun": "catalog:",
     "vite-plugin-svg-icons": "catalog:",
     "vue": "catalog:",
     "vue-router": "catalog:"
@@ -43,6 +43,7 @@
     "tailwindcss": "catalog:",
     "typescript": "catalog:",
     "unplugin-auto-import": "catalog:",
+    "unplugin-vue-components": "catalog:",
     "vite": "catalog:",
     "vite-plugin-vue-devtools": "catalog:",
     "vue-tsc": "catalog:"
