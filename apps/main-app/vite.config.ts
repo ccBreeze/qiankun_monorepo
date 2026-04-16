@@ -2,6 +2,7 @@ import { fileURLToPath, URL } from 'node:url'
 import { resolve } from 'node:path'
 
 import { defineConfig } from 'vite'
+// import { visualizer } from 'rollup-plugin-visualizer'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import vueDevTools from 'vite-plugin-vue-devtools'
@@ -41,10 +42,32 @@ export default defineConfig({
     createSvgIconsPlugin({
       iconDirs: [resolve(process.cwd(), 'src/assets/icons')],
     }),
+    // visualizer({
+    //   filename: 'dist/stats.html',
+    //   gzipSize: true,
+    // }),
   ],
   resolve: {
     alias: {
       '@': resolvePath('./src'),
+    },
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return
+          if (/node_modules\/(vue|vue-router|pinia)\//.test(id)) {
+            return 'vue-vendor'
+          }
+          if (
+            /node_modules\/(ant-design-vue|@ant-design\/icons-vue)\//.test(id)
+          ) {
+            return 'antd'
+          }
+          return 'vendor'
+        },
+      },
     },
   },
   server: {
