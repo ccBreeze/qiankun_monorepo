@@ -20,6 +20,14 @@ export const sidebar: DefaultTheme.SidebarMulti = {
       text: '优化相关',
       items: [
         {
+          text: '自动导入',
+          link: '/optimization/auto-import',
+        },
+        {
+          text: 'Vite 构建拆包策略',
+          link: '/optimization/vite-code-splitting',
+        },
+        {
           text: 'font 字体加载优化',
           link: '/optimization/font-loading-optimization',
         },
