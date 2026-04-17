@@ -28,5 +28,5 @@
     ]
   },
   "enableAllProjectMcpServers": true,
-  "disabledMcpjsonServers": ["figma", "feishu-mcp", "drawio", "chrome-devtools"]
+  "disabledMcpjsonServers": ["figma", "feishu-mcp"]
 }
