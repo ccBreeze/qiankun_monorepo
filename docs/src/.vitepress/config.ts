@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitepress'
+import { figure } from '@mdit/plugin-figure'
 import {
   groupIconMdPlugin,
   groupIconVitePlugin,
@@ -20,6 +21,7 @@ export default defineConfig({
     },
     config(md) {
       md.use(groupIconMdPlugin)
+      md.use(figure)
     },
   },
   themeConfig: {

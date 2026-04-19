@@ -25,11 +25,9 @@
 
 子应用 `index.html` 不是直接作为页面打开：主应用先通过 `fetch` 把它拉为字符串，再交给 `import-html-entry` 解析后注入到主应用 `document`。**这一过程里，HTML 模板中以 `/` 开头的路径会原样保留**——它们看起来是绝对路径，实则是"站点根路径"，浏览器会用当前页面 origin（主应用域名）来拼接解析，资源随之跑偏：
 
-<img src="./imgs/asset-path-figure-06.png" alt="错误解析到主应用域名的根路径资源" style="display: block; width: 80%; margin: 0 auto;" />
+![错误解析到主应用域名的根路径资源](./imgs/asset-path-figure-06.png)
 
-而正确的地址应该指向子应用自身的入口域名：
-
-<img src="./imgs/asset-path-figure-07.png" alt="正确解析到子应用入口域名的资源地址" style="display: block; width: 80%; margin: 0 auto;" />
+![正确解析到子应用入口域名的资源地址](./imgs/asset-path-figure-07.png)
 
 以启用 `manualChunks` 拆包的 `index.html` 为例，模板里会同时出现三种需要处理的根路径资源：
 
@@ -71,14 +69,13 @@ Vite 默认开启 [`build.cssCodeSplit`](https://cn.vitejs.dev/config/build-opti
 `<link>` 的 `href` 之所以能指向子应用 origin，靠的是两层配置共同计算：子应用通过 [`renderBuiltUrl`](#子应用配置-vite-renderbuilturl) 把 chunk 路径输出为 `window.__assetsPath(...)` 运行时表达式；主应用在加载子应用前注入 [`window.__assetsPath`](#主应用window__assetspath) 的实现。二者配合后，`__vitePreload` 动态插入 `<link>` 时解析出的 `href` 才是子应用绝对 URL，路径天然正确：
 :::
 
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start;">
-  <img src="./imgs/asset-path-figure-21.png" alt="async chunk CSS 以外链 link 形式挂在 document.head，href 指向子应用 origin" />
-  <img src="./imgs/asset-path-figure-22.png" alt="Network 面板显示该外链 CSS 请求命中子应用 8101 端口，状态 200" />
-</div>
+![async chunk CSS 以外链 link 形式挂在 document.head，href 指向子应用 origin](./imgs/asset-path-figure-21.png)
+
+![Network 面板显示该外链 CSS 请求](./imgs/asset-path-figure-22.png)
 
 问题出在另一条路径——子应用初始 HTML 中**静态声明的** `<link rel="stylesheet">`（通常是全局样式、CSS 变量、字体等入口 CSS）由 `import-html-entry` 在解析 HTML 时主动 fetch，并将 CSS 文本**内联为 `<style>` 标签**注入主应用 `document`，这是 qiankun 实现 CSS 沙箱的工作方式：
 
-<img src="./imgs/asset-path-figure-23.png" alt="qiankun-head 中原入口 link rel=stylesheet 被 import-html-entry 替换为内联 style 标签" style="display: block; width: 80%; margin: 0 auto;" />
+![qiankun-head 中原入口 link rel=stylesheet 被 import-html-entry 替换为内联 style 标签](./imgs/asset-path-figure-23.png)
 
 ::: warning 内联 `<style>` 与外链 `<link>` 的 url() 解析差异
 
@@ -87,10 +84,9 @@ Vite 默认开启 [`build.cssCodeSplit`](https://cn.vitejs.dev/config/build-opti
 
 :::
 
-<div style="display: grid; grid-template-columns: 0.5fr 1fr; gap: 16px; align-items: start;">
-  <img src="./imgs/asset-path-figure-01.png" />
-  <img src="./imgs/asset-path-figure-09.png" />
-</div>
+![外链 link 保留样式表 origin，url() 相对于 CSS 文件自身解析](./imgs/asset-path-figure-01.png)
+
+![qiankun 将入口 CSS 内联为 style 后，url() 相对于主应用页面解析](./imgs/asset-path-figure-09.png)
 
 ## 方案选型：为什么不用静态 base
 
@@ -108,9 +104,11 @@ export default defineConfig({
 - 子应用部署域名变更时必须重新构建
 - <span style="color: var(--vp-c-danger-1); font-weight: bold;">同一份构建产物无法在不同主应用环境下复用</span>
 
-<img src="./imgs/asset-path-figure-03.png" alt="静态 base 将子应用域名写死在构建产物中" style="display: block; width: 80%; margin: 0 auto;" />
-<img src="./imgs/asset-path-figure-05.png" alt="切换环境后静态 base 指向失效" style="display: block; width: 80%; margin: 0 auto;" />
-<img src="./imgs/asset-path-figure-04.png" alt="同一份构建产物无法在不同主应用环境复用" style="display: block; width: 80%; margin: 0 auto;" />
+![静态 base 将子应用域名写死在构建产物中](./imgs/asset-path-figure-03.png)
+
+![HTML 渲染结果](./imgs/asset-path-figure-05.png)
+
+![url() 固定 base](./imgs/asset-path-figure-04.png)
 
 ## 运行时动态路径协议
 
@@ -242,22 +240,21 @@ export const installMicroAppAssetRuntime = () => {
 
 第二种情况来自 `index.html` 入口模板中 `vite-plugin-qiankun` 注入的脚本：
 
-<img src="./imgs/asset-path-figure-14.png" alt="vite-plugin-qiankun 注入的入口模板 import 调用" style="display: block; width: 80%; margin: 0 auto;" />
+![vite-plugin-qiankun 注入的入口模板 import 调用](./imgs/asset-path-figure-14.png)
 
 `processDynamicImport` 将其改写为：
 
-<img src="./imgs/asset-path-figure-12.png" alt="processDynamicImport 将根路径 import 替换为 window.__assetsPath" style="display: block; width: 80%; margin: 0 auto;" />
+![processDynamicImport 将根路径 import 替换为 window.__assetsPath](./imgs/asset-path-figure-12.png)
 
 若 `window.__assetsPath` 直接拼接，就会产生双斜杠地址：
 
-<img src="./imgs/asset-path-figure-13.png" alt="拼接未去除前导斜杠导致双斜杠地址" style="display: block; width: 80%; margin: 0 auto;" />
+![拼接未去除前导斜杠导致双斜杠地址](./imgs/asset-path-figure-13.png)
 
 **这会污染入口模块 `index-DzBdh9QA.js` 的 `import.meta.url`，进而引发后续 chunk 的重复请求。**
 
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start;">
-  <img src="./imgs/asset-path-figure-15.png" alt="双斜杠污染后后续 chunk 被浏览器重复请求" />
-  <img src="./imgs/asset-path-figure-16.png" alt="Network 面板中同一 chunk 出现单斜杠与双斜杠两条请求" />
-</div>
+![双斜杠污染后，后续 chunk 被浏览器重复请求](./imgs/asset-path-figure-15.png)
+
+![Network 面板中同一 chunk 出现单斜杠与双斜杠两条请求](./imgs/asset-path-figure-16.png)
 
 ::: warning 双斜杠如何传播并导致两次请求
 
@@ -293,7 +290,7 @@ new URL("./index-DiEL3xZ7.js", "http://localhost:8101//assets/index-DzBdh9QA.js"
 
 `filename.replace(/^\//, '')` 在拼接前去掉前导 `/`，入口模块加载地址变为单斜杠，`import.meta.url` 恢复正常，双斜杠不再传播：
 
-<img src="./imgs/asset-path-figure-10.png" alt="去除前导斜杠后入口模块加载地址恢复单斜杠" style="display: block; width: 80%; margin: 0 auto;" />
+![去除前导斜杠后入口模块加载地址恢复单斜杠](./imgs/asset-path-figure-10.png)
 
 :::
 
@@ -358,11 +355,11 @@ configuration: {
 
 改写效果示例：
 
-<img src="./imgs/asset-path-figure-08.png" alt="改写前：HTML 模板中的根路径 import()" style="display: block; width: 80%; margin: 0 auto;" />
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start;">
-  <img src="./imgs/asset-path-figure-11.png" alt="改写后：import() 转为 window.__assetsPath 调用" />
-<img src="./imgs/asset-path-figure-23.png" alt="HTML渲染结果" style="display: block; width: 80%; margin: 0 auto;" />
-</div>
+![改写前：HTML 模板中的根路径 import()](./imgs/asset-path-figure-08.png)
+
+![改写后：import() 转为 window.__assetsPath 调用](./imgs/asset-path-figure-11.png)
+
+![HTML 渲染结果](./imgs/asset-path-figure-23.png)
 
 ### 主应用：cssFetchInterceptor CSS 路径拦截
 
@@ -440,7 +437,7 @@ import 'some-ui-library/dist/style.css'
 ::: info **过去的误判**：
 生产环境中可以观察到子应用的 async chunk CSS 以 `<link>` 形式被插入主应用的 `head`，直觉上容易误判为"样式跑到主应用里了，会污染其他子应用"。
 
-<img src="./imgs/asset-path-figure-17.png" alt="async chunk CSS 插入主应用 head" style="display: block; width: 80%; margin: 0 auto;" />
+![async chunk CSS 插入主应用 head](./imgs/asset-path-figure-17.png)
 
 为了规避这个现象，早期配置了 `build.cssCodeSplit: false`，将所有样式合并进入口 CSS，再由 `cssFetchInterceptor` 统一处理路径。**但这个前提判断是错的。**
 :::
@@ -472,7 +469,7 @@ import 'some-ui-library/dist/style.css'
 
 子应用 unmount 后，主应用 `head` 中会保留 `__vitePreload` 运行时插入的 `<link>` 标签：
 
-<img src="./imgs/asset-path-figure-18.png" alt="子应用卸载后主应用 head 中残留的 link 标签" style="display: block; width: 80%; margin: 0 auto;" />
+![子应用卸载后主应用 head 中残留的 link 标签](./imgs/asset-path-figure-18.png)
 
 **为什么 qiankun 无法移除它们**
 
@@ -491,10 +488,9 @@ qiankun 沙箱的职责范围是 **JS 全局变量隔离**（window proxy）和 
 
 开发环境（`vite dev`）下，样式由 Vite HMR 客户端以 `<style data-vite-dev-id="...">` 的形式动态注入 `document.head`。在 qiankun 场景中看到 style 节点出现在主应用 `head`，属于 **Vite 的预期行为**，不是异常。
 
-<div style="display: grid; grid-template-columns: 0.63fr 0.36fr; gap: 16px; align-items: start;">
-  <img src="./imgs/asset-path-figure-19.png" alt="Dev 环境下 style 标签注入主应用 head" />
-  <img src="./imgs/asset-path-figure-20.png" alt="qiankun-head 内联 style 节点" />
-</div>
+![Dev 环境下 style 标签注入主应用 head](./imgs/asset-path-figure-19.png)
+
+![qiankun-head 内联 style 节点](./imgs/asset-path-figure-20.png)
 
 当前项目不需要对该现象做额外处理，原因是：
 
