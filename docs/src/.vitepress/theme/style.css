@@ -26,6 +26,23 @@
   margin-top: 36px;
 }
 
+.vp-doc figure {
+  margin: 24px 0;
+}
+
+.vp-doc figure > img {
+  display: block;
+  width: 80%;
+  margin: 0 auto;
+}
+
+.vp-doc figure > figcaption {
+  margin-top: 12px;
+  font-size: 14px;
+  color: var(--vp-c-text-2);
+  text-align: center;
+}
+
 .vp-doc th:not(:last-child),
 .vp-doc td:not(:last-child) {
   white-space: nowrap;
