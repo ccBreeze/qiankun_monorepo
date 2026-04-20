@@ -125,7 +125,7 @@ pnpm --prefix docs run dev
 }
 ```
 
-根目录的 `dev` 不再平铺为多个 `dev:*` 脚本，而是统一委托给仓库脚本 [scripts/dev.mjs](/Users/xingfengli/Desktop/work/github/qiankun_monorepo/scripts/dev.mjs)。该脚本以 `apps` 数组作为唯一数据源，同时支持单目标启动和全量启动：
+根目录的 `dev` 不再平铺为多个 `dev:*` 脚本，而是统一委托给仓库脚本 `scripts/dev.mjs`。该脚本以 `apps` 数组作为唯一数据源，同时支持单目标启动和全量启动：
 
 ```js [scripts/dev.mjs]
 const apps = [

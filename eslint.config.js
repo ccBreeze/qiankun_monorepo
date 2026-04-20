@@ -5,16 +5,20 @@ import { base } from '@breeze/eslint-config'
 export default [
   ...base,
   {
-    // 显式设置 tsconfigRootDir，避免 monorepo 中多候选目录冲突
+    name: 'root/type-aware-files',
     languageOptions: {
       parserOptions: {
         tsconfigRootDir: import.meta.dirname,
+        projectService: {
+          allowDefaultProject: ['scripts/*.mjs', '*.js'],
+        },
       },
     },
   },
   {
+    name: 'root/node-files',
     // 根目录脚本与配置文件运行在 Node 环境，需要显式声明常用全局变量
-    files: ['scripts/**/*.mjs', '*.config.js', '*.config.mjs'],
+    files: ['scripts/**/*.mjs', '*.config.js'],
     languageOptions: {
       globals: {
         console: 'readonly',

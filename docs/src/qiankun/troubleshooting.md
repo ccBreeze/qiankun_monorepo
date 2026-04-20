@@ -20,11 +20,20 @@ title: 常见问题与解决方案
 
 优先从 `props.container` 内部查找挂载节点，仅在独立运行时回退到字符串选择器：
 
+```html [apps/vue3-history/index.html]
+<body>
+  <div id="%VITE_APP_NAME%"></div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+```
+
 ```ts
 const rootId = `#${import.meta.env.VITE_APP_NAME}`
 const rootContainer = microAppContext.container?.querySelector(rootId) || rootId
 app.mount(rootContainer)
 ```
+
+`index.html` 中的挂载节点 `id="%VITE_APP_NAME%"` 必须与入口代码中的 `import.meta.env.VITE_APP_NAME` 保持一致。
 
 > 参考：[qiankun 官方 FAQ](https://qiankun.umijs.org/zh/faq#application-died-in-status-not_mounted-target-container-with-container-not-existed-after-xxx-mounted)
 
@@ -50,7 +59,7 @@ app.mount(rootContainer)
 
 在切换到下一个子应用前，先等待上一个子应用的 `mountPromise` 完成；如果它已经失败，则主动执行卸载清理，再继续后续切换。
 
-当前项目在 [microApp.ts](/Users/xingfengli/Desktop/work/github/qiankun_monorepo/apps/main-app/src/stores/microApp.ts:71) 中采用了这套处理：
+当前项目在 `apps/main-app/src/stores/microApp.ts` 第 71 行附近采用了这套处理：
 
 ```ts
 watch(
@@ -137,7 +146,7 @@ export const cleanup = () => {
 
 ### 当前项目
 
-当前项目已经在子应用入口使用了 `qiankunWindow` 判断是否运行在 qiankun 环境中，见 [main.ts](/Users/xingfengli/Desktop/work/github/qiankun_monorepo/apps/vue3-history/src/main.ts:9)：
+当前项目已经在子应用入口使用了 `qiankunWindow` 判断是否运行在 qiankun 环境中，见 `apps/vue3-history/src/main.ts` 第 9 行附近：
 
 ```ts
 import {

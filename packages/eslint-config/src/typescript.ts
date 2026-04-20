@@ -15,7 +15,9 @@ export const typescript: Linter.Config[] = [
     languageOptions: {
       parserOptions: {
         projectService: {
-          allowDefaultProject: ['*.js', '*.mjs', '*.cjs', 'scripts/*.mjs'],
+          // 为各包根目录下未纳入 tsconfig 的配置文件提供默认项目兜底；
+          // 业务脚本（如根目录 scripts/dev.mjs）应在各自的 eslint.config.js 中显式声明。
+          allowDefaultProject: ['*.js', '*.mjs'],
         },
       },
     },
