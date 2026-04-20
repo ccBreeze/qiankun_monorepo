@@ -1,50 +1,45 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# [PROJECT_NAME] 项目宪章
+<!-- 示例：Spec 宪章、TaskFlow 宪章等 -->
 
-## Core Principles
+## 核心原则
 
 ### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
 [PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+<!-- 示例：所有交付物必须先满足某项核心原则，并说明其不可妥协的边界与原因 -->
 
 ### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
 [PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+<!-- 示例：标识命名、接口设计或协作约束等非功能性要求 -->
 
 ### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
 [PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+<!-- 示例：测试、质量门禁或发布流程中的强制规则 -->
 
 ### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
 [PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+<!-- 示例：可观测性、兼容性、性能或运维相关原则 -->
 
 ### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
 [PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+<!-- 示例：简洁性、版本管理或长期维护相关原则 -->
 
 ## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+<!-- 示例：附加约束、安全要求、性能标准等 -->
 
 [SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+<!-- 示例：技术栈要求、合规要求、部署策略等 -->
 
 ## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+<!-- 示例：研发流程、评审机制、质量门禁等 -->
 
 [SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+<!-- 示例：代码评审要求、测试门禁、发布审批流程等 -->
 
-## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+## 治理
+<!-- 示例：宪章高于其他临时约定；修订需附带影响说明与迁移计划 -->
 
 [GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+<!-- 示例：所有评审都必须校验合规性；复杂度必须给出理由；引用运行时指导文件 -->
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**版本**: [CONSTITUTION_VERSION] | **批准日期**: [RATIFICATION_DATE] | **最近修订**: [LAST_AMENDED_DATE]
+<!-- 示例：版本：2.1.1 | 批准日期：2025-06-13 | 最近修订：2025-07-16 -->

@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+本文件为 Claude Code（claude.ai/code）在此仓库中工作时提供协作指导。
 
 ## 常用命令
 
@@ -115,7 +115,9 @@ docs/              # VitePress 文档站
 ### 语言与类型
 
 - 所有新代码使用 TypeScript（`.ts`、`.tsx`），配置文件除外
-- 代码注释使用中文
+- 代码变量名和函数名使用英文，代码注释使用中文
+- 用户界面文本、错误提示和日志信息使用简体中文
+- 提交信息使用简体中文，可保留必要英文技术关键词
 
 ### 命名规范
 
