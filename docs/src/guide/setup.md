@@ -43,7 +43,7 @@ pnpm add -Dw typescript @types/node ts-node
 
 项目采用分层继承的 tsconfig 结构，根目录提供基础配置，各子项目通过 `extends` 继承并补充差异。
 
-完整的配置说明和各字段含义请参阅 [tsconfig 项目配置](/packages/eslint-config/tsconfig)。
+完整的配置说明和各字段含义请参阅 [tsconfig 项目配置](/guide/tsconfig)。
 
 ### 1.5 创建目录与示例包
 
