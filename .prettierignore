@@ -8,3 +8,11 @@ pnpm-lock.yaml
 # 自动生成的类型声明文件
 **/auto-imports.d.ts
 **/components.d.ts
+
+# Spec Kit temporary ignores
+/.agents/skills/speckit-*/
+/.claude/skills/speckit-*/
+/.github/agents/
+/.github/prompts/
+/.specify/
+/AGENTS.md
