@@ -1,5 +1,6 @@
 import {
   RUNTIME_EVENTS,
+  qiankunRuntime,
   type TabNavigateRequestPayload,
   type TabRemovePayload,
   type TabRemoveRequestPayload,
@@ -7,7 +8,7 @@ import {
 import router from '@/router'
 import { useTabBarStore } from '@/stores/tabBar'
 
-const channel = window.QiankunRuntime.channel
+const channel = qiankunRuntime.channel
 
 /** 注册主应用运行时通信监听 */
 export const setupRuntimeChannels = () => {

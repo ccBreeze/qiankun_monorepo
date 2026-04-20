@@ -9,23 +9,43 @@ import runtimeEventsCompleteFlowXml from './drawio/runtime-events-complete-flow.
 
 # 应用间的通信
 
-在 qiankun 微前端架构中，主应用与子应用运行在同一个浏览器标签页，共享同一个 `window` 对象。本项目利用这一特性，通过挂载在 `window` 上的单例对象建立了一条轻量的事件总线，实现双向通信。
+在 qiankun 微前端架构中，主应用与子应用运行在同一个浏览器标签页，共享同一个 `window` 对象。本项目利用这一特性，在运行时内部借助浏览器全局对象复用同一个单例，建立了一条轻量的事件总线，实现双向通信。
 
 ## 通信基础设施
 
 ### 全局单例
 
-事件总线的核心挂载在 `window.QiankunRuntime.channel` 上，主子应用均可直接访问；详见 [QiankunRuntime](./runtime.md#qiankunruntime)。
+事件总线的核心由 `@breeze/runtime` 导出的 `qiankunRuntime.channel` 提供，主子应用都应通过模块导入访问；只有运行时内部才需要感知浏览器全局对象。
+
+```ts
+import { qiankunRuntime } from '@breeze/runtime'
+
+const channel = qiankunRuntime.channel
+```
 
 ```ts [packages/runtime/src/QiankunRuntime.ts]
 import { EventEmitter2 } from 'eventemitter2'
 
-export class QiankunRuntime {
-  public channel = new EventEmitter2()
+const RUNTIME_SINGLETON_KEY = Symbol.for('@breeze/runtime/QiankunRuntime')
+
+class QiankunRuntime {
+  private constructor() {}
+  static getInstance() {
+    const runtimeGlobal = globalThis as RuntimeGlobal
+    return (runtimeGlobal[RUNTIME_SINGLETON_KEY] ??= new QiankunRuntime())
+  }
+
+  readonly channel = new EventEmitter2()
 }
+
+type RuntimeGlobal = typeof globalThis & {
+  [key: symbol]: QiankunRuntime | undefined
+}
+
+export const qiankunRuntime = QiankunRuntime.getInstance()
 ```
 
-`channel` 是一个 [EventEmitter2](https://github.com/EventEmitter2/EventEmitter2) 实例。主子应用通过它相互监听和发出事件。
+`channel` 是一个 [EventEmitter2](https://github.com/EventEmitter2/EventEmitter2) 实例。业务代码通过 `qiankunRuntime.channel` 相互监听和发出事件，而 `globalThis` 上通过 `Symbol.for(...)` 注册的私有 key 仅用于确保主应用与各子应用 bundle 之间共享同一个运行时实例。
 
 ### 事件约定
 
@@ -72,7 +92,7 @@ Tab 管理目前包含两类通信：
 - `removeTab()` 在删除 tab 后，会先调用 `emitTabRemove()` 通知子应用清理对应页面的 KeepAlive 缓存，再按 `activeRule` 判断是否需要回收整个子应用实例。详见 [标签栏状态管理](./tab-bar-store.md#removetab)。
 
 ```ts [apps/main-app/src/utils/channel.ts]
-const channel = window.QiankunRuntime.channel
+const channel = qiankunRuntime.channel
 
 /** 注册主应用运行时通信监听 */
 export const setupRuntimeChannels = () => {
@@ -101,7 +121,7 @@ export const emitTabRemove = (payload: TabRemovePayload) => {
 
 ### 子应用
 
-子应用通过 `@breeze/bridge-vue` 提供的封装函数收发事件，无需直接操作 `window.QiankunRuntime.channel`。
+子应用通过 `@breeze/bridge-vue` 提供的封装函数收发事件，无需直接操作 `qiankunRuntime.channel`。
 
 #### `requestNavigateTab`
 
@@ -110,10 +130,7 @@ export const emitTabRemove = (payload: TabRemovePayload) => {
 ```ts [packages/bridge-vue/src/hostBridge/tab.ts]
 /** 按子应用路由位置请求主应用跳转 / 打开 tab */
 export const requestNavigateTab = (payload: TabNavigateRequestPayload) => {
-  window.QiankunRuntime.channel.emit(
-    RUNTIME_EVENTS.TAB_NAVIGATE_REQUEST,
-    payload,
-  )
+  qiankunRuntime.channel.emit(RUNTIME_EVENTS.TAB_NAVIGATE_REQUEST, payload)
 }
 ```
 
@@ -159,7 +176,7 @@ export const requestRemoveTabByRoute = ({
 }: RequestRemoveTabByRouteOptions) => {
   // 默认关闭当前路由 // [!code focus]
   fullPath ??= router.currentRoute.value.fullPath // [!code focus]
-  window.QiankunRuntime.channel.emit(RUNTIME_EVENTS.TAB_REMOVE_REQUEST, {
+  qiankunRuntime.channel.emit(RUNTIME_EVENTS.TAB_REMOVE_REQUEST, {
     fullPath: router.resolve(fullPath).href, // [!code focus]
     ...payload,
   })
@@ -212,10 +229,10 @@ export const useTabRemoveListener = (
   }
 
   onMounted(() => {
-    window.QiankunRuntime.channel.on(RUNTIME_EVENTS.TAB_REMOVE, handler) // [!code focus]
+    qiankunRuntime.channel.on(RUNTIME_EVENTS.TAB_REMOVE, handler) // [!code focus]
   })
   onUnmounted(() => {
-    window.QiankunRuntime.channel.off(RUNTIME_EVENTS.TAB_REMOVE, handler)
+    qiankunRuntime.channel.off(RUNTIME_EVENTS.TAB_REMOVE, handler)
   })
 }
 ```

@@ -3,6 +3,7 @@ import type { Router } from 'vue-router'
 import { matchActiveRule, stripActiveRule } from '@breeze/router'
 import {
   RUNTIME_EVENTS,
+  qiankunRuntime,
   type MicroAppContext,
   type TabNavigateRequestPayload,
   type TabRemovePayload,
@@ -31,19 +32,16 @@ export const useTabRemoveListener = (
   }
 
   onMounted(() => {
-    window.QiankunRuntime.channel.on(RUNTIME_EVENTS.TAB_REMOVE, handler)
+    qiankunRuntime.channel.on(RUNTIME_EVENTS.TAB_REMOVE, handler)
   })
   onUnmounted(() => {
-    window.QiankunRuntime.channel.off(RUNTIME_EVENTS.TAB_REMOVE, handler)
+    qiankunRuntime.channel.off(RUNTIME_EVENTS.TAB_REMOVE, handler)
   })
 }
 
 /** 按子应用路由位置请求主应用跳转 / 打开 tab */
 export const requestNavigateTab = (payload: TabNavigateRequestPayload) => {
-  window.QiankunRuntime.channel.emit(
-    RUNTIME_EVENTS.TAB_NAVIGATE_REQUEST,
-    payload,
-  )
+  qiankunRuntime.channel.emit(RUNTIME_EVENTS.TAB_NAVIGATE_REQUEST, payload)
 }
 
 /** 按子应用路由位置请求主应用关闭 tab */
@@ -52,9 +50,8 @@ export const requestRemoveTabByRoute = ({
   fullPath,
   ...payload
 }: RequestRemoveTabByRouteOptions) => {
-  // 默认关闭当前路由
   fullPath ??= router.currentRoute.value.fullPath
-  window.QiankunRuntime.channel.emit(RUNTIME_EVENTS.TAB_REMOVE_REQUEST, {
+  qiankunRuntime.channel.emit(RUNTIME_EVENTS.TAB_REMOVE_REQUEST, {
     fullPath: router.resolve(fullPath).href,
     ...payload,
   })
