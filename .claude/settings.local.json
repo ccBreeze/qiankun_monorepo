@@ -23,8 +23,9 @@
       "mcp__drawio__*",
       "mcp__chrome-devtools__*",
       "mcp__figma__*",
-      "mcp__feishu-mcp__fetch-doc",
-      "mcp__feishu-mcp__update-doc"
+      "Bash(tmux:*)",
+      "Bash(omc:*)",
+      "Bash(rtk:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

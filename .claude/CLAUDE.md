@@ -31,7 +31,7 @@ pnpm --filter vue3-history run build
 
 ```bash
 # 全量类型检查
-pnpm type-check:all
+pnpm type-check
 
 # 单包类型检查
 cd apps/main-app && pnpm run type-check
