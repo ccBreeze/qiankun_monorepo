@@ -1,7 +1,7 @@
 /**
  * 主子应用通信事件
  *
- * 通过 QiankunRuntime.channel（EventEmitter2）在主应用与子应用之间传递。
+ * 通过 qiankunRuntime.channel（EventEmitter2）在主应用与子应用之间传递。
  */
 export const RUNTIME_EVENTS = {
   /** 子应用请求主应用导航到指定路由 */

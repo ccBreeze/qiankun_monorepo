@@ -242,7 +242,7 @@ export const generateRouter = (base?: string) => {
 
 ## hostBridge 模块
 
-`hostBridge` 负责封装主子应用间基于 `window.QiankunRuntime.channel` 的运行时通信，当前主要覆盖：
+`hostBridge` 负责封装主子应用间基于 `qiankunRuntime.channel` 的运行时通信，当前主要覆盖：
 
 - 子应用请求主应用打开 / 跳转到目标路由
 - 子应用请求主应用关闭 tab

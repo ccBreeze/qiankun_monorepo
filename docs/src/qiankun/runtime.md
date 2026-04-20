@@ -11,7 +11,7 @@ outline: [2, 4]
 
 - 定义主应用通过 qiankun `props` 传入子应用的标准字段类型（`MicroAppHostProps`）
 - 提供 `MicroAppContext` 基类，子应用直接实例化或继承扩展，通过 `setProps` / `reset` 管理 props 生命周期
-- 维护 `window.QiankunRuntime` 全局单例，通过 `channel`（EventEmitter2）实现主子应用双向事件通信
+- 提供 `qiankunRuntime` 单例实例，通过 `channel`（EventEmitter2）实现主子应用双向事件通信
 - 定义 `RUNTIME_EVENTS` 事件契约与类型安全的 Payload 接口，统一主子应用通信协议
 - 提供 `MICRO_APP_ACTIVE_RULE` 等共享静态常量，避免主应用和子应用各自维护一份 `activeRule`
 
@@ -148,41 +148,48 @@ class MyMicroAppContext extends MicroAppContext<MyHostProps> {
 export const microAppContext = new MyMicroAppContext()
 ```
 
-## QiankunRuntime
+## qiankunRuntime
 
-`QiankunRuntime` 是挂载在 `window` 上的全局运行时对象。
+`@breeze/runtime` 对外暴露 `qiankunRuntime` 单例实例。
 
-```ts [packages/runtime/src/instance.ts]
-import { QiankunRuntime } from './QiankunRuntime'
+```ts
+import { qiankunRuntime } from '@breeze/runtime'
 
-declare global {
-  interface Window {
-    QiankunRuntime: QiankunRuntime
-  }
-}
-
-export const createContext = () => {
-  if (typeof window === 'undefined') {
-    throw new Error('[QiankunRuntime] 浏览器环境不可用')
-  }
-
-  return (window.QiankunRuntime ??= new QiankunRuntime()) // [!code focus]
-}
-
-createContext() // [!code focus]
+qiankunRuntime.channel.emit(...)
 ```
+
+::: info 共享单例的设计意图
+主应用与所有子应用会共享同一个 `channel` 实例。底层会在浏览器全局对象上复用同一个运行时对象，但这是 `@breeze/runtime` 的内部实现细节，业务代码只应通过模块导出的 `qiankunRuntime` 访问。
+:::
+
+运行时内部实现如下：
 
 ```ts [packages/runtime/src/QiankunRuntime.ts]
-export class QiankunRuntime {
-  public channel = new EventEmitter2()
+import { EventEmitter2 } from 'eventemitter2'
+
+const RUNTIME_SINGLETON_KEY = Symbol.for('@breeze/runtime/QiankunRuntime')
+
+class QiankunRuntime {
+  private constructor() {}
+  static getInstance() {
+    const runtimeGlobal = globalThis as RuntimeGlobal
+    return (runtimeGlobal[RUNTIME_SINGLETON_KEY] ??= new QiankunRuntime())
+  }
+
+  readonly channel = new EventEmitter2()
 }
+
+type RuntimeGlobal = typeof globalThis & {
+  [key: symbol]: QiankunRuntime | undefined
+}
+
+export const qiankunRuntime = QiankunRuntime.getInstance()
 ```
 
-::: info 全局单例的设计意图
-`window.QiankunRuntime` 保证主应用与所有子应用共享同一个 `channel` 实例。无论谁先执行，都只会创建一次实例。
+这种做法兼顾了两层诉求：
 
-模块加载时自动调用 `createContext()`，消费方直接通过 `window.QiankunRuntime.channel` 访问事件总线，无需再导入实例变量。
-:::
+- 业务层通过模块导入获得稳定 API，不需要显式读写 `window.QiankunRuntime`
+- 运行时层仍然借助浏览器全局对象复用实例，并通过 `Symbol.for(...)` 避免使用裸字符串属性名，保证主应用和各个子应用最终拿到的是同一个 `channel`
 
 ## RUNTIME_EVENTS
 

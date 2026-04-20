@@ -266,7 +266,7 @@ watch(
           <div>
             <h2 class="text-[1.1rem] font-semibold">跨应用跳转案例</h2>
             <p class="mt-2 text-sm text-[#5a738e]">
-              现在只保留跨应用场景。子应用通过 `QiankunRuntime.channel` 发送
+              现在只保留跨应用场景。子应用通过 `qiankunRuntime.channel` 发送
               `fullPath +
               tabName`，主应用收到后会直接按这个完整路径打开目标应用页面。
             </p>
