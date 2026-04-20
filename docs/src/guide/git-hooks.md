@@ -46,6 +46,11 @@ pnpm exec husky init
 pnpm exec lint-staged
 ```
 
+类型检查本身也由 lint-staged 按文件类型按需触发，见 [2.2 配置](#_2-2-配置)。
+
+> [!TIP] 类型检查为什么不单独放 `pre-push`？
+> 放 `pre-push` 意味着每次 push 必然触发全量 `vue-tsc --build`，即使本次推送只改了文档或样式。交给 lint-staged 按 glob 触发后，只有暂存区出现 `.ts / .tsx / .vue` 才会跑 type-check，commit 本身仍保持轻量。
+
 ---
 
 ## 2. lint-staged — 只检查暂存文件
@@ -60,40 +65,39 @@ pnpm add -Dw lint-staged
 
 ### 2.2 配置
 
-创建 `.lintstagedrc.yaml`，按文件类型配置不同的检查命令：
+创建 `.lintstagedrc.mjs`，按文件类型配置不同的检查命令：
 
-```yaml [.lintstagedrc.yaml]
-'*.{js,jsx,ts,tsx}':
-  - eslint --fix
-  - prettier --write
-
-'*.vue':
-  - eslint --fix
-  - stylelint --fix
-  - prettier --write
-
-'*.{css,scss,sass}':
-  - stylelint --fix
-  - prettier --write
-
-'*.{json,md,yml,yaml}':
-  - prettier --write
+```js [.lintstagedrc.mjs]
+export default {
+  '*.{js,jsx,ts,tsx}': ['eslint --fix', 'prettier --write'],
+  '*.vue': ['eslint --fix', 'stylelint --fix', 'prettier --write'],
+  '*.{css,scss,sass}': ['stylelint --fix', 'prettier --write'],
+  '*.{json,md,yml,yaml}': ['prettier --write'],
+  '*.{ts,tsx,vue}': () => 'pnpm run type-check',
+}
 ```
 
 各文件类型的处理逻辑：
 
-| 文件类型               | ESLint             | Stylelint          | Prettier           |
-| ---------------------- | ------------------ | ------------------ | ------------------ |
-| `*.{js,jsx,ts,tsx}`    | :white_check_mark: | -                  | :white_check_mark: |
-| `*.vue`                | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-| `*.{css,scss,sass}`    | -                  | :white_check_mark: | :white_check_mark: |
-| `*.{json,md,yml,yaml}` | -                  | -                  | :white_check_mark: |
+| 文件类型               | ESLint             | Stylelint          | Prettier           | Type Check         |
+| ---------------------- | ------------------ | ------------------ | ------------------ | ------------------ |
+| `*.{js,jsx,ts,tsx}`    | :white_check_mark: | -                  | :white_check_mark: | (仅 ts/tsx)        |
+| `*.vue`                | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| `*.{css,scss,sass}`    | -                  | :white_check_mark: | :white_check_mark: | -                  |
+| `*.{json,md,yml,yaml}` | -                  | -                  | :white_check_mark: | -                  |
 
 > [!NOTE] 执行顺序
 > lint-staged 按数组顺序依次执行命令。
 >
 > - 建议先运行 lint 修复（可能改变代码逻辑）。
 > - 再运行 Prettier（纯格式化），确保最终输出既符合规则又格式统一。
+
+#### 为什么 `*.{ts,tsx,vue}` 要单独成 key
+
+把 type-check 拆到独立 glob key 里，是为了同时解决**两个**问题：
+
+1. **去重触发**：lint-staged 把每个 glob 当作一个独立 task，跨 task 并行执行。若把 `pnpm run type-check` 分别塞进 `*.{ts,tsx}` 和 `*.vue`，一次 commit 同时改 ts 与 vue 文件时会并行跑两次 `vue-tsc --build`，浪费 CPU 且多个进程竞争 `tsBuildInfo` 增量缓存。收拢到独立 key 后只跑一次。
+2. **跳过无关变更**：只改 `.md / .css / .json` 时，`*.{ts,tsx,vue}` 根本匹配不到任何暂存文件，lint-staged 会**直接跳过**该 task，type-check 不会触发——比放在 `pre-commit`/`pre-push` 根目录无差别全量更精准。
 
 ### 2.3 工作流程
 
@@ -234,7 +238,7 @@ qiankun_monorepo/
 ├── .husky/
 │   ├── pre-commit              ← 提交前运行 lint-staged
 │   └── commit-msg              ← 提交时校验提交信息
-├── .lintstagedrc.yaml          ← lint-staged 检查规则
+├── .lintstagedrc.mjs           ← lint-staged 检查规则（含按需触发的 type-check）
 ├── .czrc                       ← Commitizen 适配器配置
 ├── commitlint.config.js        ← 提交信息校验规则
 └── package.json                ← prepare 脚本、相关依赖
