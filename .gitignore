@@ -12,6 +12,7 @@ coverage
 cache
 *.local
 *.output
+.omc
 
 # Editor directories and files
 .idea
@@ -28,3 +29,4 @@ cache
 .prettiercache
 
 **/.nitro
+.worktrees

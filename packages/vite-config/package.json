@@ -1,0 +1,39 @@
+{
+  "name": "@breeze/vite-config",
+  "version": "1.0.0",
+  "description": "Vue3 + Vite 共享配置工厂",
+  "type": "module",
+  "exports": {
+    "./base": "./src/base.ts",
+    "./micro": "./src/micro.ts"
+  },
+  "scripts": {
+    "type-check": "tsc",
+    "lint": "eslint . --max-warnings=0 --cache",
+    "lint:fix": "eslint . --fix --cache"
+  },
+  "peerDependencies": {
+    "@vitejs/plugin-vue": ">=6.0.0",
+    "@vitejs/plugin-vue-jsx": ">=5.0.0",
+    "unplugin-auto-import": ">=20.0.0",
+    "unplugin-vue-components": ">=32.0.0",
+    "vite": ">=7.0.0",
+    "vite-plugin-qiankun": ">=1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "vite-plugin-qiankun": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@breeze/eslint-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@vitejs/plugin-vue": "catalog:",
+    "@vitejs/plugin-vue-jsx": "catalog:",
+    "typescript": "catalog:",
+    "unplugin-auto-import": "catalog:",
+    "unplugin-vue-components": "catalog:",
+    "vite": "catalog:",
+    "vite-plugin-qiankun": "catalog:"
+  }
+}
