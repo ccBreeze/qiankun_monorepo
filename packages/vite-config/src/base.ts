@@ -70,10 +70,12 @@ export const createVue3BaseConfig = (options: SharedVueOptions): UserConfig => {
     },
     server: {
       port,
+      strictPort: true,
       cors: true,
     },
     preview: {
       port,
+      strictPort: true,
     },
   }
 }
