@@ -694,7 +694,7 @@ export default [
       parserOptions: {
         tsconfigRootDir: import.meta.dirname,
         projectService: {
-          allowDefaultProject: ['scripts/*.mjs', '*.js'],
+          allowDefaultProject: ['scripts/*.mjs', '*.js', '*.mjs'],
         },
       },
     },
