@@ -1,0 +1,15 @@
+.ant-btn {
+  &.ant-btn-lg:not(.ant-btn-link) {
+    min-width: 88px;
+  }
+}
+
+/** 自定义 disabled 样式 */
+.ant-btn:not(:disabled) {
+  &.disabled,
+  &.disabled:hover {
+    color: #fff;
+    background-color: rgb(22 35 61 / 15%);
+    border-color: transparent;
+  }
+}

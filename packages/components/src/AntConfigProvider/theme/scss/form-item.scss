@@ -1,0 +1,24 @@
+.ant-form-item {
+  & &-explain,
+  & &-extra {
+    font-size: 12px;
+  }
+
+  & &-label {
+    font-weight: bold;
+  }
+}
+
+.ant-form-large {
+  .ant-form-item {
+    /** 输入框高度 */
+    .ant-form-item-control-input {
+      min-height: auto;
+    }
+
+    /** label 高度 */
+    .ant-form-item-label > label {
+      height: auto;
+    }
+  }
+}

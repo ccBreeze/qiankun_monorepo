@@ -1,0 +1,16 @@
+.ant-checkbox-indeterminate {
+  .ant-checkbox-inner {
+    background-color: #528dff;
+    border-color: #528dff;
+    opacity: 0.5;
+  }
+
+  .ant-checkbox-inner::after {
+    height: 2px;
+    background-color: #fff;
+  }
+}
+
+.ant-checkbox-wrapper {
+  min-width: 160px;
+}

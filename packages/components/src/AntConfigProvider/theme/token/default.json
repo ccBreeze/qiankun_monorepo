@@ -1,0 +1,24 @@
+{
+  "token": {
+    "colorPrimary": "#528dff",
+    "colorSuccess": "#32b963",
+    "colorWarning": "#fc8e17",
+    "colorError": "#ff4040",
+    "colorInfo": "#528dff",
+    "colorTextBase": "#16233d",
+    "colorText": "rgba(22, 35, 61, 0.95)",
+    "colorTextSecondary": "rgba(22, 35, 61, 0.85)",
+    "colorTextTertiary": "rgba(22, 35, 61, 0.65)",
+    "colorTextQuaternary": "rgba(22, 35, 61, 0.45)",
+    "colorBorder": "rgba(22, 35, 61, 0.15)",
+    "colorBorderSecondary": "rgba(22, 35, 61, 0.08)",
+    "colorFill": "rgba(22, 35, 61, 0.08)",
+    "colorBgLayout": "rgba(61, 109, 204, 0.04)",
+    "colorBgMask": "rgba(22, 35, 61, 0.15)",
+    "fontSizeLG": 14,
+    "fontSizeHeading1": 48,
+    "fontSizeHeading2": 32,
+    "boxShadow": "      0 1px 4px 0 rgba(22, 35, 61, 0.08),      0 1px 4px -1px rgba(22, 35, 61, 0.02),      0 2px 4px 0 rgba(0, 0, 0, 0.02)    ",
+    "boxShadowSecondary": "      0 2px 8px 0 rgba(22, 35, 61, 0.06),      0 1px 4px -4px rgba(22, 35, 61, 0.12),      0 12px 24px 0 rgba(22, 35, 61, 0.16)    "
+  }
+}

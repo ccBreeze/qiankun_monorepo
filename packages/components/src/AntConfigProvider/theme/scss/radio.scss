@@ -1,0 +1,24 @@
+.ant-radio-wrapper {
+  min-width: 152px;
+}
+
+/** 禁用 */
+.ant-radio-button-wrapper-disabled {
+  color: rgb(22 35 61 / 65%);
+  background-color: #fff;
+  border-color: rgb(22 35 61 / 15%);
+  opacity: 0.5;
+
+  &:first-child,
+  &:hover {
+    color: rgb(22 35 61 / 65%);
+    background-color: #fff;
+    border-color: rgb(22 35 61 / 15%);
+  }
+
+  &.ant-radio-button-wrapper-checked {
+    color: #fff;
+    background-color: #528dff;
+    border-color: #528dff;
+  }
+}

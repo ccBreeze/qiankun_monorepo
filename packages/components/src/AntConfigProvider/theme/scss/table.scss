@@ -1,0 +1,39 @@
+.ant-table {
+  .ant-table-thead {
+    height: 48px;
+
+    & > tr > th,
+    & > tr > td {
+      background: #fafbfb;
+    }
+
+    // 表头不要边框
+    & > tr > th {
+      border-bottom: none;
+
+      &::before {
+        display: none;
+      }
+    }
+
+    // 圆角
+    & > tr {
+      & > *:first-child {
+        border-end-start-radius: 8px;
+      }
+
+      & > *:last-child {
+        border-end-end-radius: 8px;
+      }
+    }
+  }
+
+  &.ant-table-small .ant-table-thead > tr > th:first-child,
+  .ant-table-tbody tr:not(.ant-table-placeholder) td:first-child {
+    padding-left: 20px;
+  }
+
+  &-row {
+    height: 64px;
+  }
+}
