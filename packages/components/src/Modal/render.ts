@@ -1,5 +1,6 @@
-import { createApp } from 'vue'
+import { createApp, h } from 'vue'
 import type { App as VueApp, Component } from 'vue'
+import AntConfigProvider from '../AntConfigProvider/index.vue'
 import type { ModalInjectedProps, ModalResult } from './types'
 
 const getContainer = () => {
@@ -34,10 +35,18 @@ export const renderModalInstance = <
       },
     }
 
-    app = createApp(component, {
+    const modalProps = {
       ...props,
       ...injected,
-    } as Record<string, unknown>)
+    } as Record<string, unknown>
+
+    app = createApp({
+      render() {
+        return h(AntConfigProvider, null, {
+          default: () => h(component, modalProps),
+        })
+      },
+    })
     app.mount(container)
   })
 }
