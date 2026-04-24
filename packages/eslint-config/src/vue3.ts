@@ -42,7 +42,18 @@ export const vue3: Linter.Config[] = [
     rules: {
       // 关闭与 Prettier 冲突但未被 eslint-config-prettier 覆盖的规则
       'vue/first-attribute-linebreak': 'off',
+      // 模板中的组件属性与事件统一使用驼峰形式
+      'vue/attribute-hyphenation': ['error', 'never'],
+      'vue/v-on-event-hyphenation': [
+        'error',
+        'never',
+        {
+          autofix: true,
+        },
+      ],
 
+      // 项目约定组件 name 格式为「目录名-文件名」（如 KeepAliveDemo-Detail），
+      'vue/component-definition-name-casing': 'off',
       // 组件名规则
       'vue/multi-word-component-names': [
         'error',
@@ -56,8 +67,14 @@ export const vue3: Linter.Config[] = [
       'vue/no-undef-components': [
         'error',
         {
-          // 忽略 router 组件和 ant-design-vue 组件
-          ignorePatterns: ['router-view', 'router-link', '^a-', '^A[A-Z]'],
+          // 忽略 router 组件、ant-design-vue 组件及图标（按需引入时由 resolver 自动注册）
+          ignorePatterns: [
+            'router-view',
+            'router-link',
+            '^a-',
+            '^A[A-Z]',
+            '(Outlined|Filled|TwoTone)$',
+          ],
         },
       ],
     },

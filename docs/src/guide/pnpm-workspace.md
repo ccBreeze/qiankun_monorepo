@@ -22,7 +22,7 @@ workspace 内的包互相引用时，使用 `workspace:` 协议：
 {
   "dependencies": {
     "@breeze/utils": "workspace:*",
-    "@breeze/qiankun-shared": "workspace:*"
+    "@breeze/router": "workspace:*"
   }
 }
 ```
@@ -117,23 +117,35 @@ pnpm --prefix docs run dev
 ```json [package.json（根目录）]
 {
   "scripts": {
-    "dev": "pnpm -r --parallel run dev",
-    "dev:mock": "pnpm --filter @breeze/mock-server run dev",
-    "dev:main": "pnpm --filter main-app run dev",
-    "dev:vue3-app": "pnpm --filter vue3-app run dev",
-    "dev:all": "concurrently ... \"pnpm dev:mock\" \"pnpm dev:main\" \"pnpm dev:vue3-app\" \"pnpm docs:dev\"",
-    "build": "pnpm -r run build",
-    "build:apps": "pnpm --filter \"./apps/*\" run build",
+    "dev": "node scripts/dev.mjs",
+    "build": "pnpm --filter \"./apps/*\" run build",
+    "preview": "pnpm --filter \"./apps/*\" run preview",
     "type-check:all": "pnpm -r --parallel --if-present run type-check"
   }
 }
 ```
 
-| 命令                  | 说明                                         |
-| --------------------- | -------------------------------------------- |
-| `pnpm dev`            | 所有包并行启动开发服务                       |
-| `pnpm dev:main`       | 仅启动主应用                                 |
-| `pnpm dev:all`        | 使用 concurrently 同时启动所有服务           |
-| `pnpm build`          | 按拓扑排序构建所有包                         |
-| `pnpm build:apps`     | 仅构建 apps 目录下的应用                     |
-| `pnpm type-check:all` | 并行对所有包执行类型检查（跳过无此脚本的包） |
+根目录的 `dev` 不再平铺为多个 `dev:*` 脚本，而是统一委托给仓库脚本 `scripts/dev.mjs`。该脚本以 `apps` 数组作为唯一数据源，同时支持单目标启动和全量启动：
+
+```js [scripts/dev.mjs]
+const apps = [
+  { name: 'mock', cmd: 'pnpm --filter @breeze/mock-server run dev' },
+  { name: 'main', cmd: 'pnpm --filter main-app run dev' },
+  { name: 'vue3-history', cmd: 'pnpm --filter vue3-history run dev' },
+  { name: 'docs', cmd: 'pnpm --prefix docs run dev' },
+]
+```
+
+| 命令                    | 说明                                                        |
+| ----------------------- | ----------------------------------------------------------- |
+| `pnpm dev`              | 启动全部开发服务（等价于 `pnpm dev all`）                   |
+| `pnpm dev main`         | 仅启动主应用                                                |
+| `pnpm dev vue3-history` | 仅启动 `vue3-history` 子应用                                |
+| `pnpm dev docs`         | 仅启动 docs 站点（内部仍通过 `pnpm --prefix docs run dev`） |
+| `pnpm build`            | 仅构建 `apps/*` 目录下的应用                                |
+| `pnpm preview`          | 仅预览 `apps/*` 目录下的应用                                |
+| `pnpm type-check:all`   | 并行对所有包执行类型检查（跳过无此脚本的包）                |
+
+::: tip 为什么改成 `scripts/dev.mjs`
+这样新增应用时只需要在一个地方追加记录，`pnpm dev <name>` 和“启动全部服务”的行为会自动同步，不需要再维护一组分散的 `dev:*` 根脚本。
+:::

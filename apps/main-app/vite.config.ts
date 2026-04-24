@@ -1,48 +1,31 @@
-import { fileURLToPath, URL } from 'node:url'
 import { resolve } from 'node:path'
 
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import vueJsx from '@vitejs/plugin-vue-jsx'
+import { defineConfig, mergeConfig } from 'vite'
 import vueDevTools from 'vite-plugin-vue-devtools'
-import AutoImport from 'unplugin-auto-import/vite'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+import { createVue3BaseConfig } from '@breeze/vite-config/base'
 
-const resolvePath = (relativePath: string) =>
-  fileURLToPath(new URL(relativePath, import.meta.url))
-
-export default defineConfig({
-  plugins: [
-    vue(),
-    vueJsx(),
-    vueDevTools(),
-    AutoImport({
-      imports: ['vue', 'vue-router', 'pinia'],
-      dts: 'src/types/auto-imports.d.ts',
-      eslintrc: {
-        enabled: true,
-        filepath: './.eslintrc-auto-import.json',
-      },
-      vueTemplate: true,
+export default defineConfig(
+  mergeConfig(
+    createVue3BaseConfig({
+      port: 8100,
     }),
-    createSvgIconsPlugin({
-      iconDirs: [resolve(process.cwd(), 'src/assets/icons')],
-    }),
-  ],
-  resolve: {
-    alias: {
-      '@': resolvePath('./src'),
-    },
-  },
-  server: {
-    port: 8100,
-    cors: true,
-    proxy: {
-      // 代理 API 请求到 mock-server
-      '/ManageAction': {
-        target: 'http://localhost:8200',
-        changeOrigin: true,
+    {
+      plugins: [
+        vueDevTools(),
+        createSvgIconsPlugin({
+          iconDirs: [resolve(process.cwd(), 'src/assets/icons')],
+        }),
+      ],
+      server: {
+        proxy: {
+          // 代理 API 请求到 mock-server
+          '/ManageAction': {
+            target: 'http://localhost:8200',
+            changeOrigin: true,
+          },
+        },
       },
     },
-  },
-})
+  ),
+)

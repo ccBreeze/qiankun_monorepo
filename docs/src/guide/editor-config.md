@@ -98,6 +98,7 @@ trim_trailing_whitespace = false
     "Vue.volar",
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
+    "bradlc.vscode-tailwindcss",
     "editorconfig.editorconfig",
     "ms-vscode.vscode-typescript-next",
     "redhat.vscode-yaml"
@@ -112,6 +113,7 @@ trim_trailing_whitespace = false
 | `Vue.volar`                        | Vue 3 语法高亮                                                        |
 | `dbaeumer.vscode-eslint`           | 在编辑器内实时显示 ESLint 错误，并支持保存时自动修复                  |
 | `esbenp.prettier-vscode`           | Prettier 格式化支持，配合 `settings.json` 实现保存时格式化            |
+| `bradlc.vscode-tailwindcss`        | Tailwind CSS 智能提示、类名补全和悬浮预览                             |
 | `editorconfig.editorconfig`        | 读取 `.editorconfig` 文件，统一缩进、换行符等基础格式                 |
 | `ms-vscode.vscode-typescript-next` | TypeScript Nightly 语言服务，支持最新语法特性（如 `import ... with`） |
 | `redhat.vscode-yaml`               | YAML 文件语法验证与补全，用于 `.lintstagedrc.yaml` 等配置文件         |
@@ -185,7 +187,7 @@ Vue 3 项目必须使用 Volar（`Vue.volar`），不要同时启用 Vetur，两
 ```json [.vscode/settings.json]
 {
   "prettier.requireConfig": true,
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "js/ts.tsdk.path": "node_modules/typescript/lib"
 }
 ```
 
@@ -193,9 +195,12 @@ Vue 3 项目必须使用 Volar（`Vue.volar`），不要同时启用 Vetur，两
 
 只有当项目中存在 Prettier 配置文件（`.prettierrc.yaml` 等）时，才对文件进行格式化。防止在没有 Prettier 配置的目录（如临时脚本）中意外格式化文件。
 
-##### `typescript.tsdk`
+##### `js/ts.tsdk.path`
 
 指定 VS Code 使用**项目本地安装的 TypeScript**，而不是 VS Code 内置的 TypeScript 版本。
+
+> [!NOTE] 设置项变更
+> 旧版 VS Code 使用 `typescript.tsdk`，现已废弃并由 `js/ts.tsdk.path` 替代。如果你在设置中看到废弃警告，确认已使用新的设置项名即可。
 
 这很重要，因为：
 
@@ -223,6 +228,16 @@ Vue 3 项目必须使用 Volar（`Vue.volar`），不要同时启用 Vetur，两
 
 关闭内置 CSS/SCSS 校验是必要的——内置校验器不理解 Stylelint 的自定义规则（如 `stylelint-scss`），会产生误报。统一交由 Stylelint 处理即可。
 
+#### 拼写检查配置
+
+```json [.vscode/settings.json]
+{
+  "cSpell.words": ["Qiankun"]
+}
+```
+
+将项目中常用但不在标准词典中的专有名词加入白名单，避免拼写检查插件误报。
+
 #### 文件嵌套配置
 
 VS Code 的文件嵌套功能可以将相关配置文件收纳到父文件下，使文件树更简洁。
@@ -231,9 +246,10 @@ VS Code 的文件嵌套功能可以将相关配置文件收纳到父文件下，
 {
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.patterns": {
-    "tsconfig.json": "tsconfig.*.json, *.tsbuildinfo",
-    "vite.config.*": "jsconfig*, vitest.config.*, cypress.config.*, playwright.config.*",
-    "package.json": "package-lock.json, pnpm*, .yarnrc*, yarn*, .eslint*, eslint*, .prettier*, prettier*, .editorconfig"
+    "package.json": "package-lock.json, pnpm-lock.yaml, pnpm-workspace.yaml, .npmrc, .yarnrc*, yarn.lock, .gitattributes, .gitignore, .czrc, .lintstagedrc*, commitlint.config.*",
+    "eslint.config.*": ".eslintcache, .eslintrc*, .prettier*, .editorconfig, stylelint.config.*, .stylelint*",
+    "tsconfig.json": "tsconfig.*.json, *.tsbuildinfo, env.d.ts",
+    "vite.config.*": "vitest.config.*, postcss.config.*, index.html"
   }
 }
 ```
@@ -256,6 +272,7 @@ VS Code 的文件嵌套功能可以将相关配置文件收纳到父文件下，
 - [Volar (Vue.volar)][volar]
 - [ESLint (dbaeumer.vscode-eslint)][eslint]
 - [Prettier (esbenp.prettier-vscode)][prettier]
+- [Tailwind CSS IntelliSense (bradlc.vscode-tailwindcss)][tailwindcss]
 - [EditorConfig (editorconfig.editorconfig)][editorconfig]
 - [TypeScript Nightly (ms-vscode.vscode-typescript-next)][ts-nightly]
 - [YAML (redhat.vscode-yaml)][yaml]
@@ -264,6 +281,7 @@ VS Code 的文件嵌套功能可以将相关配置文件收纳到父文件下，
 [volar]: https://marketplace.visualstudio.com/items?itemName=Vue.volar
 [eslint]: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
 [prettier]: https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
+[tailwindcss]: https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss
 [editorconfig]: https://marketplace.visualstudio.com/items?itemName=editorconfig.editorconfig
 [ts-nightly]: https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-typescript-next
 [yaml]: https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml

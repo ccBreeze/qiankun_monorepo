@@ -1,35 +1,38 @@
 <template>
   <div class="menu-wrap">
     <a-menu
-      v-model:selected-keys="selectedKeys"
-      :open-keys="openKeys"
+      v-model:selectedKeys="selectedKeys"
+      :openKeys="openKeys"
       :items="menuItems"
       mode="inline"
       class="menu"
       @click="handleClick"
-      @open-change="onOpenChange"
+      @openChange="onOpenChange"
     >
     </a-menu>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, h, ref, watch } from 'vue'
+import { computed, h, ref, type VNode, watch } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useRoute, useRouter } from 'vue-router'
 import { useMenuStore } from '@/stores/menu'
 import SvgIcon from '@/components/SvgIcon/SvgIcon.vue'
-import { type MenuRoute } from '@breeze/qiankun-shared'
+import { type MenuRoute } from '@breeze/router'
+import type { Key } from 'ant-design-vue/es/_util/type'
 import type { MenuInfo } from 'ant-design-vue/es/menu/src/interface'
+import type { MenuProps } from 'ant-design-vue/es/menu/src/Menu'
 
-interface MenuItem {
+type MenuItems = NonNullable<MenuProps['items']>
+
+interface MenuNode {
   key: string
   label: string
-  icon?: unknown
+  icon?: VNode
   type?: string
   class?: string
-  children?: MenuItem[]
-  /** 仅叶子节点存在 path */
-  path?: string
+  children?: MenuNode[]
 }
 
 const route = useRoute()
@@ -37,7 +40,7 @@ const router = useRouter()
 const { activeMenuRoute, activeMenuModule } = storeToRefs(useMenuStore())
 
 /** 当前选中的菜单 key */
-const selectedKeys = computed(() => {
+const selectedKeys = computed<Key[]>(() => {
   const raw = activeMenuRoute.value
   if (!raw) return []
   let fullPath = raw.path
@@ -51,15 +54,17 @@ const selectedKeys = computed(() => {
 /**
  * 生成菜单项（使用 computed 缓存）
  */
-const menuItems = computed<MenuItem[]>(() => {
-  return generateMenu(activeMenuModule.value?.menuRoutes ?? [])
+const menuItems = computed<MenuItems>(() => {
+  return generateMenu(
+    activeMenuModule.value?.dynamicRoute.rootRoutes ?? [],
+  ) as MenuItems
 })
 
 /** 生成菜单 */
-function generateMenu(list: MenuRoute[], level = 0): MenuItem[] {
+function generateMenu(list: MenuRoute[], level = 0): MenuNode[] {
   if (!list.length) return []
 
-  const items: MenuItem[] = []
+  const items: MenuNode[] = []
 
   for (const item of list) {
     // 隐藏的菜单不显示
@@ -71,7 +76,6 @@ function generateMenu(list: MenuRoute[], level = 0): MenuItem[] {
       label: item.meta.name || '',
       key: item.path,
       children: children.length ? children : undefined,
-      path: item.path,
     })
   }
 
@@ -79,7 +83,7 @@ function generateMenu(list: MenuRoute[], level = 0): MenuItem[] {
 }
 
 /** 获取不同层级的配置 */
-function getLevelConfig(level: number, iconName?: string): Partial<MenuItem> {
+function getLevelConfig(level: number, iconName?: string): Partial<MenuNode> {
   switch (level) {
     // 一级菜单
     case 0:
@@ -107,10 +111,10 @@ function getLevelConfig(level: number, iconName?: string): Partial<MenuItem> {
 /** 菜单点击事件 */
 const handleClick = (info: MenuInfo): void => {
   // 仅叶子节点才会触发点击事件
-  void router.push(info.item.path)
+  router.push(String(info.key))
 }
 
-const openKeys = ref<string[]>([])
+const openKeys = ref<Key[]>([])
 /** 自动展开当前路由的所有父级菜单 */
 const autoExpandMenu = (path: string): void => {
   const dynamicRoute = activeMenuModule.value?.dynamicRoute
@@ -124,7 +128,7 @@ watch(() => route.fullPath, autoExpandMenu, {
   immediate: true,
 })
 /** 手动展开/收起子菜单 */
-const onOpenChange = (keys: string[]): void => {
+const onOpenChange = (keys: Key[]): void => {
   // 对比新旧 keys，找出本次新展开的菜单
   const currentSet = new Set(openKeys.value)
   const latestOpenKey = keys.find((key) => !currentSet.has(key))
@@ -134,7 +138,7 @@ const onOpenChange = (keys: string[]): void => {
     return
   }
 
-  autoExpandMenu(latestOpenKey)
+  autoExpandMenu(String(latestOpenKey))
 }
 </script>
 

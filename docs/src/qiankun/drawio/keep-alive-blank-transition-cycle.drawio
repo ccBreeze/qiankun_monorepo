@@ -1,0 +1,93 @@
+<mxGraphModel dx="1677" dy="1092" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1000" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+    <mxCell id="title" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=20;fillColor=none;strokeColor=none;fontColor=#333333;" value="&lt;b&gt;保留 listening 后的“空白跳转”触发 KeepAlive 生命周期&lt;/b&gt;" vertex="1">
+      <mxGeometry height="40" width="960" x="220" y="30" as="geometry" />
+    </mxCell>
+    <mxCell id="lane-switch-out" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;strokeWidth=3;dashed=1;dashPattern=8 4;verticalAlign=top;" value="" vertex="1">
+      <mxGeometry height="760" width="560" x="90" y="100" as="geometry" />
+    </mxCell>
+    <mxCell id="lane-switch-out-label" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontStyle=1;fontSize=16;fillColor=none;strokeColor=none;fontColor=#333333;" value="&lt;b&gt;离开子应用 A，进入子应用 B&lt;/b&gt;" vertex="1">
+      <mxGeometry height="30" width="260" x="130" y="115" as="geometry" />
+    </mxCell>
+    <mxCell id="switch-out-url-change" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe0b2;strokeColor=#E65100;strokeWidth=3;shadow=1;fontStyle=1;fontSize=14;" value="&lt;b&gt;URL 变更&lt;/b&gt;" vertex="1">
+      <mxGeometry height="68" width="380" x="200" y="180" as="geometry" />
+    </mxCell>
+    <mxCell id="switch-out-component-undefined" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565C0;strokeWidth=3;shadow=1;fontStyle=1;fontSize=14;" value="&lt;b&gt;Component 变为 undefined&lt;/b&gt;" vertex="1">
+      <mxGeometry height="68" width="380" x="200" y="290" as="geometry" />
+    </mxCell>
+    <mxCell id="switch-out-render-empty" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=4;shadow=1;fontStyle=1;fontSize=14;" value="&lt;b&gt;页面空白&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#7a1c1c&quot;&gt;&lt;b&gt;（不渲染任何页面）&lt;/b&gt;&lt;/font&gt;" vertex="1">
+      <mxGeometry height="86" width="380" x="200" y="392" as="geometry" />
+    </mxCell>
+    <mxCell id="switch-out-keepalive-cache" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565C0;strokeWidth=3;shadow=1;fontStyle=1;fontSize=13;" value="&lt;b&gt;KeepAlive 检测到子组件消失&lt;/b&gt;&lt;br&gt;&lt;b&gt;放入缓存&lt;/b&gt;" vertex="1">
+      <mxGeometry height="86" width="380" x="200" y="510" as="geometry" />
+    </mxCell>
+    <mxCell id="switch-out-ondeactivated" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=3;shadow=1;fontStyle=1;fontSize=14;" value="&lt;b&gt;onDeactivated ✅&lt;/b&gt;" vertex="1">
+      <mxGeometry height="68" width="380" x="200" y="640" as="geometry" />
+    </mxCell>
+    <mxCell id="lane-switch-back" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;strokeWidth=3;dashed=1;dashPattern=8 4;verticalAlign=top;" value="" vertex="1">
+      <mxGeometry height="760" width="560" x="760" y="100" as="geometry" />
+    </mxCell>
+    <mxCell id="lane-switch-back-label" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontStyle=1;fontSize=16;fillColor=none;strokeColor=none;fontColor=#333333;" value="&lt;b&gt;切回子应用 A&lt;/b&gt;" vertex="1">
+      <mxGeometry height="30" width="260" x="800" y="115" as="geometry" />
+    </mxCell>
+    <mxCell id="switch-back-url-restore" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe0b2;strokeColor=#E65100;strokeWidth=3;shadow=1;fontStyle=1;fontSize=14;" value="&lt;b&gt;URL 变回&lt;/b&gt;" vertex="1">
+      <mxGeometry height="68" width="380" x="820" y="180" as="geometry" />
+    </mxCell>
+    <mxCell id="switch-back-component-match" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565C0;strokeWidth=3;shadow=1;fontStyle=1;fontSize=14;" value="&lt;b&gt;Component 重新匹配&lt;/b&gt;" vertex="1">
+      <mxGeometry height="68" width="380" x="820" y="290" as="geometry" />
+    </mxCell>
+    <mxCell id="switch-back-render-restore" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F7FA;strokeColor=#90A4AE;strokeWidth=2;shadow=1;fontStyle=1;fontSize=14;" value="&lt;b&gt;渲染恢复&lt;/b&gt;" vertex="1">
+      <mxGeometry height="68" width="380" x="820" y="400" as="geometry" />
+    </mxCell>
+    <mxCell id="switch-back-keepalive-hit" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565C0;strokeWidth=3;shadow=1;fontStyle=1;fontSize=14;" value="&lt;b&gt;KeepAlive 命中缓存&lt;/b&gt;" vertex="1">
+      <mxGeometry height="68" width="380" x="820" y="510" as="geometry" />
+    </mxCell>
+    <mxCell id="switch-back-onactivated" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=3;shadow=1;fontStyle=1;fontSize=14;" value="&lt;b&gt;onActivated ✅&lt;/b&gt;" vertex="1">
+      <mxGeometry height="68" width="380" x="820" y="620" as="geometry" />
+    </mxCell>
+    <mxCell id="summary-note" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=3;shadow=1;fontStyle=1;fontSize=13;" value="&lt;b&gt;关键条件：RouterView 发生“有 → 无 → 有”的组件切换，KeepAlive 才能完整触发 deactivate → activate&lt;/b&gt;" vertex="1">
+      <mxGeometry height="60" width="900" x="250" y="885" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-switch-out-1" edge="1" parent="1" source="switch-out-url-change" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#1565C0;endArrow=classic;" target="switch-out-component-undefined">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-switch-out-2" edge="1" parent="1" source="switch-out-component-undefined" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#b85450;endArrow=classic;" target="switch-out-render-empty">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-switch-out-3" edge="1" parent="1" source="switch-out-render-empty" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#b85450;endArrow=classic;" target="switch-out-keepalive-cache">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-switch-out-4" edge="1" parent="1" source="switch-out-keepalive-cache" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#1565C0;endArrow=classic;" target="switch-out-ondeactivated">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-switch-back-1" edge="1" parent="1" source="switch-back-url-restore" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#1565C0;endArrow=classic;" target="switch-back-component-match">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-switch-back-2" edge="1" parent="1" source="switch-back-component-match" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=3;strokeColor=#90A4AE;endArrow=classic;" target="switch-back-render-restore">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-switch-back-3" edge="1" parent="1" source="switch-back-render-restore" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#1565C0;endArrow=classic;" target="switch-back-keepalive-hit">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-switch-back-4" edge="1" parent="1" source="switch-back-keepalive-hit" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#1565C0;endArrow=classic;" target="switch-back-onactivated">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-switch-to-back" edge="1" parent="1" source="switch-out-ondeactivated" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=3;dashed=1;dashPattern=8 4;strokeColor=#E65100;endArrow=classic;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="switch-back-url-restore" value="&lt;b&gt;切回子应用 A&lt;/b&gt;">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="700" y="674" />
+          <mxPoint x="700" y="214" />
+          <mxPoint x="790" y="214" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge-note-left" edge="1" parent="1" source="switch-out-keepalive-cache" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=2;dashed=1;dashPattern=8 4;strokeColor=#d6b656;endArrow=none;exitX=0.6;exitY=1;entryX=0.1977778;entryY=0;" target="summary-note">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-note-right" edge="1" parent="1" source="switch-back-keepalive-hit" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=2;dashed=1;dashPattern=8 4;strokeColor=#d6b656;endArrow=none;exitX=0.4;exitY=1;entryX=0.8022222;entryY=0;" target="summary-note">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+  </root>
+</mxGraphModel>

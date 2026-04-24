@@ -10,10 +10,7 @@
 
 <script setup lang="ts">
 import AntConfigProvider from './views/AntConfigProvider/index.vue'
-</script>
+import { setupRuntimeChannels } from '@/utils/channel'
 
-<style>
-body {
-  overflow: hidden !important;
-}
-</style>
+setupRuntimeChannels()
+</script>

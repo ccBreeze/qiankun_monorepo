@@ -1,25 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import { setupDynamicRoute } from './guard/dynamicRouteGuard'
 
-const router = createRouter({
-  history: createWebHistory(),
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: HomeView,
-    },
-    {
-      path: '/Demo/AutoImportExample',
-      name: 'Demo-AutoImportExample',
-      component: () => import('../views/Demo/AutoImportExample.vue'),
-    },
-    {
-      path: '/Demo/StylelintTest',
-      name: 'Demo-StylelintTest',
-      component: () => import('../views/Demo/StylelintTest.vue'),
-    },
-  ],
-})
+/** 创建路由实例 */
+export const generateRouter = (base?: string) => {
+  const router = createRouter({
+    history: createWebHistory(base),
+    routes: [],
+  })
+
+  setupDynamicRoute(router)
+
+  return router
+}
+
+const router = generateRouter()
 
 export default router

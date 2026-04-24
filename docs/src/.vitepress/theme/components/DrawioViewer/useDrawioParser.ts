@@ -44,8 +44,6 @@ export function useDrawioParser(options: DrawioParserOptions) {
       let minY = Infinity
       let maxX = 0
       let maxY = 0
-      let hasGeometry = false
-
       geometries.forEach((geo) => {
         // 只处理绝对定位的几何信息（relative 的是连接线中间点）
         if (geo.getAttribute('relative') === '1') return
@@ -57,14 +55,13 @@ export function useDrawioParser(options: DrawioParserOptions) {
 
         if (w === 0 && h === 0) return
 
-        hasGeometry = true
         minX = Math.min(minX, x)
         minY = Math.min(minY, y)
         maxX = Math.max(maxX, x + w)
         maxY = Math.max(maxY, y + h)
       })
 
-      if (hasGeometry) {
+      if (Number.isFinite(minX) && Number.isFinite(minY)) {
         // 内容区域 + 上下左右各留 60px 边距
         const padding = 60
         const contentW = maxX - minX + padding * 2

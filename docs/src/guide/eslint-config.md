@@ -1,6 +1,8 @@
 # ESLint
 
-本文档以**文件维度**逐一说明项目中每个 ESLint 配置文件的完整内容及各字段含义。
+本文档先解释**本仓库的类型感知 lint 是怎么和 `tsconfig.json` 协作的**，再回到各个 `eslint.config.js` 文件的具体写法。
+
+如果你是第一次接触 monorepo + TypeScript + ESLint，建议按本文顺序阅读；如果你只想查某个文件的配置来源，可以直接跳到后面的“共享配置包”和“根目录 / 子项目配置”章节。
 
 ## 前置：启用 ESM
 
@@ -25,6 +27,59 @@ Node.js 中 `.js` 文件默认被当作 CommonJS 模块，无法使用 `import` 
 
 :::
 
+## 先建立心智模型：ESLint Typed Linting 如何和 tsconfig 协作
+
+### 四个角色，各管一件事
+
+| 角色                              | 负责什么                                                                        | 不负责什么           |
+| --------------------------------- | ------------------------------------------------------------------------------- | -------------------- |
+| `tsconfig.json`                   | 定义“哪些文件属于当前 TypeScript 项目”<br>以及这组文件共用的编译 / 类型检查选项 | 不直接执行 lint 规则 |
+| `typescript-eslint` typed linting | 消费 TypeScript 类型信息<br>执行依赖类型的 ESLint 规则                          | 不决定项目边界       |
+| `projectService`                  | 让 ESLint 通过 TypeScript Project Service<br>自动查找文件对应的 tsconfig        | 不决定搜索起点       |
+| `tsconfigRootDir`                 | 指定“从哪里开始找”<br>当前文件所属的 tsconfig                                   | 不提供额外类型规则   |
+
+### 一条主链路
+
+1. `tsconfig.json` 先定义“哪些文件属于当前类型项目”。
+2. ESLint 中的 typed rules 通过 `projectService` 请求类型信息。
+3. `tsconfigRootDir` 告诉 Project Service 应该从哪个目录向下/向上定位 tsconfig。
+4. 如果某个 `.js` / `.mjs` 文件不在任何 tsconfig 的 `include` 里，但仍想启用 typed linting，再由 `allowDefaultProject` 提供兜底。
+
+### 先记住这条判断规则
+
+- 文件已经在某个 tsconfig 里：优先走正常的 project service 匹配。
+- 文件不在 tsconfig 里，但只想让 ESLint typed rules 生效：用 `allowDefaultProject`。
+- 文件需要进入 `tsc` / IDE 的完整 JS 类型检查：那是 `allowJs` / `checkJs` / `// @ts-check` 的话题，不应该和 `allowDefaultProject` 混在一起。
+
+> [!TIP] 一句话总结
+>
+> - `tsconfig.json` 负责“定义类型项目”，ESLint 负责“消费类型信息做规则检查”
+> - `projectService + tsconfigRootDir` 负责把两者连起来
+> - `allowDefaultProject` 只处理“没进 tsconfig 的少量 JS/MJS 文件”。
+
+## eslint.config.js 与 tsconfig.json 的协作关系
+
+前一节已经给出了角色分工，这里只回答一个问题：**在本仓库里，这条协作链具体落到哪些配置项上？**
+
+- `packages/eslint-config/src/typescript.ts` 负责声明“ESLint 需要类型信息”
+- 每个项目自己的 `eslint.config.js` 负责声明“从哪个目录查找 tsconfig”
+- 各项目的 `tsconfig.json` / `tsconfig.app.json` / `tsconfig.node.json` 负责提供真实的类型项目边界
+
+<ClientOnly>
+  <DrawioViewer :data="typeAwareWorkflow" />
+</ClientOnly>
+
+### 为什么需要类型信息？
+
+以下规则**必须依赖 `tsconfig.json` 提供的类型推导**才能工作：
+
+- `@typescript-eslint/await-thenable`
+- `@typescript-eslint/no-misused-promises`
+- `@typescript-eslint/switch-exhaustiveness-check`
+- `@typescript-eslint/no-unnecessary-condition`
+
+没有 `tsconfig.json`，这些规则完全无法运行，ESLint 只能执行不依赖类型的基础规则。
+
 ## 整体结构
 
 ```
@@ -38,7 +93,7 @@ qiankun_monorepo/
 │   ├── main-app/
 │   │   ├── eslint.config.js          ← Vue 3 + auto-import
 │   │   └── .eslintrc-auto-import.json ← 自动生成的 globals
-│   ├── vue3-app/
+│   ├── vue3-history/
 │   │   ├── eslint.config.js          ← Vue 3 + auto-import
 │   │   └── .eslintrc-auto-import.json
 │   └── mock-server/
@@ -58,7 +113,7 @@ qiankun_monorepo/
 
 ## 为什么每个子项目都需要独立的 eslint.config.js
 
-Monorepo 中并非不能只用根目录一份配置，但本项目采用**”共享配置包 + 子项目薄配置”**模式，主要基于以下原因：
+Monorepo 中并非不能只用根目录一份配置，但本项目采用**共享配置包 + 子项目薄配置**模式，主要基于以下原因：
 
 1. **typed linting 需要明确的 tsconfig 边界**
    `typescript-eslint` 的类型感知规则需要知道每个文件属于哪个 tsconfig。子项目间的 `include`、`types`、路径别名各不相同，每个子项目设置 `tsconfigRootDir: import.meta.dirname` 指向自己的 tsconfig 是最清晰的做法。
@@ -93,58 +148,6 @@ export default defineConfigWithVueTs(...vue3, {
 - [Turborepo ESLint Guide](https://turborepo.dev/docs/guides/tools/eslint)
 - [typescript-eslint Monorepo Typed Linting](https://typescript-eslint.io/troubleshooting/typed-linting/monorepos/)
 - [ESLint v9 in a Monorepo with Flat Config（Felipe Morais）](https://medium.com/@felipeprodev/how-to-use-eslint-v9-in-a-monorepo-with-flat-config-file-format-8ef2e06ce296)
-
-## eslint.config.js 与 tsconfig.json 的协作关系
-
-`eslint.config.js` 和 `tsconfig.json` 各有职责，但通过 **Typed Linting（类型感知 lint）** 机制紧密协作——ESLint 读取 `tsconfig.json` 提供的类型信息，从而启用更强大的检查规则。
-
-### 各自的职责
-
-| 维度         | `tsconfig.json`              | `eslint.config.js`                      |
-| ------------ | ---------------------------- | --------------------------------------- |
-| **核心职责** | 定义类型检查和编译行为       | 定义代码质量和风格规则                  |
-| **独立功能** | 类型推导、路径别名、编译输出 | 普通 JS 规则、Vue 规则、Prettier 格式化 |
-| **协作功能** | 被动提供类型信息             | 主动通过 `projectService` 消费类型信息  |
-
-### 连接桥梁：`projectService` + `tsconfigRootDir`
-
-两者的连接点在共享配置包的 `typescript.ts` 中：
-
-```typescript [packages/eslint-config/src/typescript.ts]
-parserOptions: {
-  projectService: {
-    allowDefaultProject: ['*.js', '*.mjs', '*.cjs'],
-  },
-}
-```
-
-`projectService` 声明"需要类型信息"，但还需要知道去哪里查找 `tsconfig.json`。每个子项目通过 `tsconfigRootDir` 指定搜索起点：
-
-```javascript [apps/main-app/eslint.config.js]
-parserOptions: {
-  tsconfigRootDir: import.meta.dirname,  // → apps/main-app/
-}
-```
-
-完整工作流程：
-
-> [!TIP] 一句话总结
-> `tsconfig.json` 负责"理解代码类型"，`eslint.config.js` 负责"基于类型信息检查代码质量"，`projectService` + `tsconfigRootDir` 是将两者串联起来的桥梁。
-
-<ClientOnly>
-  <DrawioViewer :data="typeAwareWorkflow" />
-</ClientOnly>
-
-### 为什么需要类型信息？
-
-以下规则**必须依赖 `tsconfig.json` 提供的类型推导**才能工作：
-
-- `@typescript-eslint/await-thenable`
-- `@typescript-eslint/no-misused-promises`
-- `@typescript-eslint/switch-exhaustiveness-check`
-- `@typescript-eslint/no-unnecessary-condition`
-
-没有 `tsconfig.json`，这些规则完全无法运行，ESLint 只能执行不依赖类型的基础规则。
 
 ## 核心概念：Flat Config 与配置数组
 
@@ -383,8 +386,9 @@ export const typescript: Linter.Config[] = [
         // 使用 Project Service API（v8+ 推荐）
         // 自动查找最近的 tsconfig.json，无需 monorepo 特殊配置
         projectService: {
-          // 为不在 tsconfig 范围内的 JS 配置文件提供类型解析兜底
-          allowDefaultProject: ['*.js', '*.mjs', '*.cjs'],
+          // 为各包根目录下未纳入 tsconfig 的配置文件提供默认项目兜底；
+          // 业务脚本（如根目录 scripts/dev.mjs）应在各自的 eslint.config.js 中显式声明。
+          allowDefaultProject: ['*.js', '*.mjs'],
         },
       },
     },
@@ -440,64 +444,26 @@ Project Service 的核心优势：
 
 ::: details allowDefaultProject 的使用场景与注意事项
 
-当 Project Service 找不到某个 JS 文件对应的 tsconfig 时，会出现：
+当 Project Service 找不到某个 `.js` / `.mjs` 文件所属的 tsconfig 时，typed linting 会缺少类型信息。这时先问自己两个问题：
 
-```text
-Parsing error: eslint.config.js was not found by the project service.
-Consider either including it in the tsconfig.json or including it in allowDefaultProject.
-```
+1. 这个文件是否应该进入 `tsc` 项目？
+2. 我是不是只想让 ESLint 的类型感知规则对它生效？
 
-**先看结论**
+本仓库的答案是：**大多数配置文件和少量仓库脚本不进入 `tsc` 项目，但仍希望 typed linting 能工作**，所以使用 `allowDefaultProject` 兜底。
 
-- 只想让少量 JS 配置文件（如 `eslint.config.js`）支持 ESLint 类型感知规则，且不想改各项目 tsconfig：用 `allowDefaultProject`（本项目采用）。
-- 想让这些 JS 文件成为 TypeScript 项目成员（`tsc`/IDE 也完整接管）：用 `allowJs + include`。
-- 两种方式不能同时命中同一文件。
+| 场景                                                                       | 该用什么                               | 原因                                                       |
+| -------------------------------------------------------------------------- | -------------------------------------- | ---------------------------------------------------------- |
+| 少量 `eslint.config.js`、`*.config.js`、`scripts/*.mjs` 需要 typed linting | `allowDefaultProject`                  | 只补“类型信息来源”，不扩张 tsconfig 边界                   |
+| 某个 JS 文件需要被 `tsc` / IDE 当成正式项目成员检查                        | `allowJs` / `checkJs` / `// @ts-check` | 目标已经不是“给 ESLint 兜底”，而是“让 JS 真正进入类型项目” |
+| 大量历史 JS 代码正在迁移                                                   | `allowJs + checkJs`                    | 需要系统性 JS 类型检查，而不是零散配置兜底                 |
 
-**两种方案对比**
+**本仓库的分层策略**
 
-| 方案                  | 维护成本                     | ESLint 类型感知规则 | `tsc` / IDE 类型服务 | 适用场景             |
-| --------------------- | ---------------------------- | ------------------- | -------------------- | -------------------- |
-| `allowDefaultProject` | 低（集中在 ESLint 共享配置） | ✅                  | ❌                   | 少量 JS 配置文件兜底 |
-| `allowJs + include`   | 中高（每项目维护 tsconfig）  | ✅                  | ✅                   | 大量 JS 需长期类型化 |
+- 共享配置 `packages/eslint-config/src/typescript.ts`：兜底各包根目录自己的 `*.js` / `*.mjs`
+- 根目录 `eslint.config.js`：额外兜底 `scripts/*.mjs` 与根目录 `*.config.js`
 
-**本项目采用方式**
-
-```ts
-projectService: {
-  allowDefaultProject: ['*.js', '*.mjs', '*.cjs'],
-}
-```
-
-`allowDefaultProject` 匹配到的文件会通过 `defaultProject`（默认 `tsconfig.json`）获取类型信息；路径相对于 `tsconfigRootDir` 解析。
-
-由于每个 `eslint.config.js` 都设置了 `tsconfigRootDir: import.meta.dirname`，默认项目会自动落到各自目录：
-
-| eslint.config.js 位置 | tsconfigRootDir   | defaultProject 解析为          |
-| --------------------- | ----------------- | ------------------------------ |
-| 仓库根目录            | 仓库根            | 根 `tsconfig.json`             |
-| `apps/main-app/`      | `apps/main-app/`  | `apps/main-app/tsconfig.json`  |
-| `packages/utils/`     | `packages/utils/` | `packages/utils/tsconfig.json` |
-
-示例（类型感知规则依赖类型信息）：
-
-```js [eslint.config.js]
-async function demo() {
-  await 123
-}
-```
-
-- 没有 `allowDefaultProject` 且文件不在 tsconfig `include`：可能报 project service 错误，或类型感知规则无法工作
-- 有 `allowDefaultProject`：`@typescript-eslint/await-thenable` 可正常报告问题
-
-> [!NOTE] 与“格式检查”的关系
-> `allowDefaultProject` 只影响“类型信息来源”，不决定是否 lint 该文件，也不负责格式化。
-> `eslint.config.js` 的格式检查主要由 `prettier/prettier` 规则负责。
-
-> [!WARNING] 使用边界
->
-> - 不支持 `**` 递归 glob，且官方建议谨慎使用（sparingly）
-> - 不要与 `allowJs + include` 同时命中同一文件，否则会冲突报错
-> - 在 Vue 项目中，`defineConfigWithVueTs` 默认会对 JS 应用 `disableTypeChecked`，如需对 JS 启用类型感知规则需要额外覆盖配置
+> [!TIP] 记忆方法
+> `allowDefaultProject` 解决的是“ESLint 到哪里拿类型信息”，不是“这个文件要不要成为 tsconfig 项目成员”。
 
 :::
 
@@ -579,6 +545,9 @@ export const vue3: Linter.Config[] = [
       // 关闭与 Prettier 冲突但未被 eslint-config-prettier 覆盖的规则
       'vue/first-attribute-linebreak': 'off',
 
+      // 项目约定组件 name 格式为「目录名-文件名」（如 KeepAliveDemo-Detail），
+      'vue/component-definition-name-casing': 'off',
+
       // 组件名规则
       'vue/multi-word-component-names': [
         'error',
@@ -615,6 +584,19 @@ export const vue3: Linter.Config[] = [
 [`eslint-config-prettier`](https://github.com/prettier/eslint-config-prettier) 已经自动关闭了大部分与 Prettier 冲突的 Vue 格式规则，但 `vue/first-attribute-linebreak` **不在其覆盖范围内**。
 
 该规则控制组件第一个属性是否必须换行，与 Prettier 的格式化行为冲突——Prettier 会根据行宽自动决定是否换行，而该规则强制要求特定格式。因此需要手动设为 `'off'`。
+
+:::
+
+::: details 为什么要关闭 vue/component-definition-name-casing？
+
+`eslint-plugin-vue` 的 [`vue/component-definition-name-casing`](https://eslint.vuejs.org/rules/component-definition-name-casing.html) 只擅长约束比较标准的组件名风格，例如：
+
+- 纯 `PascalCase`
+- 纯 `kebab-case`
+
+但本项目里不少组件采用的是“目录名-文件名”的组合命名，例如 `KeepAliveDemo-Detail`。这种命名方式便于从 DevTools 或报错堆栈里直接定位到模块和文件，但它既不属于纯 PascalCase，也不属于纯 kebab-case，因此会被该规则误报。
+
+考虑到这是项目内明确接受的命名约定，我们将该规则关闭，避免为了迎合 lint 规则而放弃现有的组件命名语义。
 
 :::
 
@@ -702,13 +684,29 @@ export default [
 ```javascript [eslint.config.js]
 import { base } from '@breeze/eslint-config'
 
+// 根目录配置：仅 lint 根目录的配置文件和文档
+// 注意：apps/** 和 packages/** 有各自的 ESLint 配置
 export default [
   ...base,
   {
-    // 显式设置 tsconfigRootDir，避免 monorepo 中多候选目录冲突
+    name: 'root/type-aware-files',
     languageOptions: {
       parserOptions: {
         tsconfigRootDir: import.meta.dirname,
+        projectService: {
+          allowDefaultProject: ['scripts/*.mjs', '*.js', '*.mjs'],
+        },
+      },
+    },
+  },
+  {
+    name: 'root/node-files',
+    // 根目录脚本与配置文件运行在 Node 环境，需要显式声明常用全局变量
+    files: ['scripts/**/*.mjs', '*.config.js'],
+    languageOptions: {
+      globals: {
+        console: 'readonly',
+        process: 'readonly',
       },
     },
   },
@@ -719,10 +717,13 @@ export default [
 ]
 ```
 
-| 配置项            | 值                    | 含义                                                                                         |
-| ----------------- | --------------------- | -------------------------------------------------------------------------------------------- |
-| `tsconfigRootDir` | `import.meta.dirname` | 指向仓库根目录，让 Project Service 从此处查找 `tsconfig.json`                                |
-| `ignores`         | `apps/**` 等          | 排除所有子项目目录，仅 lint 根目录自身的文件（如 `eslint.config.js`、`stylelint.config.js`） |
+| 配置项                    | 值                                    | 含义                                                          |
+| ------------------------- | ------------------------------------- | ------------------------------------------------------------- |
+| `tsconfigRootDir`         | `import.meta.dirname`                 | 指向仓库根目录，让 Project Service 从此处查找 `tsconfig.json` |
+| `allowDefaultProject`     | `['scripts/*.mjs', '*.config.js']`    | 为不在 tsconfig include 范围内的根目录文件提供类型感知兜底    |
+| `files`                   | `['scripts/**/*.mjs', '*.config.js']` | 仅对根目录脚本和配置文件生效                                  |
+| `globals.console/process` | `'readonly'`                          | 声明 Node.js 全局变量，避免 `no-undef` 误报                   |
+| `ignores`                 | `apps/**` 等                          | 排除所有子项目目录，仅 lint 根目录自身的文件                  |
 
 ::: details 为什么根目录必须设置 tsconfigRootDir？
 
@@ -732,7 +733,7 @@ export default [
 发现 tsconfig.json 的位置：
 ├── ./tsconfig.json              ← 候选 1
 ├── apps/main-app/tsconfig.json  ← 候选 2
-├── apps/vue3-app/tsconfig.json  ← 候选 3
+├── apps/vue3-history/tsconfig.json ← 候选 3
 └── apps/mock-server/tsconfig.json ← 候选 4
 ```
 
@@ -742,9 +743,21 @@ Project Service 无法判断该用哪个，会报 **"multiple candidate TSConfig
 
 :::
 
-::: details 为什么不需要 // @ts-check？
+::: details 为什么还需要声明 `console` / `process` 这类 Node globals？
 
-共享 ESLint 配置中的 `allowDefaultProject: ['*.js', '*.mjs', '*.cjs']` 会为 JS 配置文件通过 `defaultProject`（默认 `tsconfig.json`）提供类型信息，ESLint 的类型感知规则已可正常工作，因此无需额外添加 `// @ts-check` 注释。
+因为这是两件不同的事：
+
+- `types: ["node"]` 只告诉 TypeScript：`console`、`process` 这些 API 有什么类型
+- `languageOptions.globals` 只告诉 ESLint：这些名字在运行时本来就存在，不要当成未定义变量报错
+
+所以即使 TypeScript 认识 `process`，ESLint 仍然可能因为 `no-undef` 报错。  
+声明 Node globals，就是专门解决 ESLint 这一层的问题。
+
+:::
+
+::: details 为什么不需要 `// @ts-check`？
+
+本仓库里的 `eslint.config.js`、`*.config.js` 与少量 `scripts/*.mjs` 默认只需要 **ESLint typed linting**，不需要进入 `tsc` 的完整 JS 类型检查项目，因此优先使用 `allowDefaultProject`。完整判断标准见前文 [《allowDefaultProject 的使用场景与注意事项》](#allowdefaultproject-的使用场景与注意事项)。
 
 :::
 
@@ -770,7 +783,7 @@ export default defineConfigWithVueTs(...vue3, {
 })
 ```
 
-```javascript [apps/vue3-app/eslint.config.js]
+```javascript [apps/vue3-history/eslint.config.js]
 import { defineConfigWithVueTs } from '@vue/eslint-config-typescript'
 import { vue3 } from '@breeze/eslint-config'
 import autoImportGlobals from './.eslintrc-auto-import.json' with { type: 'json' }
@@ -786,9 +799,9 @@ export default defineConfigWithVueTs(...vue3, {
 })
 ```
 
-| 配置项            | 值                    | 含义                                                 |
-| ----------------- | --------------------- | ---------------------------------------------------- |
-| `tsconfigRootDir` | `import.meta.dirname` | 指向各自的 `apps/main-app/` 或 `apps/vue3-app/` 目录 |
+| 配置项            | 值                    | 含义                                                     |
+| ----------------- | --------------------- | -------------------------------------------------------- |
+| `tsconfigRootDir` | `import.meta.dirname` | 指向各自的 `apps/main-app/` 或 `apps/vue3-history/` 目录 |
 
 ::: details defineConfigWithVueTs 做了什么？
 
@@ -930,44 +943,27 @@ export default [
 
 :::
 
-::: details 只想检查 eslint.config.js 的格式，是否需要 allowDefaultProject？
+::: details 只想检查 `eslint.config.js` 的格式，是否需要 `allowDefaultProject`？
 
-**不需要。**
-
-`eslint.config.js` 的格式检查主要来自 `prettier/prettier` 规则（通过 `eslint-plugin-prettier` 集成），与 `allowDefaultProject` 无关。
-
-- `allowDefaultProject`：解决“类型感知规则的类型信息来源”
-- `prettier/prettier`：解决“代码格式是否符合 Prettier”
-
-常用命令：
-
-```bash [pnpm]
-# 根目录配置文件
-pnpm eslint eslint.config.js --max-warnings=0
-
-# 子项目配置文件（示例）
-pnpm --filter main-app exec eslint eslint.config.js --max-warnings=0
-```
-
-> [!TIP] 为什么根目录执行 `pnpm -w run lint` 看不到子项目的 `eslint.config.js`？
-> 根目录配置里通过 `ignores: ['apps/**', 'packages/**']` 排除了子项目；检查子项目配置文件需要在子项目目录执行，或使用 `pnpm --filter <project> exec eslint ...`。
+不需要。格式检查来自 `prettier/prettier`，与 `allowDefaultProject` 无关。`allowDefaultProject` 只在你希望 `@typescript-eslint/await-thenable` 这类 typed rules 也能读取该文件的类型信息时才有意义。完整判断标准见前文 [《allowDefaultProject 的使用场景与注意事项》](#allowdefaultproject-的使用场景与注意事项)。
 
 :::
 
 ::: details ESLint 缓存失效了怎么办？
 
-当遇到"明明改了配置但 lint 结果没变"等问题时，清除缓存文件即可：
+当遇到"明明改了配置但 lint 结果没变"等问题时，先清理 ESLint / 格式化缓存；如果异常出现在 `vue-tsc --build` / `tsc --build` 的增量判断，再处理 `*.tsbuildinfo`，原理见 [tsconfig 指南](./tsconfig)。
 
 ```bash [shell ~vscode-icons:file-type-shell~]
 # 清理全仓 lint/format 缓存（含子项目）
 find . -type f \( -name '.eslintcache' -o -name '.stylelintcache' -o -name '.prettiercache' \) \
   -not -path '*/node_modules/*' -delete
 
-# 可选：同时清理 TypeScript 增量缓存
+# 如果异常出现在 `vue-tsc --build` / `tsc --build` 的增量判断，可同时清理 TypeScript 增量缓存
 find . -type f -name '*.tsbuildinfo' -not -path '*/node_modules/*' -delete
 
-# 重新运行 lint
-pnpm -w run lint:all
+# 重新运行检查
+pnpm run lint
+pnpm run type-check
 ```
 
 以下情况缓存会自动失效：
@@ -990,10 +986,8 @@ pnpm -w run lint:all
 ```json [package.json]
 {
   "scripts": {
-    "lint": "eslint . --max-warnings=0 --cache",
-    "lint:fix": "eslint . --fix --cache",
-    "lint:all": "pnpm -r --parallel run lint",
-    "lint:all:fix": "pnpm -r --parallel run lint:fix"
+    "lint": "eslint . --max-warnings=0 --cache && pnpm -r --parallel run lint",
+    "lint:fix": "eslint . --fix --cache && pnpm -r --parallel run lint:fix"
   }
 }
 ```
@@ -1001,17 +995,15 @@ pnpm -w run lint:all
 - `--cache`：启用缓存（缓存文件 `.eslintcache` 生成在运行命令的目录下），仅检查变更的文件，显著提升大型 monorepo 的执行速度
 - `--max-warnings=0`：任何 warning 都会导致 lint 失败，强制团队解决所有警告
 
-| 命令                | 说明                                                         |
-| ------------------- | ------------------------------------------------------------ |
-| `pnpm lint`         | 在根目录运行 ESLint 检查（仅检查根目录自身的文件）           |
-| `pnpm lint:fix`     | 同上，但自动修复可修复的问题                                 |
-| `pnpm lint:all`     | 递归执行所有子包（`apps/*`、`packages/*`）各自的 `lint` 脚本 |
-| `pnpm lint:all:fix` | 递归执行所有子包各自的 `lint:fix` 脚本                       |
+| 命令            | 说明                                                       |
+| --------------- | ---------------------------------------------------------- |
+| `pnpm lint`     | 先检查根目录文件，再递归执行各子项目自己的 `lint` 脚本     |
+| `pnpm lint:fix` | 先修复根目录文件，再递归执行各子项目自己的 `lint:fix` 脚本 |
 
-> [!TIP] `lint` vs `lint:all`
+> [!TIP] 当前仓库里 `lint` 已经是“根目录 + 子项目”的统一入口
 >
-> - `lint` / `lint:fix` 只使用根目录的 `eslint.config.js`，仅覆盖根目录文件
-> - `lint:all` / `lint:all:fix` 会触发每个子包各自的 `eslint.config.js`，实现全仓检查
+> - 前半段 `eslint . ...` 只使用根目录的 `eslint.config.js`，覆盖根目录文件
+> - 后半段 `pnpm -r --parallel run lint` 会触发各子项目自己的 `eslint.config.js`
 
 ## 相关依赖
 
@@ -1045,11 +1037,11 @@ pnpm add -wD eslint prettier @breeze/eslint-config lint-staged
 | `@breeze/eslint-config` | workspace:\* | 本仓库的共享 ESLint 配置包         |
 | `lint-staged`           | ^16.2.7      | Git 提交前对暂存文件运行 lint 检查 |
 
-### Vue 应用（`apps/main-app`、`apps/vue3-app`）
+### Vue 应用（`apps/main-app`、`apps/vue3-history`）
 
 ```bash
 pnpm add -D @breeze/eslint-config @vue/eslint-config-typescript \
-  --filter @breeze/main-app --filter @breeze/vue3-app
+  --filter main-app --filter vue3-history
 ```
 
 | 依赖包                          | 版本         | 说明                                                               |
