@@ -397,6 +397,9 @@ importers:
       '@breeze/bridge-vue':
         specifier: workspace:*
         version: link:../../packages/bridge-vue
+      '@breeze/components':
+        specifier: workspace:*
+        version: link:../../packages/components
       '@breeze/router':
         specifier: workspace:*
         version: link:../../packages/router
@@ -498,6 +501,34 @@ importers:
       vue-router:
         specifier: 'catalog:'
         version: 4.6.4(vue@3.5.25(typescript@5.9.3))
+
+  packages/components:
+    dependencies:
+      '@ant-design/icons-vue':
+        specifier: 'catalog:'
+        version: 7.0.1(vue@3.5.25(typescript@5.9.3))
+      ant-design-vue:
+        specifier: 'catalog:'
+        version: 4.2.6(vue@3.5.25(typescript@5.9.3))
+      vue:
+        specifier: 'catalog:'
+        version: 3.5.25(typescript@5.9.3)
+    devDependencies:
+      '@breeze/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@vue/eslint-config-typescript':
+        specifier: 'catalog:'
+        version: 14.6.0(eslint-plugin-vue@10.5.1(@typescript-eslint/parser@8.49.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))(vue-eslint-parser@10.2.0(eslint@9.39.2(jiti@2.6.1))))(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
+      '@vue/tsconfig':
+        specifier: 'catalog:'
+        version: 0.8.1(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3))
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+      vue-tsc:
+        specifier: 'catalog:'
+        version: 3.1.8(typescript@5.9.3)
 
   packages/eslint-config:
     dependencies:
