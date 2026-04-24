@@ -278,6 +278,9 @@ importers:
       '@ant-design/icons-vue':
         specifier: 'catalog:'
         version: 7.0.1(vue@3.5.25(typescript@5.9.3))
+      '@breeze/components':
+        specifier: workspace:*
+        version: link:../../packages/components
       '@breeze/router':
         specifier: workspace:*
         version: link:../../packages/router

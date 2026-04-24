@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import AntConfigProvider from './views/AntConfigProvider/index.vue'
+import { AntConfigProvider } from '@breeze/components'
 import { setupRuntimeChannels } from '@/utils/channel'
 
 setupRuntimeChannels()

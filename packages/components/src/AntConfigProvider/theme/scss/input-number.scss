@@ -1,0 +1,17 @@
+.ant-input-number-wrapper {
+  .ant-input-number-group-addon {
+    padding: 0 6px;
+  }
+}
+
+.ant-input-number-lg {
+  &.ant-input-number {
+    /**
+     * ⚠️ 注意：此样式会覆盖 Ant Design Vue 的默认宽度行为
+     * 默认情况下 InputNumber 会根据内容自适应宽度
+     * 此处强制设置为固定宽度 88px，可能会影响某些场景的显示效果
+     * 如需恢复默认行为，请移除此样式或在特定组件中通过 :deep() 覆盖
+     */
+    width: 88px;
+  }
+}

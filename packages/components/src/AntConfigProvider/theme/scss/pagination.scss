@@ -1,0 +1,15 @@
+.ant-pagination {
+  &:not(&-mini) {
+    .ant-pagination-item {
+      border-radius: 8px;
+    }
+
+    .ant-select-single .ant-select-selector {
+      border-radius: 8px;
+    }
+
+    .ant-pagination-options-quick-jumper input {
+      border-radius: 8px;
+    }
+  }
+}
