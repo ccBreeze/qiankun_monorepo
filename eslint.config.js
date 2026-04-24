@@ -1,3 +1,4 @@
+import { globalIgnores } from 'eslint/config'
 import { base } from '@breeze/eslint-config'
 
 // 根目录配置：仅 lint 根目录的配置文件和文档
@@ -26,8 +27,18 @@ export default [
       },
     },
   },
-  {
+  globalIgnores([
     // 只 lint 根目录的文件，子项目使用各自的配置
-    ignores: ['apps/**', 'packages/**', 'docs/**', '.claude'],
-  },
+    'apps/**',
+    'packages/**',
+    'docs/**',
+
+    // Spec Kit temporary ignores
+    '.agents/**',
+    '.claude/**',
+    '.github/**',
+    '.specify/**',
+    'specs/**',
+    'AGENTS.md',
+  ]),
 ]
