@@ -1,4 +1,7 @@
 node_modules/
+dist/
+build/
+coverage/
 pnpm-lock.yaml
 
 .eslintcache
@@ -10,9 +13,9 @@ pnpm-lock.yaml
 **/components.d.ts
 
 # Spec Kit temporary ignores
-/.agents/skills/speckit-*/
-/.claude/skills/speckit-*/
-/.github/agents/
-/.github/prompts/
-/.specify/
-/AGENTS.md
+.agents
+.claude
+.github
+.specify
+specs
+AGENTS.md
