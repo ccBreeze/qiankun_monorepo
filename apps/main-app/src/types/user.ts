@@ -1,4 +1,4 @@
-import type { RawMenuItem } from '@breeze/qiankun-shared'
+import type { RawMenuItem } from '@breeze/router'
 
 /**
  * 用户数据类型

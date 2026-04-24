@@ -100,18 +100,18 @@ $zoom-easing: cubic-bezier(0.2, 0, 0.2, 1);
 
 .drawio-preview {
   position: relative;
-  border: 1px solid var(--vp-c-divider);
-  border-radius: 8px;
   overflow: hidden;
   cursor: zoom-in;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
 }
 
 .drawio-iframe {
   width: 100%;
   min-height: 200px;
-  border: none;
-  background: #fff;
   pointer-events: none;
+  background: #fff;
+  border: none;
 }
 
 .drawio-overlay {
@@ -130,11 +130,11 @@ $zoom-easing: cubic-bezier(0.2, 0, 0.2, 1);
 }
 
 .drawio-hint {
-  background: rgba(0, 0, 0, 0.6);
-  color: #fff;
   padding: 4px 14px;
-  border-radius: 4px;
   font-size: 13px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 4px;
 }
 
 /* 全屏容器 */
@@ -163,9 +163,9 @@ $zoom-easing: cubic-bezier(0.2, 0, 0.2, 1);
 .drawio-fullscreen-iframe {
   width: 100%;
   height: 100%;
+  background: #fff;
   border: none;
   border-radius: 8px;
-  background: #fff;
   opacity: 0;
   transition: opacity 0.3s $zoom-easing;
 

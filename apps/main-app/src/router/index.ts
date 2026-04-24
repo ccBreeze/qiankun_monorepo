@@ -1,24 +1,31 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
-import Home from '@/views/HomePage/index.vue'
-import { microAppRegistry } from '@/views/MicroApp/utils/registry'
-import { setupRouterGuard } from './guard'
+import { microApps } from '@/utils/microApp/registry'
+import { createAuthGuard } from './guard/auth'
 
 /**
- * 根据微应用注册表动态生成路由别名
+ * 子应用路由别名列表，使主应用路由能匹配所有子应用的子路径。
  *
- * 将 pathPrefix（如 `/crm/`、`/ocrm/#/`）转换为
- * vue-router 通配别名（如 `/crm/:subPath*`、`/ocrm/:subPath*`）
+ * @see https://router.vuejs.org/zh/guide/essentials/redirect-and-alias.html#别名
  */
-const microAppAliases = [...microAppRegistry.keys()].map((pathPrefix) => {
-  // `/ocrm/#/` → `ocrm`
-  const segment = pathPrefix.split('/')[1]
-  return `/${segment}/:subPath*`
-})
+const microAppAliases = microApps
+  .filter(({ activeRule }) => {
+    // 仅为具有独立 pathname 前缀的子应用生成 alias。
+
+    // ⚠️ 不推荐使用 '/#/ocrm' 这类 hash 模式，主应用可见的 pathname 实际是 '/'
+    // '/#/ocrm/' → 命中根路由 '/'，无需额外 alias
+    const pathname = activeRule.split('#')[0] ?? ''
+    return pathname !== '/'
+  })
+  .map(({ activeRule }) => {
+    // '/ocrm/#' → '/ocrm/:subPath*'
+    // '/vue3-history' → '/vue3-history/:subPath*'
+    const segment = activeRule.split('/')[1]
+    return `/${segment}/:subPath*`
+  })
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    name: 'home',
     redirect: '/login',
   },
   {
@@ -30,7 +37,7 @@ const routes: RouteRecordRaw[] = [
     path: '/microApp',
     name: 'microApp',
     alias: microAppAliases,
-    component: Home,
+    component: () => import('@/views/HomePage/index.vue'),
   },
 ]
 
@@ -39,6 +46,6 @@ const router = createRouter({
   routes,
 })
 
-setupRouterGuard(router)
+createAuthGuard(router)
 
 export default router

@@ -15,19 +15,22 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "catalog:",
-    "@breeze/qiankun-shared": "workspace:*",
+    "@breeze/router": "workspace:*",
+    "@breeze/runtime": "workspace:*",
     "@breeze/utils": "workspace:*",
     "@vueuse/core": "catalog:",
     "ant-design-vue": "catalog:",
     "axios": "catalog:",
     "pinia": "catalog:",
     "pinyin-pro": "catalog:",
+    "qiankun": "catalog:",
     "vite-plugin-svg-icons": "catalog:",
     "vue": "catalog:",
     "vue-router": "catalog:"
   },
   "devDependencies": {
     "@breeze/eslint-config": "workspace:*",
+    "@breeze/vite-config": "workspace:*",
     "@tailwindcss/postcss": "catalog:",
     "@tsconfig/node24": "catalog:",
     "@types/node": "catalog:",
@@ -41,6 +44,7 @@
     "tailwindcss": "catalog:",
     "typescript": "catalog:",
     "unplugin-auto-import": "catalog:",
+    "unplugin-vue-components": "catalog:",
     "vite": "catalog:",
     "vite-plugin-vue-devtools": "catalog:",
     "vue-tsc": "catalog:"

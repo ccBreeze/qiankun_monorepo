@@ -2,6 +2,10 @@
 
 本文档记录从零创建 pnpm Monorepo 项目，并配置 TypeScript、ESLint、Prettier 的完整过程。
 
+## 学习视频
+
+- B 站视频：[从零搭建 qiankun Monorepo 项目](https://www.bilibili.com/video/BV1hp4y1L7Mr)
+
 ## 1. 创建 Monorepo 基础结构
 
 ### 1.1 初始化项目
@@ -39,7 +43,7 @@ pnpm add -Dw typescript @types/node ts-node
 
 项目采用分层继承的 tsconfig 结构，根目录提供基础配置，各子项目通过 `extends` 继承并补充差异。
 
-完整的配置说明和各字段含义请参阅 [tsconfig 项目配置](/packages/eslint-config/tsconfig)。
+完整的配置说明和各字段含义请参阅 [tsconfig 项目配置](/guide/tsconfig)。
 
 ### 1.5 创建目录与示例包
 

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile>
+  <diagram id="keep-alive-definition-usage-flow" name="KeepAlive 定义与使用流程">
+    <mxGraphModel dx="1600" dy="1200" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="title" value="&lt;b&gt;子应用 KeepAlive：定义与使用流程&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=20;fillColor=none;strokeColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="360" y="30" width="580" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="container-subapp" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;strokeWidth=3;dashed=1;dashPattern=8 4;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="100" y="100" width="1100" height="380" as="geometry" />
+        </mxCell>
+        <mxCell id="label-subapp" value="&lt;b&gt;子应用&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontStyle=1;fontSize=14;fillColor=none;strokeColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="125" y="105" width="100" height="28" as="geometry" />
+        </mxCell>
+
+        <mxCell id="container-runtime" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F7FA;strokeColor=#90A4AE;strokeWidth=3;dashed=1;dashPattern=8 4;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="100" y="500" width="1100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="label-runtime" value="&lt;b&gt;Runtime Channel&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontStyle=1;fontSize=14;fillColor=none;strokeColor=none;fontColor=#455A64;" vertex="1" parent="1">
+          <mxGeometry x="125" y="505" width="180" height="28" as="geometry" />
+        </mxCell>
+
+        <mxCell id="container-host" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EBF2FF;strokeColor=#0A1A3C;strokeWidth=3;dashed=1;dashPattern=8 4;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="100" y="620" width="1100" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="label-host" value="&lt;b&gt;主应用&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontStyle=1;fontSize=14;fillColor=none;strokeColor=none;fontColor=#0A1A3C;" vertex="1" parent="1">
+          <mxGeometry x="125" y="625" width="100" height="28" as="geometry" />
+        </mxCell>
+
+        <mxCell id="container-keepalive" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF3E0;strokeColor=#EF6C00;strokeWidth=3;dashed=1;dashPattern=8 4;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="100" y="780" width="1100" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="label-keepalive" value="&lt;b&gt;Vue / KeepAlive&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;fontStyle=1;fontSize=14;fillColor=none;strokeColor=none;fontColor=#EF6C00;" vertex="1" parent="1">
+          <mxGeometry x="125" y="785" width="180" height="28" as="geometry" />
+        </mxCell>
+
+        <mxCell id="node-enter-page" value="&lt;b&gt;用户进入子应用页面&lt;/b&gt;" style="shape=mxgraph.flowchart.terminator;rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE0B2;strokeColor=#E65100;strokeWidth=3;shadow=1;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="150" y="170" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="node-app-setup" value="&lt;b&gt;App.vue 调用 useKeepAlive()&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;strokeWidth=3;shadow=1;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="410" y="170" width="250" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="node-routerview-render" value="&lt;b&gt;RouterView 渲染组件&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F7FA;strokeColor=#90A4AE;strokeWidth=2;shadow=1;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="700" y="170" width="210" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="node-wrap-fullpath" value="&lt;b&gt;调用 wrapKeepAliveComponent()&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#BBDEFB;strokeColor=#1565C0;strokeWidth=3;shadow=1;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="950" y="170" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="node-cache-created" value="&lt;b&gt;KeepAlive 按 fullPath 缓存页面实例&lt;/b&gt;" style="shape=mxgraph.flowchart.terminator;rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE0B2;strokeColor=#E65100;strokeWidth=3;shadow=1;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="950" y="265" width="220" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="node-cross-note" value="&lt;b&gt;补充：跨子应用切换时&lt;/b&gt;&lt;br&gt;&lt;b&gt;页面会经历“有组件 → 空 → 有组件”&lt;/b&gt;&lt;br&gt;&lt;b&gt;KeepAlive 生命周期可正常触发&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F7FA;strokeColor=#90A4AE;strokeWidth=2;dashed=1;dashPattern=8 4;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="150" y="265" width="620" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="node-click-close" value="&lt;b&gt;用户点击“关闭 Tab”&lt;/b&gt;" style="shape=mxgraph.flowchart.terminator;rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE0B2;strokeColor=#E65100;strokeWidth=3;shadow=1;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="150" y="370" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="node-request-remove" value="&lt;b&gt;requestRemoveTabByRoute()&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#BBDEFB;strokeColor=#1565C0;strokeWidth=3;shadow=1;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="410" y="370" width="250" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="node-listener" value="&lt;b&gt;useTabRemoveListener()&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;strokeWidth=3;shadow=1;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="730" y="370" width="210" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="node-hook-remove" value="&lt;b&gt;useKeepAlive().removeTab()&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#BBDEFB;strokeColor=#1565C0;strokeWidth=3;shadow=1;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="970" y="370" width="210" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="node-runtime-request" value="&lt;b&gt;TAB_REMOVE_REQUEST&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;strokeWidth=3;shadow=1;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="410" y="520" width="250" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="node-runtime-remove" value="&lt;b&gt;TAB_REMOVE&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;strokeWidth=3;shadow=1;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="730" y="520" width="210" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="node-host-remove" value="&lt;b&gt;主应用调用 tabBar.removeTab()&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#BBDEFB;strokeColor=#1565C0;strokeWidth=3;shadow=1;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="410" y="655" width="250" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="node-host-emit" value="&lt;b&gt;主应用调用 emitTabRemove()&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#BBDEFB;strokeColor=#1565C0;strokeWidth=3;shadow=1;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="730" y="655" width="210" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="node-keepalive-clean" value="&lt;b&gt;removeTab() 清理 include/wrapperMap&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#BBDEFB;strokeColor=#1565C0;strokeWidth=3;shadow=1;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="960" y="845" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="node-keepalive-destroy" value="&lt;b&gt;KeepAlive 移除对应缓存实例&lt;/b&gt;" style="shape=mxgraph.flowchart.terminator;rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE0B2;strokeColor=#E65100;strokeWidth=3;shadow=1;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="960" y="940" width="220" height="35" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge-enter-to-setup" style="edgeStyle=straightEdgeStyle;rounded=1;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#546E7A;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="node-enter-page" target="node-app-setup" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-setup-to-render" style="edgeStyle=straightEdgeStyle;rounded=1;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#546E7A;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="node-app-setup" target="node-routerview-render" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-render-to-wrap" style="edgeStyle=straightEdgeStyle;rounded=1;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#546E7A;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="node-routerview-render" target="node-wrap-fullpath" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-wrap-to-cache" style="edgeStyle=straightEdgeStyle;rounded=1;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#546E7A;endArrow=classic;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="node-wrap-fullpath" target="node-cache-created" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-cache-to-cross-note" value="&lt;b&gt;跨系统切换&lt;/b&gt;" style="html=1;edgeStyle=straightEdgeStyle;rounded=1;jumpStyle=arc;jumpSize=6;strokeWidth=2;strokeColor=#90A4AE;dashed=1;dashPattern=8 4;endArrow=classic;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" source="node-cache-created" target="node-cross-note" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge-click-to-request" style="edgeStyle=straightEdgeStyle;rounded=1;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#546E7A;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="node-click-close" target="node-request-remove" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-request-to-runtime-request" style="edgeStyle=straightEdgeStyle;rounded=1;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#546E7A;endArrow=classic;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="node-request-remove" target="node-runtime-request" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-runtime-request-to-host-remove" style="edgeStyle=straightEdgeStyle;rounded=1;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#546E7A;endArrow=classic;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="node-runtime-request" target="node-host-remove" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-host-remove-to-host-emit" style="edgeStyle=straightEdgeStyle;rounded=1;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#546E7A;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="node-host-remove" target="node-host-emit" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-host-emit-to-runtime-remove" style="edgeStyle=straightEdgeStyle;rounded=1;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#546E7A;endArrow=classic;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" source="node-host-emit" target="node-runtime-remove" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-runtime-remove-to-listener" style="edgeStyle=straightEdgeStyle;rounded=1;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#546E7A;endArrow=classic;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" source="node-runtime-remove" target="node-listener" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-listener-to-hook-remove" style="edgeStyle=straightEdgeStyle;rounded=1;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#546E7A;endArrow=classic;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="node-listener" target="node-hook-remove" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-hook-remove-to-cleanup" style="edgeStyle=straightEdgeStyle;rounded=1;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#546E7A;endArrow=classic;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="node-hook-remove" target="node-keepalive-clean" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-cleanup-to-destroy" style="edgeStyle=straightEdgeStyle;rounded=1;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#546E7A;endArrow=classic;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="node-keepalive-clean" target="node-keepalive-destroy" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

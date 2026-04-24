@@ -1,0 +1,98 @@
+<mxGraphModel dx="2236" dy="1456" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1000" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+    <mxCell id="title" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=20;fillColor=none;strokeColor=none;fontColor=#333333;" value="&lt;b&gt;跨子应用切换时，router.listening 造成 KeepAlive 生命周期中断&lt;/b&gt;" vertex="1">
+      <mxGeometry height="40" width="880" x="260" y="30" as="geometry" />
+    </mxCell>
+    <mxCell id="lane-switch-to-b" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;strokeWidth=3;dashed=1;dashPattern=8 4;verticalAlign=top;" value="" vertex="1">
+      <mxGeometry height="770" width="560" x="70" y="110" as="geometry" />
+    </mxCell>
+    <mxCell id="lane-switch-to-b-label" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontStyle=1;fontSize=16;fillColor=none;strokeColor=none;fontColor=#333333;" value="&lt;b&gt;离开子应用 A，进入子应用 B&lt;/b&gt;" vertex="1">
+      <mxGeometry height="30" width="380" x="110" y="140" as="geometry" />
+    </mxCell>
+    <mxCell id="to-b-listening-false" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe0b2;strokeColor=#E65100;strokeWidth=3;shadow=1;fontStyle=1;fontSize=14;" value="&lt;b&gt;router.listening = false&lt;/b&gt;" vertex="1">
+      <mxGeometry height="70" width="380" x="160" y="190" as="geometry" />
+    </mxCell>
+    <mxCell id="to-b-route-frozen" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565C0;strokeWidth=3;shadow=1;fontStyle=1;fontSize=14;" value="&lt;b&gt;route 冻结&lt;/b&gt;" vertex="1">
+      <mxGeometry height="70" width="380" x="160" y="305" as="geometry" />
+    </mxCell>
+    <mxCell id="to-b-router-view-stable" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565C0;strokeWidth=3;shadow=1;fontStyle=1;fontSize=14;" value="&lt;b&gt;RouterView 不切换组件&lt;/b&gt;" vertex="1">
+      <mxGeometry height="70" width="380" x="160" y="420" as="geometry" />
+    </mxCell>
+    <mxCell id="to-b-keepalive-no-change" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F7FA;strokeColor=#90A4AE;strokeWidth=2;shadow=1;fontStyle=1;fontSize=13;" value="&lt;b&gt;KeepAlive 感知不到变化&lt;/b&gt;&lt;br&gt;&lt;b&gt;组件持续渲染&lt;/b&gt;" vertex="1">
+      <mxGeometry height="85" width="380" x="160" y="535" as="geometry" />
+    </mxCell>
+    <mxCell id="to-b-ondeactivated-miss" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=3;shadow=1;fontStyle=1;fontSize=14;" value="&lt;b&gt;onDeactivated 不触发&lt;/b&gt;" vertex="1">
+      <mxGeometry height="70" width="380" x="160" y="665" as="geometry" />
+    </mxCell>
+    <mxCell id="lane-switch-back-a" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;strokeWidth=3;dashed=1;dashPattern=8 4;verticalAlign=top;" value="" vertex="1">
+      <mxGeometry height="770" width="560" x="770" y="110" as="geometry" />
+    </mxCell>
+    <mxCell id="lane-switch-back-a-label" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontStyle=1;fontSize=16;fillColor=none;strokeColor=none;fontColor=#333333;" value="&lt;b&gt;切回子应用 A&lt;/b&gt;" vertex="1">
+      <mxGeometry height="30" width="260" x="810" y="140" as="geometry" />
+    </mxCell>
+    <mxCell id="back-a-listening-true" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe0b2;strokeColor=#E65100;strokeWidth=3;shadow=1;fontStyle=1;fontSize=14;" value="&lt;b&gt;router.listening = true&lt;/b&gt;" vertex="1">
+      <mxGeometry height="70" width="380" x="860" y="230" as="geometry" />
+    </mxCell>
+    <mxCell id="back-a-route-resume" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565C0;strokeWidth=3;shadow=1;fontStyle=1;fontSize=14;" value="&lt;b&gt;route 恢复更新&lt;/b&gt;" vertex="1">
+      <mxGeometry height="70" width="380" x="860" y="355" as="geometry" />
+    </mxCell>
+    <mxCell id="back-a-component-still-render" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F7FA;strokeColor=#90A4AE;strokeWidth=2;shadow=1;fontStyle=1;fontSize=14;" value="&lt;b&gt;组件一直在渲染中&lt;/b&gt;" vertex="1">
+      <mxGeometry height="70" width="380" x="860" y="480" as="geometry" />
+    </mxCell>
+    <mxCell id="back-a-onactivated-miss" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=3;shadow=1;fontStyle=1;fontSize=14;" value="&lt;b&gt;onActivated 不触发&lt;/b&gt;" vertex="1">
+      <mxGeometry height="70" width="380" x="860" y="605" as="geometry" />
+    </mxCell>
+    <mxCell id="root-cause-note" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=3;shadow=1;fontStyle=1;fontSize=13;" value="&lt;b&gt;根因：RouterView 没有发生“有 → 无 → 有”的组件切换，KeepAlive 无法进入 deactivate / activate 周期&lt;/b&gt;" vertex="1">
+      <mxGeometry height="70" width="900" x="250" y="785" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-to-b-1" edge="1" parent="1" source="to-b-listening-false" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#1565C0;endArrow=classic;" target="to-b-route-frozen">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-to-b-2" edge="1" parent="1" source="to-b-route-frozen" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#1565C0;endArrow=classic;" target="to-b-router-view-stable">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-to-b-3" edge="1" parent="1" source="to-b-router-view-stable" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#90A4AE;endArrow=classic;" target="to-b-keepalive-no-change">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-to-b-4" edge="1" parent="1" source="to-b-keepalive-no-change" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#90A4AE;endArrow=classic;" target="to-b-ondeactivated-miss">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-back-a-1" edge="1" parent="1" source="back-a-listening-true" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#1565C0;endArrow=classic;" target="back-a-route-resume">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-back-a-2" edge="1" parent="1" source="back-a-route-resume" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#90A4AE;endArrow=classic;" target="back-a-component-still-render">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-back-a-3" edge="1" parent="1" source="back-a-component-still-render" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=4;strokeColor=#90A4AE;endArrow=classic;" target="back-a-onactivated-miss">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-cross-switch-back" edge="1" parent="1" source="to-b-ondeactivated-miss" style="html=1;edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=3;dashed=1;dashPattern=8 4;strokeColor=#E65100;endArrow=classic;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="back-a-listening-true" value="&lt;b&gt;切回子应用 A&lt;/b&gt;">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="700" y="700" />
+          <mxPoint x="700" y="265" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge-root-cause-left" edge="1" parent="1" source="to-b-router-view-stable" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=2;dashed=1;dashPattern=8 4;strokeColor=#d6b656;endArrow=none;exitX=1;exitY=0.5;entryX=0.3;entryY=0;" target="root-cause-note">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="620" y="455" />
+          <mxPoint x="620" y="770" />
+          <mxPoint x="520" y="770" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge-root-cause-right" edge="1" parent="1" source="back-a-component-still-render" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;jumpStyle=arc;jumpSize=6;strokeWidth=2;dashed=1;dashPattern=8 4;strokeColor=#d6b656;endArrow=none;exitX=0;exitY=0.5;entryX=0.7;entryY=0;" target="root-cause-note">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="780" y="515" />
+          <mxPoint x="780" y="770" />
+          <mxPoint x="880" y="770" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+  </root>
+</mxGraphModel>

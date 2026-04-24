@@ -3,9 +3,9 @@
     v-model:open="open"
     placement="bottom"
     color="#fff"
-    destroy-tooltip-on-hide
+    destroyTooltipOnHide
     trigger="click"
-    :overlay-inner-style="{ padding: '8px 4px' }"
+    :overlayInnerStyle="{ padding: '8px 4px' }"
   >
     <div class="multilanguage-trigger">
       <SvgIcon name="multilanguage" />

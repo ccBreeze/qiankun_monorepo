@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "nitro dev --port 8200",
     "build": "nitro build",
-    "preview": "nitro preview",
+    "preview": "PORT=8200 node .output/server/index.mjs",
     "type-check": "tsc",
     "lint": "eslint . --max-warnings=0 --cache",
     "lint:fix": "eslint . --fix --cache"
