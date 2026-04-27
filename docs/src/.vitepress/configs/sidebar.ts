@@ -20,7 +20,7 @@ export const sidebar: DefaultTheme.SidebarMulti = {
       text: '优化相关',
       items: [
         {
-          text: '自动导入',
+          text: 'API/组件自动导入',
           link: '/optimization/auto-import',
         },
         {
@@ -32,6 +32,12 @@ export const sidebar: DefaultTheme.SidebarMulti = {
           link: '/optimization/font-loading-optimization',
         },
       ],
+    },
+  ],
+  '/packages/vite-config/': [
+    {
+      text: 'vite-config',
+      items: [{ text: '@breeze/vite-config', link: '/packages/vite-config/' }],
     },
   ],
   '/packages/utils/': [

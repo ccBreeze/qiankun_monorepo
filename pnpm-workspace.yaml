@@ -2,6 +2,7 @@ packages:
   - apps/*
   - packages/*
   - packages/bridge-react/*
+  - docs
 
 catalog:
   '@ant-design/icons-vue': ^7.0.1

@@ -28,6 +28,10 @@ export const nav: DefaultTheme.NavItem[] = [
         text: 'utils',
         link: firstLink('/packages/utils/'),
       },
+      {
+        text: '@breeze/vite-config',
+        link: firstLink('/packages/vite-config/'),
+      },
     ],
   },
 ]
