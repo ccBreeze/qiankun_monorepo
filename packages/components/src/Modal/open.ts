@@ -32,14 +32,28 @@ export type BuiltinModalProps<T extends ModalEnum> =
 export type BuiltinModalResult<T extends ModalEnum> =
   BuiltinModalContractMap[T]['result']
 
+/** 取出 T 中的必填字段名，全可选时为 never */
+type RequiredKeys<T> = {
+  [K in keyof T]-?: object extends Pick<T, K> ? never : K
+}[keyof T]
+
+/** props 含必填字段时为 true，全可选（含 {}）时为 false */
+type HasRequired<T> = [RequiredKeys<T>] extends [never] ? false : true
+
+/** 根据 props 是否含必填字段，推导对应的可变参数元组 */
+type OpenModalArgs<T extends ModalEnum> =
+  HasRequired<BuiltinModalProps<T>> extends true
+    ? [component: T, props: BuiltinModalProps<T>]
+    : [component: T, props?: BuiltinModalProps<T>]
+
 /**
  * 通过命令式入口打开弹窗：
- * 1. 传入内置枚举时，根据契约映射自动推导 props 与结果类型
+ * 1. 传入内置枚举时，根据契约映射自动推导 props 与结果类型；
+ *    且当契约 props 含必填字段时，第二个参数强制必填，否则可省略
  * 2. 传入任意组件时，保留通用泛型调用能力
  */
 export function openModal<T extends ModalEnum>(
-  component: T,
-  props: BuiltinModalProps<T>,
+  ...args: OpenModalArgs<T>
 ): Promise<ModalResult<BuiltinModalResult<T>>>
 
 export function openModal<
