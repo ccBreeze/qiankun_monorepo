@@ -3,12 +3,6 @@ import type { App as VueApp, Component } from 'vue'
 import AntConfigProvider from '../AntConfigProvider/index.vue'
 import type { ModalInjectedProps, ModalResult } from './types'
 
-const getContainer = () => {
-  const container = document.createElement('div')
-  document.body.appendChild(container)
-  return container
-}
-
 /** 渲染单个弹窗实例，并在 close 时完成清理 */
 export const renderModalInstance = <
   TProps extends object = Record<string, unknown>,
@@ -18,7 +12,7 @@ export const renderModalInstance = <
   props: TProps,
 ): Promise<ModalResult<TResult>> => {
   return new Promise<ModalResult<TResult>>((resolve, reject) => {
-    const container = getContainer()
+    const container = document.createElement('div')
     let app: VueApp<Element> | null = null
     const cleanup = () => {
       app?.unmount()
