@@ -49,6 +49,19 @@ export const sidebar: DefaultTheme.SidebarMulti = {
       ],
     },
   ],
+  '/packages/components/': [
+    {
+      text: 'components',
+      items: [
+        { text: '概览', link: '/packages/components/' },
+        {
+          text: 'AntConfigProvider 全局配置',
+          link: '/packages/components/ant-config-provider',
+        },
+        { text: 'Modal 弹窗', link: '/packages/components/modal' },
+      ],
+    },
+  ],
   '/qiankun/': [
     {
       text: 'Packages',
