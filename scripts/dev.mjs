@@ -91,7 +91,7 @@ function printKillPortCommands(appList) {
   console.error('\n检测到 dev 服务异常退出，可按需清理占用端口：')
   const ports = appList.map(resolveAppPort).join(' ')
   console.error(
-    `\n# 一次性清理上述全部端口\nfor PORT in ${ports}; do PIDS=$(lsof -ti tcp:$PORT); [ -n "$PIDS" ] && kill -9 $PIDS; done\n`,
+    `\n# 一次性清理上述全部端口\nfor PORT in ${ports}; do PIDS=$(lsof -nP -tiTCP:$PORT -sTCP:LISTEN); [ -n "$PIDS" ] && kill -9 $PIDS; done\n`,
   )
 }
 

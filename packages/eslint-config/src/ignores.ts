@@ -1,13 +1,8 @@
-import { globalIgnores } from 'eslint/config'
-
 /**
  * 全局忽略规则
  * 参考: https://turborepo.com/docs/guides/tools/eslint
  */
-export const ignores = globalIgnores([
-  // 依赖目录
-  '**/node_modules/**',
-
+export const ignores = [
   // 构建输出
   '**/dist/**',
   '**/build/**',
@@ -34,4 +29,4 @@ export const ignores = globalIgnores([
   '**/pnpm-lock.yaml',
   '**/package-lock.json',
   '**/yarn.lock',
-])
+]

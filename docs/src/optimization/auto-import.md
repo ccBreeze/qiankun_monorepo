@@ -1,4 +1,4 @@
-# 自动导入
+# API/组件自动导入
 
 本文说明如何用 `unplugin-auto-import` 和 `unplugin-vue-components` 实现 Vue API 与 UI 组件的自动导入，覆盖两个插件的职责划分、ant-design-vue 配置、图标处理和 ESLint 适配。
 

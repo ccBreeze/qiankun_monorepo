@@ -12,11 +12,9 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    AConfigProvider: typeof import('ant-design-vue/es')['ConfigProvider']
     AMenu: typeof import('ant-design-vue/es')['Menu']
     APopover: typeof import('ant-design-vue/es')['Popover']
     ASpin: typeof import('ant-design-vue/es')['Spin']
-    AStyleProvider: typeof import('ant-design-vue/es')['StyleProvider']
     ATooltip: typeof import('ant-design-vue/es')['Tooltip']
     ATypographyText: typeof import('ant-design-vue/es')['TypographyText']
     CloseOutlined: typeof import('@ant-design/icons-vue')['CloseOutlined']
@@ -29,11 +27,9 @@ declare module 'vue' {
 
 // For TSX support
 declare global {
-  const AConfigProvider: typeof import('ant-design-vue/es')['ConfigProvider']
   const AMenu: typeof import('ant-design-vue/es')['Menu']
   const APopover: typeof import('ant-design-vue/es')['Popover']
   const ASpin: typeof import('ant-design-vue/es')['Spin']
-  const AStyleProvider: typeof import('ant-design-vue/es')['StyleProvider']
   const ATooltip: typeof import('ant-design-vue/es')['Tooltip']
   const ATypographyText: typeof import('ant-design-vue/es')['TypographyText']
   const CloseOutlined: typeof import('@ant-design/icons-vue')['CloseOutlined']

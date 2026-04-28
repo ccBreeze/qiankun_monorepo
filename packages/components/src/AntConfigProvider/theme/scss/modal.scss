@@ -1,0 +1,9 @@
+.ant-modal {
+  & &-content {
+    border-radius: 16px;
+  }
+
+  & &-header {
+    margin-bottom: 24px;
+  }
+}
