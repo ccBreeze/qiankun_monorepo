@@ -20,7 +20,7 @@ export const sidebar: DefaultTheme.SidebarMulti = {
       text: '优化相关',
       items: [
         {
-          text: '自动导入',
+          text: 'API/组件自动导入',
           link: '/optimization/auto-import',
         },
         {
@@ -34,12 +34,31 @@ export const sidebar: DefaultTheme.SidebarMulti = {
       ],
     },
   ],
+  '/packages/vite-config/': [
+    {
+      text: 'vite-config',
+      items: [{ text: '@breeze/vite-config', link: '/packages/vite-config/' }],
+    },
+  ],
   '/packages/utils/': [
     {
       text: 'utils',
       items: [
         { text: '概览', link: '/packages/utils/' },
         { text: 'Request', link: '/packages/utils/request/technical' },
+      ],
+    },
+  ],
+  '/packages/components/': [
+    {
+      text: 'components',
+      items: [
+        { text: '概览', link: '/packages/components/' },
+        {
+          text: 'AntConfigProvider 全局配置',
+          link: '/packages/components/ant-config-provider',
+        },
+        { text: 'Modal 弹窗', link: '/packages/components/modal' },
       ],
     },
   ],

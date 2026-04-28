@@ -1,0 +1,27 @@
+{
+  "name": "@breeze/components",
+  "version": "1.0.0",
+  "description": "Breeze 公共 UI 组件",
+  "type": "module",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "type-check": "vue-tsc --noEmit -p tsconfig.json",
+    "lint": "eslint . --max-warnings=0 --cache",
+    "lint:fix": "eslint . --fix --cache"
+  },
+  "dependencies": {
+    "@ant-design/icons-vue": "catalog:",
+    "ant-design-vue": "catalog:",
+    "vue": "catalog:"
+  },
+  "devDependencies": {
+    "@breeze/eslint-config": "workspace:*",
+    "@vue/eslint-config-typescript": "catalog:",
+    "@vue/tsconfig": "catalog:",
+    "typescript": "catalog:",
+    "vue-tsc": "catalog:"
+  }
+}

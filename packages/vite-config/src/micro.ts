@@ -5,13 +5,10 @@ import qiankun from 'vite-plugin-qiankun'
 import { createVue3BaseConfig } from './base.ts'
 import type { SharedVueOptions } from './base.ts'
 
-/** qiankun 子应用配置参数 */
-export type MicroAppOptions = SharedVueOptions
-
 /**
  * 创建 qiankun 子应用专用的 Vite 配置。
  */
-export const createVue3MicroAppConfig = (options: MicroAppOptions) => {
+export const createVue3MicroAppConfig = (options: SharedVueOptions) => {
   return defineConfig((env) => {
     const { port } = options
     const envMap = loadEnv(env.mode, process.cwd())

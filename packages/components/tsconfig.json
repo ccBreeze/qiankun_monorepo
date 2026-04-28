@@ -1,0 +1,7 @@
+{
+  "extends": ["@vue/tsconfig/tsconfig.dom.json", "../../tsconfig.base.json"],
+  "include": ["src/**/*", "src/**/*.vue"],
+  "compilerOptions": {
+    "composite": true
+  }
+}
