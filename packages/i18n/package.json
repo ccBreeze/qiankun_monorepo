@@ -1,8 +1,9 @@
 {
-  "name": "@breeze/bridge-vue",
+  "name": "@breeze/i18n",
   "version": "1.0.0",
-  "description": "Vue Router 适配层",
+  "description": "Breeze 国际化配置",
   "type": "module",
+  "types": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts"
   },
@@ -12,19 +13,17 @@
     "lint:fix": "eslint . --fix --cache"
   },
   "dependencies": {
-    "@breeze/router": "workspace:*",
     "@breeze/runtime": "workspace:*"
   },
   "peerDependencies": {
     "vue": "^3.5.25",
-    "vue-i18n": "^11.2.2",
-    "vue-router": "^4.6.3"
+    "vue-i18n": "^11.2.2"
   },
   "devDependencies": {
     "@breeze/eslint-config": "workspace:*",
     "typescript": "catalog:",
+    "vite": "catalog:",
     "vue": "catalog:",
-    "vue-i18n": "catalog:",
-    "vue-router": "catalog:"
+    "vue-i18n": "catalog:"
   }
 }

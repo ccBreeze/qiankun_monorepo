@@ -1,0 +1,171 @@
+{
+  "page": {
+    "eyebrow": "vue3-history / Modal",
+    "title": "App-side openModal test page",
+    "description": "This page keeps two integration paths for `DemoActionModal`: one through `openModal(ModalEnum.DemoActionModal)` and one through direct component mounting. It also keeps 2 app-side local modal components using `openModal`, so command-style and component-style usage can be verified side by side.",
+    "caseTitle": "App-side test cases",
+    "caseDescription": "This area keeps both command-style and component-style tests for package `DemoActionModal`, alongside app-side component cases.",
+    "resultTitle": "Recent Results",
+    "resultTag": "Promise result log"
+  },
+  "actions": {
+    "openCase": "Open {label}",
+    "openMountedPackage": "Open package component mount",
+    "openQueued": "Open 3 queued modals"
+  },
+  "logs": {
+    "initial": "After opening any case, Promise resolve / reject results will be recorded here.",
+    "confirmAction": "Closed by confirm",
+    "cancelAction": "Closed by cancel",
+    "emptyData": "{action}, no business data returned",
+    "metrics": "{action}, kind=metrics, selected={selectedMetric}, metricCount={metricCount}, processedAt={processedAt}",
+    "demoAction": "{action}, kind=demo-action, ticketId={ticketId}, status={status}, operator={operatorName}, remark={remark}, processedAt={processedAt}",
+    "checklist": "{action}, kind=checklist, completed={completedCount}, items={items}, processedAt={processedAt}",
+    "empty": "(empty)",
+    "entry": "{time} {label} -> {result}"
+  },
+  "mountedPackage": {
+    "label": "Package component mount",
+    "componentLabel": "DemoActionModal",
+    "summary": "This case mounts the `DemoActionModal` component exported from `packages/components` directly on the page, verifying package modal usage as a component instead of opening it through `openModal`.",
+    "checks": {
+      "mount": "component mount",
+      "component": "package component",
+      "response": "structured response"
+    },
+    "modal": {
+      "title": "Package built-in modal",
+      "description": "This case mounts the DemoActionModal component directly on the page to verify component-style integration instead of command-style opening through openModal.",
+      "initialRemark": "Default note: component mount",
+      "okText": "Confirm call",
+      "cancelText": "Back to list"
+    }
+  },
+  "cases": {
+    "packageImperative": {
+      "label": "Package command modal",
+      "componentLabel": "ModalEnum.DemoActionModal",
+      "summary": "This keeps the command-style `openModal(ModalEnum.DemoActionModal)` case for comparison with the component mount below.",
+      "checks": {
+        "openModal": "openModal",
+        "modalEnum": "ModalEnum",
+        "packageComponent": "package component"
+      },
+      "modal": {
+        "title": "Package command modal",
+        "description": "This case hits the package internal mapping through ModalEnum.DemoActionModal and verifies DemoActionModal with command-style usage.",
+        "initialRemark": "Default note: command open",
+        "okText": "Confirm call",
+        "cancelText": "Back to list"
+      }
+    },
+    "metrics": {
+      "label": "Metrics snapshot modal",
+      "componentLabel": "MetricsSnapshotModal",
+      "summary": "Use a metric-card component to verify different layouts, `size/width/centered` passthrough, and card selection results.",
+      "checks": {
+        "layout": "cards layout",
+        "size": "size=medium",
+        "width": "width=720"
+      },
+      "modal": {
+        "title": "Size and layout passthrough",
+        "heading": "This opens a wider modal and disables vertical centering, making it easier to inspect how the app-side metric-card component lays out after integrating BaseModal.",
+        "okText": "Confirm metric",
+        "cancelText": "Review later"
+      },
+      "metrics": {
+        "successRate": {
+          "label": "Open success rate",
+          "note": "Last 24 hours"
+        },
+        "averageWait": {
+          "label": "Average wait",
+          "note": "Queue peak period"
+        },
+        "closeTime": {
+          "label": "Close latency",
+          "note": "Result returned after confirm"
+        }
+      }
+    },
+    "checklist": {
+      "label": "Checklist confirm modal",
+      "componentLabel": "ChecklistReviewModal",
+      "summary": "Use a checklist component to verify button prop passthrough and confirm that the page is using another distinct local modal implementation.",
+      "checks": {
+        "list": "checkbox list",
+        "ready": "okButtonReady=false",
+        "danger": "danger button"
+      },
+      "modal": {
+        "title": "Form validation state",
+        "summary": "This case focuses on the disabled-looking confirm button and danger button props, while also verifying the result returned by a checklist modal.",
+        "items": {
+          "contract": "Modal contract reviewed",
+          "closePath": "Close path verified",
+          "promise": "Promise result checked"
+        },
+        "okText": "Continue submit",
+        "cancelText": "Cancel entry"
+      }
+    }
+  },
+  "queue": {
+    "title": "Serial queue verification",
+    "tips": {
+      "order": "1. The queue button opens command-style `openModal` cases in order and switches between different app-side components.",
+      "props": "2. The 3rd queued case uses a wider modal, making it easier to verify that props do not leak between components.",
+      "logs": "3. The log area prints result summaries by `kind`, and the component mount case is recorded here as well."
+    },
+    "metricsFirst": {
+      "label": "Queued metrics modal #1",
+      "title": "Queued metrics modal #1",
+      "heading": "The first queued modal uses the metric-card component to confirm that the first item in the openModal queue opens normally.",
+      "defaultMetric": "Queue length",
+      "okText": "Continue",
+      "cancelText": "Cancel queue",
+      "metrics": {
+        "length": {
+          "label": "Queue length",
+          "note": "Including current modal"
+        },
+        "type": {
+          "label": "Component type",
+          "note": "Item 1"
+        }
+      }
+    },
+    "checklistSecond": {
+      "label": "Queued checklist modal #2",
+      "title": "Queued checklist modal #2",
+      "summary": "The second modal switches to a checklist component to confirm that switching component types inside the queue does not contaminate state.",
+      "items": {
+        "closed": "Item 1 closed",
+        "switched": "Component switched",
+        "pendingLog": "Log pending"
+      },
+      "okText": "Continue",
+      "cancelText": "Cancel queue"
+    },
+    "metricsThird": {
+      "label": "Queued metrics modal #3",
+      "title": "Queued metrics modal #3",
+      "heading": "The third modal switches back to the metrics component and widens the modal to verify that props do not leak.",
+      "defaultMetric": "Width passthrough",
+      "okText": "Finish queue",
+      "cancelText": "Cancel queue",
+      "metrics": {
+        "order": {
+          "label": "Queue order",
+          "value": "Normal",
+          "note": "Item 3 shown"
+        },
+        "width": {
+          "label": "Width passthrough",
+          "note": "Extra wide"
+        }
+      }
+    }
+  }
+}

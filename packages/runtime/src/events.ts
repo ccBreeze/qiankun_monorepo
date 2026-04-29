@@ -10,6 +10,8 @@ export const RUNTIME_EVENTS = {
   TAB_REMOVE_REQUEST: 'tab:remove:request',
   /** 主应用关闭 tab 时通知子应用清除 KeepAlive 缓存 */
   TAB_REMOVE: 'tab:remove',
+  /** 主应用语言变更时通知子应用同步语言 */
+  LOCALE_CHANGE: 'locale:change',
 } as const
 
 export interface TabNavigateRequestPayload {
@@ -26,4 +28,8 @@ export interface TabRemoveRequestPayload {
 
 export interface TabRemovePayload {
   fullPath: string
+}
+
+export interface LocaleChangePayload {
+  locale: string
 }

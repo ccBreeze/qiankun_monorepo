@@ -5,7 +5,7 @@
       :class="{ 'shunt-menu-button--active': isActive }"
     >
       <SvgIcon :name="iconName" class="icon" />
-      <span class="title">{{ title }}</span>
+      <span class="title">{{ $t(`menu.${title}`) }}</span>
       <template v-if="isActive">
         <i class="lb--square" />
         <i class="lb--circle" />

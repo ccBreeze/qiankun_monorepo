@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import {
   DemoActionModal,
   ModalEnum,
@@ -81,6 +82,12 @@ interface SettledModalResult<TResult> {
   data: ModalResult<TResult>
 }
 
+const { t: translate } = useI18n({ useScope: 'global' })
+const t = (key: string, params?: Record<string, unknown>) =>
+  params === undefined
+    ? translate(`views/Modal.${key}`)
+    : translate(`views/Modal.${key}`, params)
+
 const settleModal = async <TResult,>(
   task: Promise<ModalResult<TResult>>,
 ): Promise<SettledModalResult<TResult>> => {
@@ -97,48 +104,64 @@ const settleModal = async <TResult,>(
   }
 }
 
-const demoCases: DemoCase[] = [
+const demoCases = computed<DemoCase[]>(() => [
   {
-    label: '组件包命令式弹窗',
-    componentLabel: 'ModalEnum.DemoActionModal',
-    summary:
-      '这里保留 `openModal(ModalEnum.DemoActionModal)` 的命令式用例，用来和下方的组件挂载方式做对照验证。',
-    checks: ['openModal', 'ModalEnum', 'package component'],
+    label: t('cases.packageImperative.label'),
+    componentLabel: t('cases.packageImperative.componentLabel'),
+    summary: t('cases.packageImperative.summary'),
+    checks: [
+      t('cases.packageImperative.checks.openModal'),
+      t('cases.packageImperative.checks.modalEnum'),
+      t('cases.packageImperative.checks.packageComponent'),
+    ],
     open: () =>
       settleModal(
         openModal(ModalEnum.DemoActionModal, {
-          title: '组件包命令式弹窗',
-          description:
-            '这个用例通过 ModalEnum.DemoActionModal 命中组件包内部映射，用命令式方式验证 DemoActionModal。',
-          initialRemark: '默认备注：命令式打开',
-          okText: '确认调用',
-          cancelText: '返回列表',
+          title: t('cases.packageImperative.modal.title'),
+          description: t('cases.packageImperative.modal.description'),
+          initialRemark: t('cases.packageImperative.modal.initialRemark'),
+          okText: t('cases.packageImperative.modal.okText'),
+          cancelText: t('cases.packageImperative.modal.cancelText'),
           size: 'small',
         }),
       ),
   },
   {
-    label: '指标快照弹窗',
-    componentLabel: 'MetricsSnapshotModal',
-    summary:
-      '用指标卡片类组件验证不同布局结构、`size/width/centered` 透传，以及卡片选择结果。',
-    checks: ['cards layout', 'size=medium', 'width=720'],
+    label: t('cases.metrics.label'),
+    componentLabel: t('cases.metrics.componentLabel'),
+    summary: t('cases.metrics.summary'),
+    checks: [
+      t('cases.metrics.checks.layout'),
+      t('cases.metrics.checks.size'),
+      t('cases.metrics.checks.width'),
+    ],
     open: () =>
       settleModal(
         openModal<MetricsSnapshotModalRequest, MetricsSnapshotModalResult>(
           MetricsSnapshotModal,
           {
-            title: '尺寸与布局透传',
-            heading:
-              '这里会使用更宽的弹窗并取消垂直居中，方便观察应用侧指标卡片组件在接入 BaseModal 后的布局表现。',
+            title: t('cases.metrics.modal.title'),
+            heading: t('cases.metrics.modal.heading'),
             metrics: [
-              { label: '打开成功率', value: '99.2%', note: '最近 24 小时' },
-              { label: '平均等待', value: '320ms', note: '队列峰值时段' },
-              { label: '关闭耗时', value: '0.8s', note: '确认后回传结果' },
+              {
+                label: t('cases.metrics.metrics.successRate.label'),
+                value: '99.2%',
+                note: t('cases.metrics.metrics.successRate.note'),
+              },
+              {
+                label: t('cases.metrics.metrics.averageWait.label'),
+                value: '320ms',
+                note: t('cases.metrics.metrics.averageWait.note'),
+              },
+              {
+                label: t('cases.metrics.metrics.closeTime.label'),
+                value: '0.8s',
+                note: t('cases.metrics.metrics.closeTime.note'),
+              },
             ],
-            defaultMetric: '平均等待',
-            okText: '确认指标',
-            cancelText: '稍后再看',
+            defaultMetric: t('cases.metrics.metrics.averageWait.label'),
+            okText: t('cases.metrics.modal.okText'),
+            cancelText: t('cases.metrics.modal.cancelText'),
             size: 'medium',
             width: 720,
             centered: false,
@@ -147,23 +170,29 @@ const demoCases: DemoCase[] = [
       ),
   },
   {
-    label: '清单确认弹窗',
-    componentLabel: 'ChecklistReviewModal',
-    summary:
-      '用 checklist 组件验证按钮样式透传，同时确认测试页确实在使用另一种完全不同的本地弹窗实现。',
-    checks: ['checkbox list', 'okButtonReady=false', 'danger button'],
+    label: t('cases.checklist.label'),
+    componentLabel: t('cases.checklist.componentLabel'),
+    summary: t('cases.checklist.summary'),
+    checks: [
+      t('cases.checklist.checks.list'),
+      t('cases.checklist.checks.ready'),
+      t('cases.checklist.checks.danger'),
+    ],
     open: () =>
       settleModal(
         openModal<ChecklistReviewModalRequest, ChecklistReviewModalResult>(
           ChecklistReviewModal,
           {
-            title: '表单校验态',
-            summary:
-              '这个用例主要观察确定按钮置灰样式和危险态按钮配置，同时验证勾选型弹窗的确认结果。',
-            items: ['已阅读弹窗契约', '已验证关闭路径', '已检查 Promise 结果'],
-            initialChecked: ['已阅读弹窗契约'],
-            okText: '继续提交',
-            cancelText: '取消录入',
+            title: t('cases.checklist.modal.title'),
+            summary: t('cases.checklist.modal.summary'),
+            items: [
+              t('cases.checklist.modal.items.contract'),
+              t('cases.checklist.modal.items.closePath'),
+              t('cases.checklist.modal.items.promise'),
+            ],
+            initialChecked: [t('cases.checklist.modal.items.contract')],
+            okText: t('cases.checklist.modal.okText'),
+            cancelText: t('cases.checklist.modal.cancelText'),
             okButtonReady: false,
             okButtonProps: {
               danger: true,
@@ -172,40 +201,60 @@ const demoCases: DemoCase[] = [
         ),
       ),
   },
-]
-
-const activityLogs = ref<string[]>([
-  '点击任一用例后，这里会记录 Promise 的 resolve / reject 结果。',
 ])
 
+const activityLogs = ref<string[]>([])
+const displayedActivityLogs = computed(() =>
+  activityLogs.value.length > 0 ? activityLogs.value : [t('logs.initial')],
+)
+
 const packageComponentVisible = ref(false)
-const packageComponentProps: DemoActionModalRequest = {
-  title: '组件包内置弹窗',
-  description:
-    '这个用例直接在页面里挂载 DemoActionModal 组件，用来验证组件形式的接入方式，而不是通过 openModal 命令式打开。',
-  initialRemark: '默认备注：组件形式挂载',
-  okText: '确认调用',
-  cancelText: '返回列表',
+const packageComponentProps = computed<DemoActionModalRequest>(() => ({
+  title: t('mountedPackage.modal.title'),
+  description: t('mountedPackage.modal.description'),
+  initialRemark: t('mountedPackage.modal.initialRemark'),
+  okText: t('mountedPackage.modal.okText'),
+  cancelText: t('mountedPackage.modal.cancelText'),
   size: 'small',
-}
+}))
 
 const formatResultText = (result: SettledModalResult<DemoResult>): string => {
-  const actionText = result.action === 'confirm' ? '确认关闭' : '取消关闭'
+  const actionText =
+    result.action === 'confirm'
+      ? t('logs.confirmAction')
+      : t('logs.cancelAction')
 
   if (!result.data) {
-    return `${actionText}，未返回业务数据`
+    return t('logs.emptyData', { action: actionText })
   }
 
   if ('kind' in result.data && result.data.kind === 'metrics') {
-    return `${actionText}，kind=metrics，selected=${result.data.selectedMetric}，metricCount=${result.data.metricCount}，processedAt=${result.data.processedAt}`
+    return t('logs.metrics', {
+      action: actionText,
+      selectedMetric: result.data.selectedMetric,
+      metricCount: result.data.metricCount,
+      processedAt: result.data.processedAt,
+    })
   }
 
   if ('ticketId' in result.data) {
-    const remarkText = result.data.remark || '（空）'
-    return `${actionText}，kind=demo-action，ticketId=${result.data.ticketId}，status=${result.data.status}，operator=${result.data.operatorName}，remark=${remarkText}，processedAt=${result.data.processedAt}`
+    const remarkText = result.data.remark || t('logs.empty')
+    return t('logs.demoAction', {
+      action: actionText,
+      ticketId: result.data.ticketId,
+      status: result.data.status,
+      operatorName: result.data.operatorName,
+      remark: remarkText,
+      processedAt: result.data.processedAt,
+    })
   }
 
-  return `${actionText}，kind=checklist，completed=${result.data.completedCount}，items=${result.data.selectedItems.join(' / ') || '（空）'}，processedAt=${result.data.processedAt}`
+  return t('logs.checklist', {
+    action: actionText,
+    completedCount: result.data.completedCount,
+    items: result.data.selectedItems.join(' / ') || t('logs.empty'),
+    processedAt: result.data.processedAt,
+  })
 }
 
 const appendLog = (
@@ -215,7 +264,11 @@ const appendLog = (
   const time = new Date().toLocaleTimeString('zh-CN', { hour12: false })
 
   activityLogs.value = [
-    `${time} ${label} -> ${formatResultText(result)}`,
+    t('logs.entry', {
+      time,
+      label,
+      result: formatResultText(result),
+    }),
     ...activityLogs.value,
   ].slice(0, 12)
 }
@@ -233,7 +286,7 @@ const handlePackageComponentConfirm = (
   payload?: DemoActionModalResult,
 ): void => {
   packageComponentVisible.value = false
-  appendLog('组件包组件挂载', {
+  appendLog(t('mountedPackage.label'), {
     action: 'confirm',
     data: payload,
   })
@@ -241,7 +294,7 @@ const handlePackageComponentConfirm = (
 
 const handlePackageComponentCancel = (): void => {
   packageComponentVisible.value = false
-  appendLog('组件包组件挂载', {
+  appendLog(t('mountedPackage.label'), {
     action: 'cancel',
     data: undefined,
   })
@@ -250,63 +303,80 @@ const handlePackageComponentCancel = (): void => {
 const openQueuedModals = async (): Promise<void> => {
   const queueTasks = [
     {
-      label: '排队指标弹窗 #1',
+      label: t('queue.metricsFirst.label'),
       open: () =>
         settleModal(
           openModal<MetricsSnapshotModalRequest, MetricsSnapshotModalResult>(
             MetricsSnapshotModal,
             {
-              title: '排队指标弹窗 #1',
-              heading:
-                '第一个排队弹窗使用指标卡片组件，确认 openModal 队列的第一项能正常打开。',
+              title: t('queue.metricsFirst.title'),
+              heading: t('queue.metricsFirst.heading'),
               metrics: [
-                { label: '排队长度', value: '3', note: '含当前弹窗' },
-                { label: '组件类型', value: 'metrics', note: '第 1 个' },
+                {
+                  label: t('queue.metricsFirst.metrics.length.label'),
+                  value: '3',
+                  note: t('queue.metricsFirst.metrics.length.note'),
+                },
+                {
+                  label: t('queue.metricsFirst.metrics.type.label'),
+                  value: 'metrics',
+                  note: t('queue.metricsFirst.metrics.type.note'),
+                },
               ],
-              defaultMetric: '排队长度',
-              okText: '继续处理',
-              cancelText: '取消队列',
+              defaultMetric: t('queue.metricsFirst.defaultMetric'),
+              okText: t('queue.metricsFirst.okText'),
+              cancelText: t('queue.metricsFirst.cancelText'),
               size: 'small',
             },
           ),
         ),
     },
     {
-      label: '排队清单弹窗 #2',
+      label: t('queue.checklistSecond.label'),
       open: () =>
         settleModal(
           openModal<ChecklistReviewModalRequest, ChecklistReviewModalResult>(
             ChecklistReviewModal,
             {
-              title: '排队清单弹窗 #2',
-              summary:
-                '第二个弹窗切换成 checklist 组件，确认队列中切换不同组件不会互相污染。',
-              items: ['第 1 项已关闭', '组件已切换', '日志待记录'],
-              initialChecked: ['第 1 项已关闭'],
-              okText: '继续处理',
-              cancelText: '取消队列',
+              title: t('queue.checklistSecond.title'),
+              summary: t('queue.checklistSecond.summary'),
+              items: [
+                t('queue.checklistSecond.items.closed'),
+                t('queue.checklistSecond.items.switched'),
+                t('queue.checklistSecond.items.pendingLog'),
+              ],
+              initialChecked: [t('queue.checklistSecond.items.closed')],
+              okText: t('queue.checklistSecond.okText'),
+              cancelText: t('queue.checklistSecond.cancelText'),
               size: 'small',
             },
           ),
         ),
     },
     {
-      label: '排队指标弹窗 #3',
+      label: t('queue.metricsThird.label'),
       open: () =>
         settleModal(
           openModal<MetricsSnapshotModalRequest, MetricsSnapshotModalResult>(
             MetricsSnapshotModal,
             {
-              title: '排队指标弹窗 #3',
-              heading:
-                '第三个弹窗再切回指标组件，并额外放大宽度验证不同 props 不会串台。',
+              title: t('queue.metricsThird.title'),
+              heading: t('queue.metricsThird.heading'),
               metrics: [
-                { label: '队列顺序', value: '正常', note: '第 3 个展示' },
-                { label: '宽度透传', value: '680', note: '额外放大' },
+                {
+                  label: t('queue.metricsThird.metrics.order.label'),
+                  value: t('queue.metricsThird.metrics.order.value'),
+                  note: t('queue.metricsThird.metrics.order.note'),
+                },
+                {
+                  label: t('queue.metricsThird.metrics.width.label'),
+                  value: '680',
+                  note: t('queue.metricsThird.metrics.width.note'),
+                },
               ],
-              defaultMetric: '宽度透传',
-              okText: '完成队列',
-              cancelText: '取消队列',
+              defaultMetric: t('queue.metricsThird.defaultMetric'),
+              okText: t('queue.metricsThird.okText'),
+              cancelText: t('queue.metricsThird.cancelText'),
               size: 'medium',
               width: 680,
             },
@@ -338,46 +408,52 @@ const openQueuedModals = async (): Promise<void> => {
         <p
           class="mb-2.5 text-[0.85rem] font-bold uppercase tracking-[0.08em] text-[#2f6fed]"
         >
-          vue3-history / Modal
+          {{ t('page.eyebrow') }}
         </p>
         <h1 class="text-[clamp(1.8rem,4vw,2.5rem)] font-semibold">
-          应用侧 openModal 测试页
+          {{ t('page.title') }}
         </h1>
         <p class="mt-3 max-w-3xl text-[#53708d]">
-          页面内现在同时保留 `DemoActionModal` 的两种接入方式：一条走
-          `openModal(ModalEnum.DemoActionModal)`，另一条走组件直接挂载；另外还保留
-          2 个应用侧本地弹窗组件的 `openModal`
-          测试。这样能并排验证命令式与组件式两套用法。
+          {{ t('page.description') }}
         </p>
       </section>
 
       <section class="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
         <article class="page-surface p-6">
           <div class="flex flex-col gap-3">
-            <h2 class="text-[1.15rem] font-semibold">应用侧测试用例</h2>
+            <h2 class="text-[1.15rem] font-semibold">
+              {{ t('page.caseTitle') }}
+            </h2>
             <p class="text-sm leading-6 text-[#5a738e]">
-              这里同时保留组件包 `DemoActionModal`
-              的命令式和组件式测试，再配合应用侧组件用例一起验证。
+              {{ t('page.caseDescription') }}
             </p>
           </div>
 
           <div class="mt-6 grid grid-cols-1 gap-4">
             <section class="case-card">
               <div class="flex flex-wrap items-center justify-between gap-3">
-                <h3 class="case-card__title">组件包组件挂载</h3>
-                <span class="status-tag">DemoActionModal</span>
+                <h3 class="case-card__title">
+                  {{ t('mountedPackage.label') }}
+                </h3>
+                <span class="status-tag">
+                  {{ t('mountedPackage.componentLabel') }}
+                </span>
               </div>
 
               <p class="case-card__summary">
-                这里直接在页面里挂载 `packages/components` 导出的
-                `DemoActionModal` 组件，用组件形式验证包内弹窗，而不是通过
-                `openModal` 命令式打开。
+                {{ t('mountedPackage.summary') }}
               </p>
 
               <div class="case-chip-list">
-                <span class="case-chip">component mount</span>
-                <span class="case-chip">package component</span>
-                <span class="case-chip">structured response</span>
+                <span class="case-chip">
+                  {{ t('mountedPackage.checks.mount') }}
+                </span>
+                <span class="case-chip">
+                  {{ t('mountedPackage.checks.component') }}
+                </span>
+                <span class="case-chip">
+                  {{ t('mountedPackage.checks.response') }}
+                </span>
               </div>
 
               <button
@@ -385,7 +461,7 @@ const openQueuedModals = async (): Promise<void> => {
                 class="action--primary"
                 @click="openPackageComponentDemo"
               >
-                打开组件包组件挂载
+                {{ t('actions.openMountedPackage') }}
               </button>
             </section>
 
@@ -422,46 +498,45 @@ const openQueuedModals = async (): Promise<void> => {
                 "
                 @click="openDemoCase(demoCase)"
               >
-                打开 {{ demoCase.label }}
+                {{ t('actions.openCase', { label: demoCase.label }) }}
               </button>
             </section>
           </div>
 
           <div class="tips-panel mt-6">
             <div class="flex items-center justify-between gap-3">
-              <p class="tips-title">串行队列验证</p>
+              <p class="tips-title">{{ t('queue.title') }}</p>
               <button
                 type="button"
                 class="action--ghost action--inline"
                 @click="openQueuedModals"
               >
-                连续打开 3 个排队弹窗
+                {{ t('actions.openQueued') }}
               </button>
             </div>
             <p>
-              1. 队列按钮会按顺序打开命令式 `openModal`
-              用例，并在不同应用侧组件之间切换。
+              {{ t('queue.tips.order') }}
             </p>
             <p>
-              2. 第 3 个队列用例额外放大宽度，方便观察 props
-              在不同组件间是否互不污染。
+              {{ t('queue.tips.props') }}
             </p>
             <p>
-              3. 日志区会按不同 `kind`
-              输出各自的结果摘要，组件挂载用例也会记录在这里。
+              {{ t('queue.tips.logs') }}
             </p>
           </div>
         </article>
 
         <article class="page-surface p-6">
           <div class="flex items-center justify-between gap-3">
-            <h2 class="text-[1.15rem] font-semibold">最近结果</h2>
-            <span class="status-tag">Promise 回传日志</span>
+            <h2 class="text-[1.15rem] font-semibold">
+              {{ t('page.resultTitle') }}
+            </h2>
+            <span class="status-tag">{{ t('page.resultTag') }}</span>
           </div>
 
           <div class="log-list mt-5">
             <p
-              v-for="(item, index) in activityLogs"
+              v-for="(item, index) in displayedActivityLogs"
               :key="`${item}-${index}`"
               class="log-item"
             >
