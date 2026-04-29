@@ -32,7 +32,7 @@ export const useMicroAppStore = defineStore('microApp', () => {
         activeRule: app.activeRule,
         authorizedRoutes:
           menuStore.authorizedRoutesByActiveRule.get(app.activeRule) ?? [],
-        userData: userStore.userData,
+        userData: toRaw(userStore.userData),
       },
     }))
   })

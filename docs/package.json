@@ -9,14 +9,14 @@
     "preview": "vitepress preview src"
   },
   "dependencies": {
-    "medium-zoom": "^1.1.0",
-    "vitepress": "^1.6.4",
-    "vitepress-plugin-group-icons": "^1.7.1",
-    "vue": "^3.5.25"
+    "medium-zoom": "catalog:",
+    "vitepress": "catalog:",
+    "vitepress-plugin-group-icons": "catalog:",
+    "vue": "catalog:"
   },
   "devDependencies": {
-    "@mdit/plugin-figure": "^0.23.2",
-    "sass": "^1.97.3",
-    "vitepress-plugin-llms": "^1.11.0"
+    "@mdit/plugin-figure": "catalog:",
+    "sass": "catalog:",
+    "vitepress-plugin-llms": "catalog:"
   }
 }
