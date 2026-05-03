@@ -82,11 +82,7 @@ interface SettledModalResult<TResult> {
   data: ModalResult<TResult>
 }
 
-const { t: translate } = useI18n({ useScope: 'global' })
-const t = (key: string, params?: Record<string, unknown>) =>
-  params === undefined
-    ? translate(`views/Modal.${key}`)
-    : translate(`views/Modal.${key}`, params)
+const { t } = useI18n({ useScope: 'global' })
 
 const settleModal = async <TResult,>(
   task: Promise<ModalResult<TResult>>,
@@ -106,62 +102,68 @@ const settleModal = async <TResult,>(
 
 const demoCases = computed<DemoCase[]>(() => [
   {
-    label: t('cases.packageImperative.label'),
-    componentLabel: t('cases.packageImperative.componentLabel'),
-    summary: t('cases.packageImperative.summary'),
+    label: t('views.Modal.cases.packageImperative.label'),
+    componentLabel: t('views.Modal.cases.packageImperative.componentLabel'),
+    summary: t('views.Modal.cases.packageImperative.summary'),
     checks: [
-      t('cases.packageImperative.checks.openModal'),
-      t('cases.packageImperative.checks.modalEnum'),
-      t('cases.packageImperative.checks.packageComponent'),
+      t('views.Modal.cases.packageImperative.checks.openModal'),
+      t('views.Modal.cases.packageImperative.checks.modalEnum'),
+      t('views.Modal.cases.packageImperative.checks.packageComponent'),
     ],
     open: () =>
       settleModal(
         openModal(ModalEnum.DemoActionModal, {
-          title: t('cases.packageImperative.modal.title'),
-          description: t('cases.packageImperative.modal.description'),
-          initialRemark: t('cases.packageImperative.modal.initialRemark'),
-          okText: t('cases.packageImperative.modal.okText'),
-          cancelText: t('cases.packageImperative.modal.cancelText'),
+          title: t('views.Modal.cases.packageImperative.modal.title'),
+          description: t(
+            'views.Modal.cases.packageImperative.modal.description',
+          ),
+          initialRemark: t(
+            'views.Modal.cases.packageImperative.modal.initialRemark',
+          ),
+          okText: t('views.Modal.cases.packageImperative.modal.okText'),
+          cancelText: t('views.Modal.cases.packageImperative.modal.cancelText'),
           size: 'small',
         }),
       ),
   },
   {
-    label: t('cases.metrics.label'),
-    componentLabel: t('cases.metrics.componentLabel'),
-    summary: t('cases.metrics.summary'),
+    label: t('views.Modal.cases.metrics.label'),
+    componentLabel: t('views.Modal.cases.metrics.componentLabel'),
+    summary: t('views.Modal.cases.metrics.summary'),
     checks: [
-      t('cases.metrics.checks.layout'),
-      t('cases.metrics.checks.size'),
-      t('cases.metrics.checks.width'),
+      t('views.Modal.cases.metrics.checks.layout'),
+      t('views.Modal.cases.metrics.checks.size'),
+      t('views.Modal.cases.metrics.checks.width'),
     ],
     open: () =>
       settleModal(
         openModal<MetricsSnapshotModalRequest, MetricsSnapshotModalResult>(
           MetricsSnapshotModal,
           {
-            title: t('cases.metrics.modal.title'),
-            heading: t('cases.metrics.modal.heading'),
+            title: t('views.Modal.cases.metrics.modal.title'),
+            heading: t('views.Modal.cases.metrics.modal.heading'),
             metrics: [
               {
-                label: t('cases.metrics.metrics.successRate.label'),
+                label: t('views.Modal.cases.metrics.metrics.successRate.label'),
                 value: '99.2%',
-                note: t('cases.metrics.metrics.successRate.note'),
+                note: t('views.Modal.cases.metrics.metrics.successRate.note'),
               },
               {
-                label: t('cases.metrics.metrics.averageWait.label'),
+                label: t('views.Modal.cases.metrics.metrics.averageWait.label'),
                 value: '320ms',
-                note: t('cases.metrics.metrics.averageWait.note'),
+                note: t('views.Modal.cases.metrics.metrics.averageWait.note'),
               },
               {
-                label: t('cases.metrics.metrics.closeTime.label'),
+                label: t('views.Modal.cases.metrics.metrics.closeTime.label'),
                 value: '0.8s',
-                note: t('cases.metrics.metrics.closeTime.note'),
+                note: t('views.Modal.cases.metrics.metrics.closeTime.note'),
               },
             ],
-            defaultMetric: t('cases.metrics.metrics.averageWait.label'),
-            okText: t('cases.metrics.modal.okText'),
-            cancelText: t('cases.metrics.modal.cancelText'),
+            defaultMetric: t(
+              'views.Modal.cases.metrics.metrics.averageWait.label',
+            ),
+            okText: t('views.Modal.cases.metrics.modal.okText'),
+            cancelText: t('views.Modal.cases.metrics.modal.cancelText'),
             size: 'medium',
             width: 720,
             centered: false,
@@ -170,29 +172,31 @@ const demoCases = computed<DemoCase[]>(() => [
       ),
   },
   {
-    label: t('cases.checklist.label'),
-    componentLabel: t('cases.checklist.componentLabel'),
-    summary: t('cases.checklist.summary'),
+    label: t('views.Modal.cases.checklist.label'),
+    componentLabel: t('views.Modal.cases.checklist.componentLabel'),
+    summary: t('views.Modal.cases.checklist.summary'),
     checks: [
-      t('cases.checklist.checks.list'),
-      t('cases.checklist.checks.ready'),
-      t('cases.checklist.checks.danger'),
+      t('views.Modal.cases.checklist.checks.list'),
+      t('views.Modal.cases.checklist.checks.ready'),
+      t('views.Modal.cases.checklist.checks.danger'),
     ],
     open: () =>
       settleModal(
         openModal<ChecklistReviewModalRequest, ChecklistReviewModalResult>(
           ChecklistReviewModal,
           {
-            title: t('cases.checklist.modal.title'),
-            summary: t('cases.checklist.modal.summary'),
+            title: t('views.Modal.cases.checklist.modal.title'),
+            summary: t('views.Modal.cases.checklist.modal.summary'),
             items: [
-              t('cases.checklist.modal.items.contract'),
-              t('cases.checklist.modal.items.closePath'),
-              t('cases.checklist.modal.items.promise'),
+              t('views.Modal.cases.checklist.modal.items.contract'),
+              t('views.Modal.cases.checklist.modal.items.closePath'),
+              t('views.Modal.cases.checklist.modal.items.promise'),
             ],
-            initialChecked: [t('cases.checklist.modal.items.contract')],
-            okText: t('cases.checklist.modal.okText'),
-            cancelText: t('cases.checklist.modal.cancelText'),
+            initialChecked: [
+              t('views.Modal.cases.checklist.modal.items.contract'),
+            ],
+            okText: t('views.Modal.cases.checklist.modal.okText'),
+            cancelText: t('views.Modal.cases.checklist.modal.cancelText'),
             okButtonReady: false,
             okButtonProps: {
               danger: true,
@@ -205,31 +209,33 @@ const demoCases = computed<DemoCase[]>(() => [
 
 const activityLogs = ref<string[]>([])
 const displayedActivityLogs = computed(() =>
-  activityLogs.value.length > 0 ? activityLogs.value : [t('logs.initial')],
+  activityLogs.value.length > 0
+    ? activityLogs.value
+    : [t('views.Modal.logs.initial')],
 )
 
 const packageComponentVisible = ref(false)
 const packageComponentProps = computed<DemoActionModalRequest>(() => ({
-  title: t('mountedPackage.modal.title'),
-  description: t('mountedPackage.modal.description'),
-  initialRemark: t('mountedPackage.modal.initialRemark'),
-  okText: t('mountedPackage.modal.okText'),
-  cancelText: t('mountedPackage.modal.cancelText'),
+  title: t('views.Modal.mountedPackage.modal.title'),
+  description: t('views.Modal.mountedPackage.modal.description'),
+  initialRemark: t('views.Modal.mountedPackage.modal.initialRemark'),
+  okText: t('views.Modal.mountedPackage.modal.okText'),
+  cancelText: t('views.Modal.mountedPackage.modal.cancelText'),
   size: 'small',
 }))
 
 const formatResultText = (result: SettledModalResult<DemoResult>): string => {
   const actionText =
     result.action === 'confirm'
-      ? t('logs.confirmAction')
-      : t('logs.cancelAction')
+      ? t('views.Modal.logs.confirmAction')
+      : t('views.Modal.logs.cancelAction')
 
   if (!result.data) {
-    return t('logs.emptyData', { action: actionText })
+    return t('views.Modal.logs.emptyData', { action: actionText })
   }
 
   if ('kind' in result.data && result.data.kind === 'metrics') {
-    return t('logs.metrics', {
+    return t('views.Modal.logs.metrics', {
       action: actionText,
       selectedMetric: result.data.selectedMetric,
       metricCount: result.data.metricCount,
@@ -238,8 +244,8 @@ const formatResultText = (result: SettledModalResult<DemoResult>): string => {
   }
 
   if ('ticketId' in result.data) {
-    const remarkText = result.data.remark || t('logs.empty')
-    return t('logs.demoAction', {
+    const remarkText = result.data.remark || t('views.Modal.logs.empty')
+    return t('views.Modal.logs.demoAction', {
       action: actionText,
       ticketId: result.data.ticketId,
       status: result.data.status,
@@ -249,10 +255,10 @@ const formatResultText = (result: SettledModalResult<DemoResult>): string => {
     })
   }
 
-  return t('logs.checklist', {
+  return t('views.Modal.logs.checklist', {
     action: actionText,
     completedCount: result.data.completedCount,
-    items: result.data.selectedItems.join(' / ') || t('logs.empty'),
+    items: result.data.selectedItems.join(' / ') || t('views.Modal.logs.empty'),
     processedAt: result.data.processedAt,
   })
 }
@@ -264,7 +270,7 @@ const appendLog = (
   const time = new Date().toLocaleTimeString('zh-CN', { hour12: false })
 
   activityLogs.value = [
-    t('logs.entry', {
+    t('views.Modal.logs.entry', {
       time,
       label,
       result: formatResultText(result),
@@ -286,7 +292,7 @@ const handlePackageComponentConfirm = (
   payload?: DemoActionModalResult,
 ): void => {
   packageComponentVisible.value = false
-  appendLog(t('mountedPackage.label'), {
+  appendLog(t('views.Modal.mountedPackage.label'), {
     action: 'confirm',
     data: payload,
   })
@@ -294,7 +300,7 @@ const handlePackageComponentConfirm = (
 
 const handlePackageComponentCancel = (): void => {
   packageComponentVisible.value = false
-  appendLog(t('mountedPackage.label'), {
+  appendLog(t('views.Modal.mountedPackage.label'), {
     action: 'cancel',
     data: undefined,
   })
@@ -303,80 +309,90 @@ const handlePackageComponentCancel = (): void => {
 const openQueuedModals = async (): Promise<void> => {
   const queueTasks = [
     {
-      label: t('queue.metricsFirst.label'),
+      label: t('views.Modal.queue.metricsFirst.label'),
       open: () =>
         settleModal(
           openModal<MetricsSnapshotModalRequest, MetricsSnapshotModalResult>(
             MetricsSnapshotModal,
             {
-              title: t('queue.metricsFirst.title'),
-              heading: t('queue.metricsFirst.heading'),
+              title: t('views.Modal.queue.metricsFirst.title'),
+              heading: t('views.Modal.queue.metricsFirst.heading'),
               metrics: [
                 {
-                  label: t('queue.metricsFirst.metrics.length.label'),
+                  label: t(
+                    'views.Modal.queue.metricsFirst.metrics.length.label',
+                  ),
                   value: '3',
-                  note: t('queue.metricsFirst.metrics.length.note'),
+                  note: t('views.Modal.queue.metricsFirst.metrics.length.note'),
                 },
                 {
-                  label: t('queue.metricsFirst.metrics.type.label'),
+                  label: t('views.Modal.queue.metricsFirst.metrics.type.label'),
                   value: 'metrics',
-                  note: t('queue.metricsFirst.metrics.type.note'),
+                  note: t('views.Modal.queue.metricsFirst.metrics.type.note'),
                 },
               ],
-              defaultMetric: t('queue.metricsFirst.defaultMetric'),
-              okText: t('queue.metricsFirst.okText'),
-              cancelText: t('queue.metricsFirst.cancelText'),
+              defaultMetric: t('views.Modal.queue.metricsFirst.defaultMetric'),
+              okText: t('views.Modal.queue.metricsFirst.okText'),
+              cancelText: t('views.Modal.queue.metricsFirst.cancelText'),
               size: 'small',
             },
           ),
         ),
     },
     {
-      label: t('queue.checklistSecond.label'),
+      label: t('views.Modal.queue.checklistSecond.label'),
       open: () =>
         settleModal(
           openModal<ChecklistReviewModalRequest, ChecklistReviewModalResult>(
             ChecklistReviewModal,
             {
-              title: t('queue.checklistSecond.title'),
-              summary: t('queue.checklistSecond.summary'),
+              title: t('views.Modal.queue.checklistSecond.title'),
+              summary: t('views.Modal.queue.checklistSecond.summary'),
               items: [
-                t('queue.checklistSecond.items.closed'),
-                t('queue.checklistSecond.items.switched'),
-                t('queue.checklistSecond.items.pendingLog'),
+                t('views.Modal.queue.checklistSecond.items.closed'),
+                t('views.Modal.queue.checklistSecond.items.switched'),
+                t('views.Modal.queue.checklistSecond.items.pendingLog'),
               ],
-              initialChecked: [t('queue.checklistSecond.items.closed')],
-              okText: t('queue.checklistSecond.okText'),
-              cancelText: t('queue.checklistSecond.cancelText'),
+              initialChecked: [
+                t('views.Modal.queue.checklistSecond.items.closed'),
+              ],
+              okText: t('views.Modal.queue.checklistSecond.okText'),
+              cancelText: t('views.Modal.queue.checklistSecond.cancelText'),
               size: 'small',
             },
           ),
         ),
     },
     {
-      label: t('queue.metricsThird.label'),
+      label: t('views.Modal.queue.metricsThird.label'),
       open: () =>
         settleModal(
           openModal<MetricsSnapshotModalRequest, MetricsSnapshotModalResult>(
             MetricsSnapshotModal,
             {
-              title: t('queue.metricsThird.title'),
-              heading: t('queue.metricsThird.heading'),
+              title: t('views.Modal.queue.metricsThird.title'),
+              heading: t('views.Modal.queue.metricsThird.heading'),
               metrics: [
                 {
-                  label: t('queue.metricsThird.metrics.order.label'),
-                  value: t('queue.metricsThird.metrics.order.value'),
-                  note: t('queue.metricsThird.metrics.order.note'),
+                  label: t(
+                    'views.Modal.queue.metricsThird.metrics.order.label',
+                  ),
+                  value: t(
+                    'views.Modal.queue.metricsThird.metrics.order.value',
+                  ),
+                  note: t('views.Modal.queue.metricsThird.metrics.order.note'),
                 },
                 {
-                  label: t('queue.metricsThird.metrics.width.label'),
+                  label: t(
+                    'views.Modal.queue.metricsThird.metrics.width.label',
+                  ),
                   value: '680',
-                  note: t('queue.metricsThird.metrics.width.note'),
+                  note: t('views.Modal.queue.metricsThird.metrics.width.note'),
                 },
               ],
-              defaultMetric: t('queue.metricsThird.defaultMetric'),
-              okText: t('queue.metricsThird.okText'),
-              cancelText: t('queue.metricsThird.cancelText'),
+              defaultMetric: t('views.Modal.queue.metricsThird.defaultMetric'),
+              okText: t('views.Modal.queue.metricsThird.okText'),
+              cancelText: t('views.Modal.queue.metricsThird.cancelText'),
               size: 'medium',
               width: 680,
             },
@@ -408,13 +424,13 @@ const openQueuedModals = async (): Promise<void> => {
         <p
           class="mb-2.5 text-[0.85rem] font-bold uppercase tracking-[0.08em] text-[#2f6fed]"
         >
-          {{ t('page.eyebrow') }}
+          {{ t('views.Modal.page.eyebrow') }}
         </p>
         <h1 class="text-[clamp(1.8rem,4vw,2.5rem)] font-semibold">
-          {{ t('page.title') }}
+          {{ t('views.Modal.page.title') }}
         </h1>
         <p class="mt-3 max-w-3xl text-[#53708d]">
-          {{ t('page.description') }}
+          {{ t('views.Modal.page.description') }}
         </p>
       </section>
 
@@ -422,10 +438,10 @@ const openQueuedModals = async (): Promise<void> => {
         <article class="page-surface p-6">
           <div class="flex flex-col gap-3">
             <h2 class="text-[1.15rem] font-semibold">
-              {{ t('page.caseTitle') }}
+              {{ t('views.Modal.page.caseTitle') }}
             </h2>
             <p class="text-sm leading-6 text-[#5a738e]">
-              {{ t('page.caseDescription') }}
+              {{ t('views.Modal.page.caseDescription') }}
             </p>
           </div>
 
@@ -433,26 +449,26 @@ const openQueuedModals = async (): Promise<void> => {
             <section class="case-card">
               <div class="flex flex-wrap items-center justify-between gap-3">
                 <h3 class="case-card__title">
-                  {{ t('mountedPackage.label') }}
+                  {{ t('views.Modal.mountedPackage.label') }}
                 </h3>
                 <span class="status-tag">
-                  {{ t('mountedPackage.componentLabel') }}
+                  {{ t('views.Modal.mountedPackage.componentLabel') }}
                 </span>
               </div>
 
               <p class="case-card__summary">
-                {{ t('mountedPackage.summary') }}
+                {{ t('views.Modal.mountedPackage.summary') }}
               </p>
 
               <div class="case-chip-list">
                 <span class="case-chip">
-                  {{ t('mountedPackage.checks.mount') }}
+                  {{ t('views.Modal.mountedPackage.checks.mount') }}
                 </span>
                 <span class="case-chip">
-                  {{ t('mountedPackage.checks.component') }}
+                  {{ t('views.Modal.mountedPackage.checks.component') }}
                 </span>
                 <span class="case-chip">
-                  {{ t('mountedPackage.checks.response') }}
+                  {{ t('views.Modal.mountedPackage.checks.response') }}
                 </span>
               </div>
 
@@ -461,7 +477,7 @@ const openQueuedModals = async (): Promise<void> => {
                 class="action--primary"
                 @click="openPackageComponentDemo"
               >
-                {{ t('actions.openMountedPackage') }}
+                {{ t('views.Modal.actions.openMountedPackage') }}
               </button>
             </section>
 
@@ -498,30 +514,32 @@ const openQueuedModals = async (): Promise<void> => {
                 "
                 @click="openDemoCase(demoCase)"
               >
-                {{ t('actions.openCase', { label: demoCase.label }) }}
+                {{
+                  t('views.Modal.actions.openCase', { label: demoCase.label })
+                }}
               </button>
             </section>
           </div>
 
           <div class="tips-panel mt-6">
             <div class="flex items-center justify-between gap-3">
-              <p class="tips-title">{{ t('queue.title') }}</p>
+              <p class="tips-title">{{ t('views.Modal.queue.title') }}</p>
               <button
                 type="button"
                 class="action--ghost action--inline"
                 @click="openQueuedModals"
               >
-                {{ t('actions.openQueued') }}
+                {{ t('views.Modal.actions.openQueued') }}
               </button>
             </div>
             <p>
-              {{ t('queue.tips.order') }}
+              {{ t('views.Modal.queue.tips.order') }}
             </p>
             <p>
-              {{ t('queue.tips.props') }}
+              {{ t('views.Modal.queue.tips.props') }}
             </p>
             <p>
-              {{ t('queue.tips.logs') }}
+              {{ t('views.Modal.queue.tips.logs') }}
             </p>
           </div>
         </article>
@@ -529,9 +547,11 @@ const openQueuedModals = async (): Promise<void> => {
         <article class="page-surface p-6">
           <div class="flex items-center justify-between gap-3">
             <h2 class="text-[1.15rem] font-semibold">
-              {{ t('page.resultTitle') }}
+              {{ t('views.Modal.page.resultTitle') }}
             </h2>
-            <span class="status-tag">{{ t('page.resultTag') }}</span>
+            <span class="status-tag">{{
+              t('views.Modal.page.resultTag')
+            }}</span>
           </div>
 
           <div class="log-list mt-5">

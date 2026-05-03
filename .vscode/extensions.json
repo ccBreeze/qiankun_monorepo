@@ -6,7 +6,7 @@
     "bradlc.vscode-tailwindcss",
     "editorconfig.editorconfig",
     "ms-vscode.vscode-typescript-next",
-    "redhat.vscode-yaml"
-  ],
-  "unwantedRecommendations": []
+    "redhat.vscode-yaml",
+    "lokalise.i18n-ally"
+  ]
 }

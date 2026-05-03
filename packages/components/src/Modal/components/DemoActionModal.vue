@@ -5,19 +5,23 @@
         {{ description }}
       </p>
 
-      <label class="field-label" for="demo-modal-remark">处理备注</label>
+      <label class="field-label" for="demo-modal-remark">{{
+        t('Modal.DemoActionModal.remarkLabel')
+      }}</label>
       <textarea
         id="demo-modal-remark"
         v-model="remark"
         class="field-input"
         rows="4"
-        placeholder="这里可以模拟业务弹窗里的额外表单内容"
+        :placeholder="t('Modal.DemoActionModal.remarkPlaceholder')"
       />
 
       <div class="api-card">
-        <p class="api-card__title">确认后模拟接口返回</p>
+        <p class="api-card__title">
+          {{ t('Modal.DemoActionModal.apiCardTitle') }}
+        </p>
         <p class="api-card__text">
-          会等待 1 秒，再回传一个包含单号、状态、操作人和备注的响应对象。
+          {{ t('Modal.DemoActionModal.apiCardText') }}
         </p>
       </div>
     </div>
@@ -53,9 +57,12 @@ export type DemoActionModalProps = DemoActionModalOwnProps &
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import BaseModal from '../BaseModal.vue'
 
 const props = defineProps<DemoActionModalProps>()
+
+const { t } = useI18n({ useScope: 'global' })
 
 const remark = ref(props.initialRemark ?? '')
 
@@ -65,7 +72,7 @@ const createMockResponse = (): Promise<DemoActionModalResult> => {
       resolve({
         ticketId: `API-${Date.now().toString().slice(-6)}`,
         status: 'success',
-        operatorName: '演示账号',
+        operatorName: t('Modal.DemoActionModal.operatorName'),
         remark: remark.value.trim(),
         processedAt: new Date().toLocaleString('zh-CN', { hour12: false }),
       })

@@ -1,4 +1,5 @@
 import { setupComponentsI18n } from '@breeze/components'
+import type { I18nInstance } from '@breeze/i18n'
 import type { App } from 'vue'
 
 const localeModules = import.meta.glob('./**/*.json', {
@@ -6,5 +7,9 @@ const localeModules = import.meta.glob('./**/*.json', {
   import: 'default',
 })
 
-export const setupLocaleMessages = (app: App) =>
-  setupComponentsI18n(app, localeModules)
+export let i18n: I18nInstance
+
+export const setupLocaleMessages = (app: App) => {
+  i18n = setupComponentsI18n(app, localeModules)
+  return i18n
+}
