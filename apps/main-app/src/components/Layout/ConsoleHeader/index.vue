@@ -15,7 +15,7 @@
 
     <div class="right">
       <div class="multilingual-wrap">
-        <MultipleLanguages />
+        <LocaleSwitcher />
       </div>
       <UserAvatarTooltip />
     </div>
@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import ShuntMenuButton from './components/ShuntMenuButton.vue'
 import UserAvatarTooltip from './components/UserAvatarTooltip.vue'
-import MultipleLanguages from '@/components/MultipleLanguages/MultipleLanguages.vue'
+import LocaleSwitcher from './components/LocaleSwitcher.vue'
 import { useMenuStore } from '@/stores/menu'
 
 const { menuMap, activeMenuKey } = storeToRefs(useMenuStore())
