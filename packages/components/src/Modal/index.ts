@@ -1,3 +1,4 @@
+export { default as ModalContainer } from './ModalContainer.vue'
 export { ModalEnum, ModalMap, openModal } from './open'
 export type * from './types'
 

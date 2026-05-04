@@ -9,7 +9,7 @@
   >
     <div class="multilanguage-trigger">
       <SvgIcon name="multilanguage" />
-      <span class="mx-1 text-[12px]">{{ localeDic[localeKey] }}</span>
+      <span class="mx-1 text-[12px]">{{ localeDic[locale] }}</span>
       <SvgIcon name="arrow-down" size="small" />
     </div>
 
@@ -29,22 +29,24 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+import { I18N_LOCALE_STORAGE_KEY } from '@breeze/i18n'
 import SvgIcon from '@/components/SvgIcon/SvgIcon.vue'
+import { emitLocaleChange } from '@/utils/channel'
 
-// 字典
-const localeDic = {
+const { locale } = useI18n({ useScope: 'global' })
+
+const localeDic: Record<string, string> = {
   en: 'English',
-  hk: '中文繁體',
-  cn: '中文简体',
-} as const
-
-type LocaleKey = keyof typeof localeDic
+  'zh-CN': '中文简体',
+}
 
 const open = ref(false)
-const localeKey = ref<LocaleKey>('en')
 
-const switchMultilanguage = (key: LocaleKey) => {
-  localeKey.value = key
+const switchMultilanguage = (key: string) => {
+  locale.value = key
+  localStorage.setItem(I18N_LOCALE_STORAGE_KEY, key)
+  emitLocaleChange({ locale: key })
   open.value = false
 }
 </script>

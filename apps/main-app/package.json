@@ -16,6 +16,8 @@
   "dependencies": {
     "@ant-design/icons-vue": "catalog:",
     "@breeze/components": "workspace:*",
+    "@breeze/i18n": "workspace:*",
+    "vue-i18n": "catalog:",
     "@breeze/router": "workspace:*",
     "@breeze/runtime": "workspace:*",
     "@breeze/utils": "workspace:*",

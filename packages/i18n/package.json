@@ -1,0 +1,29 @@
+{
+  "name": "@breeze/i18n",
+  "version": "1.0.0",
+  "description": "Breeze 国际化配置",
+  "type": "module",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "type-check": "tsc",
+    "lint": "eslint . --max-warnings=0 --cache",
+    "lint:fix": "eslint . --fix --cache"
+  },
+  "dependencies": {
+    "@breeze/runtime": "workspace:*"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.25",
+    "vue-i18n": "^11.2.2"
+  },
+  "devDependencies": {
+    "@breeze/eslint-config": "workspace:*",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vue": "catalog:",
+    "vue-i18n": "catalog:"
+  }
+}

@@ -34,6 +34,12 @@ export const sidebar: DefaultTheme.SidebarMulti = {
       ],
     },
   ],
+  '/packages/i18n/': [
+    {
+      text: 'i18n',
+      items: [{ text: '@breeze/i18n', link: '/packages/i18n/' }],
+    },
+  ],
   '/packages/vite-config/': [
     {
       text: 'vite-config',

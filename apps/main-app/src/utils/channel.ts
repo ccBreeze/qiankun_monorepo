@@ -1,6 +1,7 @@
 import {
   RUNTIME_EVENTS,
   qiankunRuntime,
+  type LocaleChangePayload,
   type TabNavigateRequestPayload,
   type TabRemovePayload,
   type TabRemoveRequestPayload,
@@ -32,4 +33,9 @@ export const setupRuntimeChannels = () => {
 /** @see {@link RUNTIME_EVENTS.TAB_REMOVE} */
 export const emitTabRemove = (payload: TabRemovePayload) => {
   channel.emit(RUNTIME_EVENTS.TAB_REMOVE, payload)
+}
+
+/** @see {@link RUNTIME_EVENTS.LOCALE_CHANGE} */
+export const emitLocaleChange = (payload: LocaleChangePayload) => {
+  channel.emit(RUNTIME_EVENTS.LOCALE_CHANGE, payload)
 }

@@ -36,6 +36,10 @@ export const nav: DefaultTheme.NavItem[] = [
         text: '@breeze/components',
         link: firstLink('/packages/components/'),
       },
+      {
+        text: '@breeze/i18n',
+        link: firstLink('/packages/i18n/'),
+      },
     ],
   },
 ]

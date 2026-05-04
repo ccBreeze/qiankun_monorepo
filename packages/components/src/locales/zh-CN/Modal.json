@@ -1,0 +1,9 @@
+{
+  "DemoActionModal": {
+    "remarkLabel": "处理备注",
+    "remarkPlaceholder": "这里可以模拟业务弹窗里的额外表单内容",
+    "apiCardTitle": "确认后模拟接口返回",
+    "apiCardText": "会等待 1 秒，再回传一个包含单号、状态、操作人和备注的响应对象。",
+    "operatorName": "演示账号"
+  }
+}

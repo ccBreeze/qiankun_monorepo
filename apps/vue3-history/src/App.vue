@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import { useKeepAlive, useTabRemoveListener } from '@breeze/bridge-vue'
-import { AntConfigProvider } from '@breeze/components'
+import {
+  useHostLocaleSync,
+  useKeepAlive,
+  useTabRemoveListener,
+} from '@breeze/bridge-vue'
+import { AntConfigProvider, ModalContainer } from '@breeze/components'
 import { microAppContext } from '@/utils/microAppContext'
 
 const route = useRoute()
@@ -9,6 +13,7 @@ const { include, wrapKeepAliveComponent, removeTab } =
   useKeepAlive(microAppContext)
 
 useTabRemoveListener(microAppContext, removeTab)
+useHostLocaleSync()
 </script>
 
 <template>
@@ -21,5 +26,6 @@ useTabRemoveListener(microAppContext, removeTab)
         />
       </KeepAlive>
     </RouterView>
+    <ModalContainer />
   </AntConfigProvider>
 </template>

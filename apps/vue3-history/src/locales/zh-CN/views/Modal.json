@@ -1,0 +1,171 @@
+{
+  "page": {
+    "eyebrow": "vue3-history / Modal",
+    "title": "应用侧 openModal 测试页",
+    "description": "页面内现在同时保留 `DemoActionModal` 的两种接入方式：一条走 `openModal(ModalEnum.DemoActionModal)`，另一条走组件直接挂载；另外还保留 2 个应用侧本地弹窗组件的 `openModal` 测试。这样能并排验证命令式与组件式两套用法。",
+    "caseTitle": "应用侧测试用例",
+    "caseDescription": "这里同时保留组件包 `DemoActionModal` 的命令式和组件式测试，再配合应用侧组件用例一起验证。",
+    "resultTitle": "最近结果",
+    "resultTag": "Promise 回传日志"
+  },
+  "actions": {
+    "openCase": "打开 {label}",
+    "openMountedPackage": "打开组件包组件挂载",
+    "openQueued": "连续打开 3 个排队弹窗"
+  },
+  "logs": {
+    "initial": "点击任一用例后，这里会记录 Promise 的 resolve / reject 结果。",
+    "confirmAction": "确认关闭",
+    "cancelAction": "取消关闭",
+    "emptyData": "{action}，未返回业务数据",
+    "metrics": "{action}，kind=metrics，selected={selectedMetric}，metricCount={metricCount}，processedAt={processedAt}",
+    "demoAction": "{action}，kind=demo-action，ticketId={ticketId}，status={status}，operator={operatorName}，remark={remark}，processedAt={processedAt}",
+    "checklist": "{action}，kind=checklist，completed={completedCount}，items={items}，processedAt={processedAt}",
+    "empty": "（空）",
+    "entry": "{time} {label} -> {result}"
+  },
+  "mountedPackage": {
+    "label": "组件包组件挂载",
+    "componentLabel": "DemoActionModal",
+    "summary": "这里直接在页面里挂载 `packages/components` 导出的 `DemoActionModal` 组件，用组件形式验证包内弹窗，而不是通过 `openModal` 命令式打开。",
+    "checks": {
+      "mount": "component mount",
+      "component": "package component",
+      "response": "structured response"
+    },
+    "modal": {
+      "title": "组件包内置弹窗",
+      "description": "这个用例直接在页面里挂载 DemoActionModal 组件，用来验证组件形式的接入方式，而不是通过 openModal 命令式打开。",
+      "initialRemark": "默认备注：组件形式挂载",
+      "okText": "确认调用",
+      "cancelText": "返回列表"
+    }
+  },
+  "cases": {
+    "packageImperative": {
+      "label": "组件包命令式弹窗",
+      "componentLabel": "ModalEnum.DemoActionModal",
+      "summary": "这里保留 `openModal(ModalEnum.DemoActionModal)` 的命令式用例，用来和下方的组件挂载方式做对照验证。",
+      "checks": {
+        "openModal": "openModal",
+        "modalEnum": "ModalEnum",
+        "packageComponent": "package component"
+      },
+      "modal": {
+        "title": "组件包命令式弹窗",
+        "description": "这个用例通过 ModalEnum.DemoActionModal 命中组件包内部映射，用命令式方式验证 DemoActionModal。",
+        "initialRemark": "默认备注：命令式打开",
+        "okText": "确认调用",
+        "cancelText": "返回列表"
+      }
+    },
+    "metrics": {
+      "label": "指标快照弹窗",
+      "componentLabel": "MetricsSnapshotModal",
+      "summary": "用指标卡片类组件验证不同布局结构、`size/width/centered` 透传，以及卡片选择结果。",
+      "checks": {
+        "layout": "cards layout",
+        "size": "size=medium",
+        "width": "width=720"
+      },
+      "modal": {
+        "title": "尺寸与布局透传",
+        "heading": "这里会使用更宽的弹窗并取消垂直居中，方便观察应用侧指标卡片组件在接入 BaseModal 后的布局表现。",
+        "okText": "确认指标",
+        "cancelText": "稍后再看"
+      },
+      "metrics": {
+        "successRate": {
+          "label": "打开成功率",
+          "note": "最近 24 小时"
+        },
+        "averageWait": {
+          "label": "平均等待",
+          "note": "队列峰值时段"
+        },
+        "closeTime": {
+          "label": "关闭耗时",
+          "note": "确认后回传结果"
+        }
+      }
+    },
+    "checklist": {
+      "label": "清单确认弹窗",
+      "componentLabel": "ChecklistReviewModal",
+      "summary": "用 checklist 组件验证按钮样式透传，同时确认测试页确实在使用另一种完全不同的本地弹窗实现。",
+      "checks": {
+        "list": "checkbox list",
+        "ready": "okButtonReady=false",
+        "danger": "danger button"
+      },
+      "modal": {
+        "title": "表单校验态",
+        "summary": "这个用例主要观察确定按钮置灰样式和危险态按钮配置，同时验证勾选型弹窗的确认结果。",
+        "items": {
+          "contract": "已阅读弹窗契约",
+          "closePath": "已验证关闭路径",
+          "promise": "已检查 Promise 结果"
+        },
+        "okText": "继续提交",
+        "cancelText": "取消录入"
+      }
+    }
+  },
+  "queue": {
+    "title": "串行队列验证",
+    "tips": {
+      "order": "1. 队列按钮会按顺序打开命令式 `openModal` 用例，并在不同应用侧组件之间切换。",
+      "props": "2. 第 3 个队列用例额外放大宽度，方便观察 props 在不同组件间是否互不污染。",
+      "logs": "3. 日志区会按不同 `kind` 输出各自的结果摘要，组件挂载用例也会记录在这里。"
+    },
+    "metricsFirst": {
+      "label": "排队指标弹窗 #1",
+      "title": "排队指标弹窗 #1",
+      "heading": "第一个排队弹窗使用指标卡片组件，确认 openModal 队列的第一项能正常打开。",
+      "defaultMetric": "排队长度",
+      "okText": "继续处理",
+      "cancelText": "取消队列",
+      "metrics": {
+        "length": {
+          "label": "排队长度",
+          "note": "含当前弹窗"
+        },
+        "type": {
+          "label": "组件类型",
+          "note": "第 1 个"
+        }
+      }
+    },
+    "checklistSecond": {
+      "label": "排队清单弹窗 #2",
+      "title": "排队清单弹窗 #2",
+      "summary": "第二个弹窗切换成 checklist 组件，确认队列中切换不同组件不会互相污染。",
+      "items": {
+        "closed": "第 1 项已关闭",
+        "switched": "组件已切换",
+        "pendingLog": "日志待记录"
+      },
+      "okText": "继续处理",
+      "cancelText": "取消队列"
+    },
+    "metricsThird": {
+      "label": "排队指标弹窗 #3",
+      "title": "排队指标弹窗 #3",
+      "heading": "第三个弹窗再切回指标组件，并额外放大宽度验证不同 props 不会串台。",
+      "defaultMetric": "宽度透传",
+      "okText": "完成队列",
+      "cancelText": "取消队列",
+      "metrics": {
+        "order": {
+          "label": "队列顺序",
+          "value": "正常",
+          "note": "第 3 个展示"
+        },
+        "width": {
+          "label": "宽度透传",
+          "note": "额外放大"
+        }
+      }
+    }
+  }
+}

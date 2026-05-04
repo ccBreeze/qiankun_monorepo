@@ -4,6 +4,7 @@
 
 - **`BaseModal`**：项目级通用壳，固化尺寸预设、loading 处理与样式；
 - **`openModal`**：命令式调用入口，业务以 `await` 的方式拿到弹窗结果；
+- **`ModalContainer`**：根应用级弹窗渲染容器，通过 `Teleport` 把命令式弹窗渲染到 `body`；
 - **内置弹窗注册表（`ModalEnum` / `ModalMap`）**：通过枚举派发常用业务弹窗，并自动推导 props 与结果类型。
 
 ## 何时使用
@@ -13,6 +14,25 @@
 - 需要多个弹窗按调用顺序串行展示，避免出现"同屏堆叠"。
 
 ## 代码演示
+
+### 在根应用挂载 ModalContainer
+
+命令式弹窗需要先在应用根组件内挂载一次 `ModalContainer`。它必须放在 `AntConfigProvider` 内部，这样 `openModal` 打开的弹窗可以直接继承当前应用的主题、语言包和其他 app-level provide。
+
+```vue [apps/main-app/src/App.vue]
+<template>
+  <AntConfigProvider>
+    <router-view />
+    <ModalContainer />
+  </AntConfigProvider>
+</template>
+
+<script setup lang="ts">
+import { AntConfigProvider, ModalContainer } from '@breeze/components'
+</script>
+```
+
+`ModalContainer` 内部会使用 `Teleport to="body"`，所以弹窗最终仍然渲染在 `body` 下，不会被页面局部容器的 `overflow`、`z-index` 或布局层级影响。
 
 ### 命令式打开内置弹窗
 
@@ -288,22 +308,123 @@ type Props = MyOwnProps & Pick<ModalInjectedProps<MyResult>, 'onOk'>
 
 1. **`open.ts`**：负责类型分发，把枚举映射成 `ModalMap` 中的异步组件，再交给 `openModalRequest`；
 2. **`manager.ts`**：维护一个 `Promise` 队列，让多个 `openModal` 调用按顺序展示，避免堆叠；
-3. **`render.ts`**：为单个弹窗 `createApp(...)` 一个独立 Vue 实例，外层套 `AntConfigProvider`，挂到 `document.body` 下临时容器；用户点击后 `resolve / reject`，并通过 `afterClose` 触发 `app.unmount()` + 容器移除。
+3. **`render.ts`**：为单个弹窗生成唯一 `id`，把组件、props 和注入回调写入 `modalStore`；
+4. **`ModalContainer.vue`**：订阅 `modalStore`，通过 `Teleport to="body"` 渲染当前弹窗实例；容器卸载时清空 store，避免 qiankun 子应用卸载后遗留 pending 弹窗。
 
-`render.ts` 在创建 Promise 时把 `onOk` 绑到 `resolve`、把 `onCancel` 绑到 `reject`：
+`render.ts` 在创建 Promise 时把 `onOk` 绑到 `resolve`、把 `onCancel` 绑到 `reject`，并把 `afterClose` 绑到 `removeModalInstance(id)`：
 
 ```ts
 // packages/components/src/Modal/render.ts（节选）
-const injected: ModalInjectedProps<TResult> = {
-  afterClose: cleanup,
-  onOk: (payload?: TResult) => resolve(payload), // 确定 → resolve
-  onCancel: (payload?: TResult) => reject(payload), // 取消 → reject
-}
+addModalInstance({
+  id,
+  component,
+  props: {
+    ...(props as Record<string, unknown>),
+    onOk: (payload?: TResult) => resolve(payload),
+    onCancel: (payload?: TResult) => reject(payload),
+    afterClose: () => removeModalInstance(id),
+  },
+})
+```
+
+`ModalContainer.vue` 只负责把 store 中的弹窗实例渲染出来：
+
+```vue
+<template>
+  <Teleport to="body">
+    <component
+      :is="instance.component"
+      v-for="instance in modalStore.values()"
+      :key="instance.id"
+      v-bind="instance.props"
+    />
+  </Teleport>
+</template>
 ```
 
 这是 `openModal` 对调用方的核心契约：**取消即抛出**。业务侧可以借此让 `await` 链在用户取消时自然中断，无需在父组件维护"取消标记"或额外回调。
 
-由于每个弹窗实例都自带 `AntConfigProvider`，命令式入口在 qiankun 子应用、独立路由页中都可以直接使用，不依赖业务侧的根组件。
+和早期每次 `openModal` 都创建独立 Vue app 的方案不同，现在命令式弹窗仍在根应用组件树里，只是 DOM 位置被 `Teleport` 到 `body`。因此它可以自然继承根应用上安装的能力，例如 `AntConfigProvider`、`vue-i18n`、主题配置和依赖注入；不需要再额外维护 `configureModalApp()`。
+
+## Teleport 方案的接入约束
+
+每个应用根组件只挂载一个 `ModalContainer`，通常放在应用级 provider 内部、页面主体之后：
+
+```vue [apps/vue3-history/src/App.vue]
+<script setup lang="ts">
+import { AntConfigProvider, ModalContainer } from '@breeze/components'
+</script>
+
+<template>
+  <AntConfigProvider>
+    <RouterView />
+    <ModalContainer />
+  </AntConfigProvider>
+</template>
+```
+
+`ModalContainer` 必须位于 `AntConfigProvider`、`vue-i18n`、store 等应用级上下文内部。下面这种写法不推荐，因为命令式弹窗虽然会被渲染到 `body`，但组件树上已经离开了应用 provider：
+
+```vue
+<template>
+  <AntConfigProvider>
+    <RouterView />
+  </AntConfigProvider>
+
+  <!-- 不推荐：弹窗组件拿不到 AntConfigProvider 内部提供的上下文 -->
+  <ModalContainer />
+</template>
+```
+
+`openModal` 只负责把实例写入 `modalStore`，真正渲染依赖根组件里的 `ModalContainer`。如果忘记挂载容器，Promise 会被创建，但页面不会出现弹窗：
+
+```ts [packages/components/src/Modal/render.ts]
+addModalInstance({
+  id,
+  component,
+  props: {
+    ...(props as Record<string, unknown>),
+    onOk: (payload?: TResult) => resolve(payload),
+    onCancel: (payload?: TResult) => reject(payload),
+    afterClose: () => removeModalInstance(id),
+  },
+})
+```
+
+`ModalContainer` 卸载时会清空 store，用于处理 qiankun 子应用 unmount、根应用销毁等场景，避免仍未关闭的 pending 弹窗残留：
+
+```vue [packages/components/src/Modal/ModalContainer.vue]
+<script setup lang="ts">
+import { onUnmounted } from 'vue'
+import { modalStore, resetModalStore } from './modalStore'
+
+onUnmounted(() => {
+  resetModalStore()
+})
+</script>
+
+<template>
+  <Teleport to="body">
+    <component
+      :is="instance.component"
+      v-for="instance in modalStore.values()"
+      :key="instance.id"
+      v-bind="instance.props"
+    />
+  </Teleport>
+</template>
+```
+
+`modalStore` 保存组件时使用 `markRaw(component)`，避免 Vue 把组件定义转成深层响应式对象：
+
+```ts [packages/components/src/Modal/modalStore.ts]
+export function addModalInstance(instance: ModalInstance) {
+  modalStore.set(instance.id, {
+    ...instance,
+    component: markRaw(instance.component),
+  })
+}
+```
 
 ## 注意事项
 
@@ -312,3 +433,68 @@ const injected: ModalInjectedProps<TResult> = {
 - **业务弹窗里要主动调用 `props.onOk(payload)`**，否则 `openModal` 永远不会 resolve；不需要再手动改 `visible`，关闭由 `BaseModal` 内部处理。
 - **取消会 `reject`，不会 `resolve(undefined)`**。把弹窗调用挂在 `await` 链上即可天然阻断后续业务；如需在取消分支做收尾，使用 `try/catch` 拦截，不要写"判断 result 是否为 undefined"这类代码。
 - 弹窗回调里抛错不会破坏队列（队列内部已 `catch`），但抛错时弹窗保持打开，需要在业务侧提示用户。
+
+## 如果使用 createApp 应该怎么实现
+
+当前推荐使用 `ModalContainer + Teleport`，因为它能复用根应用上下文。若某个场景必须回到独立 `createApp` 方案，需要显式补齐 app 级依赖，并在关闭后销毁独立实例：
+
+```ts
+import { createApp, h } from 'vue'
+import type { App as VueApp, Component } from 'vue'
+import AntConfigProvider from '../AntConfigProvider/index.vue'
+
+type ModalAppSetup = (app: VueApp) => void
+
+let modalAppSetup: ModalAppSetup | null = null
+
+export function configureModalApp(setup: ModalAppSetup) {
+  modalAppSetup = setup
+}
+
+export function renderModalWithCreateApp<TResult>(
+  component: Component,
+  props: Record<string, unknown>,
+) {
+  return new Promise<TResult | undefined>((resolve, reject) => {
+    const container = document.createElement('div')
+    document.body.appendChild(container)
+
+    let app: VueApp<Element> | null = null
+    const cleanup = () => {
+      app?.unmount()
+      container.remove()
+    }
+
+    const modalProps = {
+      ...props,
+      afterClose: cleanup,
+      onOk: (payload?: TResult) => resolve(payload),
+      onCancel: (payload?: TResult) => reject(payload),
+    }
+
+    app = createApp({
+      render() {
+        return h(AntConfigProvider, null, {
+          default: () => h(component, modalProps),
+        })
+      },
+    })
+
+    modalAppSetup?.(app)
+    app.mount(container)
+  })
+}
+```
+
+使用这种方案时，应用初始化阶段要把根 app 上用到的插件同步注册给命令式弹窗的独立 app，例如：
+
+```ts
+setupComponentsI18n(app, localeModules)
+configureModalApp((modalApp) => {
+  modalApp.use(i18n)
+  modalApp.use(router)
+  modalApp.provide('xxx', xxx)
+})
+```
+
+这种写法的关键是：**独立 app 不会自动继承根应用上下文**。凡是弹窗里依赖的 `i18n`、router、store、provide 或组件库配置，都必须通过 `configureModalApp` 重新安装；否则弹窗可能出现语言包缺失、注入为空或主题不一致的问题。

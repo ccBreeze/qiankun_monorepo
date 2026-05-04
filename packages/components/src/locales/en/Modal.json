@@ -1,0 +1,9 @@
+{
+  "DemoActionModal": {
+    "remarkLabel": "Handling Notes",
+    "remarkPlaceholder": "Use this area to simulate extra form content in a business modal.",
+    "apiCardTitle": "Mock API response after confirmation",
+    "apiCardText": "After a 1-second delay, a response object with ticket ID, status, operator, and notes will be returned.",
+    "operatorName": "Demo Account"
+  }
+}

@@ -3,12 +3,12 @@ packages:
   - packages/*
   - packages/bridge-react/*
   - docs
-
 catalog:
   '@ant-design/icons-vue': ^7.0.1
   '@commitlint/cli': ^20.2.0
   '@commitlint/config-conventional': ^20.2.0
   '@eslint/js': ^9.39.2
+  '@mdit/plugin-figure': ^0.23.2
   '@tailwindcss/postcss': ^4.1.18
   '@tailwindcss/vite': ^4.1.18
   '@tsconfig/node24': ^24.0.3
@@ -30,6 +30,7 @@ catalog:
   concurrently: ^9.1.2
   crypto-js: ^4.2.0
   cz-conventional-changelog: ^3.3.0
+  dayjs: ^1.11.19
   eslint: ^9.39.2
   eslint-config-prettier: ^10.1.8
   eslint-plugin-prettier: ^5.5.4
@@ -40,6 +41,7 @@ catalog:
   lint-staged: ^16.2.7
   lodash-es: ^4.17.21
   lru-cache: ^11.2.4
+  medium-zoom: ^1.1.0
   msw: ^2.7.5
   nitropack: ^2.10.4
   npm-run-all2: ^8.0.4
@@ -53,7 +55,8 @@ catalog:
   react: ^18.3.1
   react-dom: ^18.3.1
   react-router-dom: ^7.1.5
-  sass: ^1.97.1
+  rollup-plugin-visualizer: ^7.0.1
+  sass: ^1.97.3
   stylelint: ^16.26.1
   stylelint-config-recess-order: ^7.7.0
   stylelint-config-recommended-vue: ^1.6.1
@@ -72,6 +75,10 @@ catalog:
   vite-plugin-qiankun: ^1.0.15
   vite-plugin-svg-icons: ^2.0.1
   vite-plugin-vue-devtools: 8.0.5
+  vitepress: ^1.6.4
+  vitepress-plugin-group-icons: ^1.7.1
+  vitepress-plugin-llms: ^1.11.0
   vue: ^3.5.25
+  vue-i18n: ^11.4.0
   vue-router: ^4.6.3
   vue-tsc: ^3.1.5
