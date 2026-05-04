@@ -1,5 +1,5 @@
+export { default as ModalContainer } from './ModalContainer.vue'
 export { ModalEnum, ModalMap, openModal } from './open'
-export { configureModalApp } from './render'
 export type * from './types'
 
 export { default as BaseModal } from './BaseModal.vue'

@@ -5,7 +5,7 @@ import {
   useKeepAlive,
   useTabRemoveListener,
 } from '@breeze/bridge-vue'
-import { AntConfigProvider } from '@breeze/components'
+import { AntConfigProvider, ModalContainer } from '@breeze/components'
 import { microAppContext } from '@/utils/microAppContext'
 
 const route = useRoute()
@@ -26,5 +26,6 @@ useHostLocaleSync()
         />
       </KeepAlive>
     </RouterView>
+    <ModalContainer />
   </AntConfigProvider>
 </template>
