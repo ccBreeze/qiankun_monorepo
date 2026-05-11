@@ -353,6 +353,43 @@ configuration: {
 }
 ```
 
+::: details ❓ `htmlProcessor.ts` 能不能改用运行时 `window.proxy.__INJECTED_PUBLIC_PATH_BY_QIANKUN__`？
+
+**不能整体替换。** 根因是 Vite 打包产出的 `index.html` 同时包含两类需要改写的目标，它们的执行机制完全不同：
+
+```html [apps/vue3-history/dist/index.html]
+<!-- ① inline script：是 JS 代码，可执行运行时表达式 -->
+<script crossorigin="">
+  import('/assets/index-LQMfwYAD.js').finally(() => {
+    /* 回填 qiankun 生命周期 */
+  })
+</script>
+
+<!-- ② 静态 HTML 属性：浏览器按 URL 字符串解析，不执行 JS -->
+<link rel="modulepreload" href="/assets/vendor-CDg3j5Yc.js" />
+<link rel="modulepreload" href="/assets/vue-vendor-DM2I66EO.js" />
+<link rel="stylesheet" href="/assets/index-BBVUIMF_.css" />
+```
+
+| 目标                              | 性质      | 能否使用运行时变量                             |
+| --------------------------------- | --------- | ---------------------------------------------- |
+| inline `import('/assets/...')`    | JS 代码   | ✅ 可改写为 `window.proxy.__INJECTED_...` 拼接 |
+| `<link rel="modulepreload" href>` | HTML 属性 | ❌ `href` 只接受静态 URL，不会执行 JS 表达式   |
+| `<link rel="stylesheet" href>`    | HTML 属性 | ❌ 同上                                        |
+
+下面这种写法在浏览器里完全不成立 —— `href` 会被当作字面量字符串解析：
+
+```html
+<link
+  rel="stylesheet"
+  href="(window.proxy.__INJECTED_... ?? '') + '/assets/index.css'"
+/>
+```
+
+因此 `<link>` 类标签**只能**在 `getTemplate` 阶段用主应用已知的 `entry` 静态改写为绝对地址。
+
+:::
+
 改写效果示例：
 
 ![改写前：HTML 模板中的根路径 import()](./imgs/asset-path-figure-08.png)

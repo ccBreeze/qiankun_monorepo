@@ -1,0 +1,72 @@
+<mxGraphModel dx="2236" dy="1456" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="900" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+    <mxCell id="title" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=22;fillColor=none;strokeColor=none;fontColor=#333333;" value="&lt;b&gt;外部 JS 在 qiankun 沙箱中的执行链路&lt;/b&gt;" vertex="1">
+      <mxGeometry height="40" width="440" x="430" y="40" as="geometry" />
+    </mxCell>
+    <mxCell id="phase-parse" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=14;fillColor=none;strokeColor=none;fontColor=#607D8B;" value="&lt;b&gt;解析阶段&lt;/b&gt;" vertex="1">
+      <mxGeometry height="28" width="180" x="50" y="120" as="geometry" />
+    </mxCell>
+    <mxCell id="phase-sandbox" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=14;fillColor=none;strokeColor=none;fontColor=#607D8B;" value="&lt;b&gt;沙箱阶段&lt;/b&gt;" vertex="1">
+      <mxGeometry height="28" width="180" x="470" y="120" as="geometry" />
+    </mxCell>
+    <mxCell id="phase-export" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=14;fillColor=none;strokeColor=none;fontColor=#607D8B;" value="&lt;b&gt;导出阶段&lt;/b&gt;" vertex="1">
+      <mxGeometry height="28" width="180" x="890" y="120" as="geometry" />
+    </mxCell>
+    <mxCell id="node-process-tpl" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E3F2FD;strokeColor=#1565C0;strokeWidth=3;shadow=1;fontStyle=1;fontSize=15;arcSize=20;" value="&lt;b&gt;processTpl()&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#4E5B61;&quot;&gt;收集脚本 URL 与内联文本&lt;/font&gt;" vertex="1">
+      <mxGeometry height="70" width="220" x="30" y="165" as="geometry" />
+    </mxCell>
+    <mxCell id="node-exec-scripts" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF3E0;strokeColor=#E65100;strokeWidth=3;shadow=1;fontStyle=1;fontSize=15;arcSize=20;" value="&lt;b&gt;execScripts(proxy, strictGlobal)&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#4E5B61;&quot;&gt;接收沙箱代理并驱动执行&lt;/font&gt;" vertex="1">
+      <mxGeometry height="70" width="300" x="330" y="165" as="geometry" />
+    </mxCell>
+    <mxCell id="node-lifecycle" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#2E7D32;strokeWidth=3;shadow=1;fontStyle=1;fontSize=15;arcSize=20;" value="&lt;b&gt;入口脚本暴露生命周期&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#4E5B61;&quot;&gt;bootstrap / mount / unmount&lt;/font&gt;" vertex="1">
+      <mxGeometry height="70" width="250" x="840" y="165" as="geometry" />
+    </mxCell>
+    <mxCell id="node-get-external" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F1F8E9;strokeColor=#689F38;strokeWidth=3;fontStyle=1;fontSize=14;arcSize=20;" value="&lt;b&gt;getExternalScripts()&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#4E5B61;&quot;&gt;按列表 fetch 外部脚本&lt;br&gt;命中缓存则复用内容&lt;/font&gt;" vertex="1">
+      <mxGeometry height="86" width="250" x="355" y="301" as="geometry" />
+    </mxCell>
+    <mxCell id="node-get-executable" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF8E1;strokeColor=#F9A825;strokeWidth=3;fontStyle=1;fontSize=14;arcSize=20;" value="&lt;b&gt;getExecutableScript()&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#4E5B61;&quot;&gt;拼装 IIFE&lt;br&gt;bind(proxy) + with(window)&lt;/font&gt;" vertex="1">
+      <mxGeometry height="86" width="250" x="355" y="436" as="geometry" />
+    </mxCell>
+    <mxCell id="node-geval" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FCE4EC;strokeColor=#AD1457;strokeWidth=3;fontStyle=1;fontSize=14;arcSize=20;" value="&lt;b&gt;geval()&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#4E5B61;&quot;&gt;(0, eval) 全局求值&lt;br&gt;执行包装后的脚本文本&lt;/font&gt;" vertex="1">
+      <mxGeometry height="86" width="250" x="355" y="571" as="geometry" />
+    </mxCell>
+    <mxCell id="note-proxy" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECEFF1;strokeColor=#90A4AE;strokeWidth=2;fontStyle=1;fontSize=13;arcSize=16;" value="&lt;b&gt;window / self / globalThis 指向 proxy&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#4E5B61;&quot;&gt;显式全局写入落到代理对象&lt;/font&gt;" vertex="1">
+      <mxGeometry height="70" width="250" x="710" y="400" as="geometry" />
+    </mxCell>
+    <mxCell id="note-with" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECEFF1;strokeColor=#90A4AE;strokeWidth=2;fontStyle=1;fontSize=13;arcSize=16;" value="&lt;b&gt;with(window) 捕获裸写变量&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#4E5B61;&quot;&gt;foo = 1 / setTimeout(...) 进入代理查找链&lt;/font&gt;" vertex="1">
+      <mxGeometry height="70" width="260" x="710" y="480" as="geometry" />
+    </mxCell>
+    <mxCell id="note-get" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECEFF1;strokeColor=#90A4AE;strokeWidth=2;fontStyle=1;fontSize=13;arcSize=16;" value="&lt;b&gt;proxy get 兜底到真实 window&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#4E5B61;&quot;&gt;读取 location / document 等浏览器对象&lt;/font&gt;" vertex="1">
+      <mxGeometry height="70" width="250" x="705" y="579" as="geometry" />
+    </mxCell>
+    <mxCell id="summary" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E0F2F1;strokeColor=#00796B;strokeWidth=3;shadow=1;fontStyle=1;fontSize=16;arcSize=20;" value="&lt;b&gt;整体语义：写入隔离，读取共享&lt;/b&gt;" vertex="1">
+      <mxGeometry height="58" width="300" x="990" y="480" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-process-to-exec" edge="1" parent="1" source="node-process-tpl" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565C0;strokeWidth=4;endArrow=classic;jumpStyle=arc;jumpSize=6;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="node-exec-scripts">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-exec-to-lifecycle" edge="1" parent="1" source="node-exec-scripts" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E65100;strokeWidth=4;endArrow=classic;jumpStyle=arc;jumpSize=6;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="node-lifecycle">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-exec-to-external" edge="1" parent="1" source="node-exec-scripts" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#689F38;strokeWidth=3;endArrow=classic;jumpStyle=arc;jumpSize=6;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="node-get-external">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-external-to-executable" edge="1" parent="1" source="node-get-external" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#689F38;strokeWidth=3;endArrow=classic;jumpStyle=arc;jumpSize=6;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="node-get-executable">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-executable-to-geval" edge="1" parent="1" source="node-get-executable" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#F9A825;strokeWidth=3;endArrow=classic;jumpStyle=arc;jumpSize=6;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="node-geval">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-executable-to-proxy" edge="1" parent="1" source="node-get-executable" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#90A4AE;strokeWidth=2;dashed=1;dashPattern=8 4;endArrow=classic;jumpStyle=arc;jumpSize=6;exitX=1;exitY=0.3;entryX=0;entryY=0.5;" target="note-proxy">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-executable-to-with" edge="1" parent="1" source="node-get-executable" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#90A4AE;strokeWidth=2;dashed=1;dashPattern=8 4;endArrow=classic;jumpStyle=arc;jumpSize=6;exitX=1;exitY=0.7;entryX=0;entryY=0.5;" target="note-with">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-geval-to-get" edge="1" parent="1" source="node-geval" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#90A4AE;strokeWidth=2;dashed=1;dashPattern=8 4;endArrow=classic;jumpStyle=arc;jumpSize=6;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="note-get">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+  </root>
+</mxGraphModel>

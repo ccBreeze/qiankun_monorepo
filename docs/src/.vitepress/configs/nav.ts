@@ -18,6 +18,10 @@ export const nav: DefaultTheme.NavItem[] = [
     link: firstLink('/qiankun/'),
   },
   {
+    text: '微前端原理',
+    link: firstLink('/micro-frontend/'),
+  },
+  {
     text: '优化相关',
     link: firstLink('/optimization/'),
   },

@@ -12,7 +12,7 @@ export default defineConfig({
   base: process.env.VITEPRESS_BASE ?? '/',
   title: 'Docs',
   appearance: {
-    initialValue: 'dark',
+    initialValue: 'light',
   },
   markdown: {
     theme: {

@@ -1,0 +1,115 @@
+<mxGraphModel dx="3353" dy="2183" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1240" pageHeight="1440" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+    <mxCell id="title" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=22;fillColor=none;strokeColor=none;fontColor=#263238;" value="&lt;b&gt;vite-plugin-qiankun 流程&lt;/b&gt;" vertex="1">
+      <mxGeometry height="40" width="620" x="340" y="40" as="geometry" />
+    </mxCell>
+    <mxCell id="tc3atqwQg-Ff20DS_BRD-5" edge="1" parent="1" source="group-build" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#E65100;strokeWidth=4;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;jumpStyle=arc;jumpSize=6;endArrow=classic;dashed=1;" target="group-sync">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="tc3atqwQg-Ff20DS_BRD-6" edge="1" parent="1" source="group-build" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;strokeColor=#2E7D32;strokeWidth=4;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;jumpStyle=arc;jumpSize=6;endArrow=classic;dashed=1;" target="group-async">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="group-build" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F7FAFC;strokeColor=#90A4AE;strokeWidth=2;arcSize=10;" value="" vertex="1">
+      <mxGeometry height="435" width="820" x="250" y="115" as="geometry" />
+    </mxCell>
+    <mxCell id="group-sync" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF8E1;strokeColor=#F9A825;strokeWidth=2;arcSize=10;" value="" vertex="1">
+      <mxGeometry height="568" width="480" x="130" y="612" as="geometry" />
+    </mxCell>
+    <mxCell id="group-async" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#43A047;strokeWidth=2;arcSize=10;" value="" vertex="1">
+      <mxGeometry height="568" width="470" x="700" y="612" as="geometry" />
+    </mxCell>
+    <mxCell id="label-build" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=16;fillColor=none;strokeColor=none;fontColor=#455A64;" value="&lt;b&gt;构建 / 开发阶段：把 ESM 入口改写成普通脚本里的动态 import&lt;/b&gt;" vertex="1">
+      <mxGeometry height="30" width="720" x="290" y="135" as="geometry" />
+    </mxCell>
+    <mxCell id="label-sync" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=16;fillColor=none;strokeColor=none;fontColor=#8A5A00;" value="&lt;b&gt;同步阶段：qiankun 先拿到占位生命周期&lt;/b&gt;" vertex="1">
+      <mxGeometry height="30" width="400" x="165" y="632" as="geometry" />
+    </mxCell>
+    <mxCell id="label-async" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=16;fillColor=none;strokeColor=none;fontColor=#2E7D32;" value="&lt;b&gt;异步阶段：ESM 执行后回写真实生命周期&lt;/b&gt;" vertex="1">
+      <mxGeometry height="30" width="400" x="735" y="632" as="geometry" />
+    </mxCell>
+    <mxCell id="node-html" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECEFF1;strokeColor=#607D8B;strokeWidth=3;fontStyle=1;fontSize=14;arcSize=18;" value="&lt;b&gt;Vite HTML 入口&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#4E5B61;&quot;&gt;script type=module&lt;/font&gt;" vertex="1">
+      <mxGeometry height="78" width="280" x="510" y="190" as="geometry" />
+    </mxCell>
+    <mxCell id="node-transform" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E3F2FD;strokeColor=#1565C0;strokeWidth=3;shadow=1;fontStyle=1;fontSize=14;arcSize=18;" value="&lt;b&gt;transformIndexHtml()&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#4E5B61;&quot;&gt;扫描 module / crossorigin 脚本&lt;/font&gt;" vertex="1">
+      <mxGeometry height="88" width="280" x="510" y="300" as="geometry" />
+    </mxCell>
+    <mxCell id="node-module-import" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E0F2F1;strokeColor=#00796B;strokeWidth=3;shadow=1;fontStyle=1;fontSize=14;arcSize=18;" value="&lt;b&gt;module2DynamicImport()&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#4E5B61;&quot;&gt;移除 src/type&lt;br&gt;改为 import(src)&lt;/font&gt;" vertex="1">
+      <mxGeometry height="98" width="280" x="510" y="415" as="geometry" />
+    </mxCell>
+    <mxCell id="node-dev" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F1F8E9;strokeColor=#689F38;strokeWidth=2;fontStyle=1;fontSize=13;arcSize=18;" value="&lt;b&gt;configureServer()&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#4E5B61;&quot;&gt;dev 下额外改写 @vite/client&lt;/font&gt;" vertex="1">
+      <mxGeometry height="78" width="200" x="850" y="425" as="geometry" />
+    </mxCell>
+    <mxCell id="node-helper" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF3E0;strokeColor=#E65100;strokeWidth=3;shadow=1;fontStyle=1;fontSize=14;arcSize=18;" value="&lt;b&gt;createQiankunHelper()&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#4E5B61;&quot;&gt;注入普通 script&lt;br&gt;创建 deferred&lt;/font&gt;" vertex="1">
+      <mxGeometry height="92" width="260" x="235" y="707" as="geometry" />
+    </mxCell>
+    <mxCell id="node-exec" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF3E0;strokeColor=#E65100;strokeWidth=3;fontStyle=1;fontSize=14;arcSize=18;" value="&lt;b&gt;execScripts(proxy)&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#4E5B61;&quot;&gt;eval 执行普通脚本&lt;/font&gt;" vertex="1">
+      <mxGeometry height="82" width="260" x="235" y="827" as="geometry" />
+    </mxCell>
+    <mxCell id="node-placeholder" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFDE7;strokeColor=#F9A825;strokeWidth=3;fontStyle=1;fontSize=14;arcSize=18;" value="&lt;b&gt;window[appName]&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#4E5B61;&quot;&gt;拿到 bootstrap / mount / unmount 占位函数&lt;/font&gt;" vertex="1">
+      <mxGeometry height="92" width="260" x="235" y="937" as="geometry" />
+    </mxCell>
+    <mxCell id="node-call-mount" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF8E1;strokeColor=#F9A825;strokeWidth=3;fontStyle=1;fontSize=14;arcSize=18;" value="&lt;b&gt;mount(props)&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#4E5B61;&quot;&gt;返回 deferred.promise&lt;br&gt;等待真实回调&lt;/font&gt;" vertex="1">
+      <mxGeometry height="92" width="260" x="235" y="1057" as="geometry" />
+    </mxCell>
+    <mxCell id="node-import" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#2E7D32;strokeWidth=3;shadow=1;fontStyle=1;fontSize=14;arcSize=18;" value="&lt;b&gt;import(&#39;/src/main.ts&#39;)&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#4E5B61;&quot;&gt;浏览器原生加载 ESM&lt;/font&gt;" vertex="1">
+      <mxGeometry height="92" width="260" x="805" y="707" as="geometry" />
+    </mxCell>
+    <mxCell id="node-main" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F1F8E9;strokeColor=#689F38;strokeWidth=3;fontStyle=1;fontSize=14;arcSize=18;" value="&lt;b&gt;main.ts&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#4E5B61;&quot;&gt;执行子应用入口模块&lt;/font&gt;" vertex="1">
+      <mxGeometry height="82" width="260" x="805" y="827" as="geometry" />
+    </mxCell>
+    <mxCell id="node-register" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#2E7D32;strokeWidth=3;fontStyle=1;fontSize=14;arcSize=18;" value="&lt;b&gt;renderWithQiankun()&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#4E5B61;&quot;&gt;注册真实生命周期&lt;br&gt;到 moudleQiankunAppLifeCycles&lt;/font&gt;" vertex="1">
+      <mxGeometry height="92" width="260" x="805" y="937" as="geometry" />
+    </mxCell>
+    <mxCell id="node-resolve" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E3F2FD;strokeColor=#1565C0;strokeWidth=3;shadow=1;fontStyle=1;fontSize=14;arcSize=18;" value="&lt;b&gt;window.proxy.vite*&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 12px; color: rgb(78, 91, 97);&quot;&gt;入口模块执行完成后读取回调&lt;br&gt;resolve deferred&lt;/font&gt;" vertex="1">
+      <mxGeometry height="92" width="260" x="805" y="1057" as="geometry" />
+    </mxCell>
+    <mxCell id="node-real-mount" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E3F2FD;strokeColor=#1565C0;strokeWidth=3;shadow=1;fontStyle=1;fontSize=15;arcSize=18;" value="&lt;b&gt;真实 mount(props)&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px;color:#4E5B61;&quot;&gt;createApp / router / pinia&lt;br&gt;挂载到 qiankun container&lt;/font&gt;" vertex="1">
+      <mxGeometry height="100" width="350" x="475" y="1270" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-html-to-transform" edge="1" parent="1" source="node-html" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565C0;strokeWidth=4;endArrow=classic;jumpStyle=arc;jumpSize=6;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="node-transform">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-transform-to-module" edge="1" parent="1" source="node-transform" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565C0;strokeWidth=4;endArrow=classic;jumpStyle=arc;jumpSize=6;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="node-module-import">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-dev-to-module" edge="1" parent="1" source="node-dev" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#689F38;strokeWidth=2;dashed=1;dashPattern=8 4;endArrow=classic;jumpStyle=arc;jumpSize=6;exitX=0;exitY=0.5;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="node-module-import">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-helper-to-exec" edge="1" parent="1" source="node-helper" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E65100;strokeWidth=4;endArrow=classic;jumpStyle=arc;jumpSize=6;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="node-exec">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-exec-to-placeholder" edge="1" parent="1" source="node-exec" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#E65100;strokeWidth=4;endArrow=classic;jumpStyle=arc;jumpSize=6;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="node-placeholder">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-placeholder-to-call" edge="1" parent="1" source="node-placeholder" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#F9A825;strokeWidth=4;endArrow=classic;jumpStyle=arc;jumpSize=6;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="node-call-mount">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-import-to-main" edge="1" parent="1" source="node-import" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2E7D32;strokeWidth=4;endArrow=classic;jumpStyle=arc;jumpSize=6;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="node-main">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-main-to-register" edge="1" parent="1" source="node-main" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2E7D32;strokeWidth=4;endArrow=classic;jumpStyle=arc;jumpSize=6;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="node-register">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-register-to-resolve" edge="1" parent="1" source="node-register" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2E7D32;strokeWidth=4;endArrow=classic;jumpStyle=arc;jumpSize=6;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" target="node-resolve">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="edge-call-to-real" edge="1" parent="1" source="node-call-mount" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#F9A825;strokeWidth=4;dashed=1;dashPattern=8 4;endArrow=classic;jumpStyle=arc;jumpSize=6;exitX=0.5;exitY=1;entryX=0.25;entryY=0;" target="node-real-mount">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="365" y="1220" />
+          <mxPoint x="562" y="1220" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge-resolve-to-real" edge="1" parent="1" source="node-resolve" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565C0;strokeWidth=4;endArrow=classic;jumpStyle=arc;jumpSize=6;exitX=0.5;exitY=1;entryX=0.75;entryY=0;" target="node-real-mount">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="935" y="1210" />
+          <mxPoint x="738" y="1210" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+  </root>
+</mxGraphModel>

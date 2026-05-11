@@ -34,6 +34,34 @@ export const sidebar: DefaultTheme.SidebarMulti = {
       ],
     },
   ],
+  '/micro-frontend/': [
+    {
+      text: '微前端原理',
+      items: [
+        {
+          text: 'qiankun 原理',
+          link: '/micro-frontend/qiankun-principle',
+        },
+        {
+          text: 'vite-plugin-qiankun 解决了什么问题',
+          link: '/micro-frontend/vite-plugin-qiankun',
+        },
+        // {
+        //   text: '为什么不使用 Module Federation',
+        //   link: '/micro-frontend/why-not-module-federation',
+        // },
+      ],
+    },
+    // {
+    //   text: '面试 QA',
+    //   items: [
+    //     {
+    //       text: '微前端中台架构升级 · 面试 QA',
+    //       link: '/micro-frontend/interview-qa',
+    //     },
+    //   ],
+    // },
+  ],
   '/packages/i18n/': [
     {
       text: 'i18n',
@@ -103,7 +131,6 @@ export const sidebar: DefaultTheme.SidebarMulti = {
       items: [
         { text: 'Vite 动态修改 base', link: '/qiankun/asset-path' },
         { text: 'OCRM 接入问题排查', link: '/qiankun/ocrm-troubleshooting' },
-        { text: 'CSS 样式隔离', link: '/qiankun/style-isolation' },
         { text: '常见问题与解决方案', link: '/qiankun/troubleshooting' },
       ],
     },
