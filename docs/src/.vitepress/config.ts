@@ -31,6 +31,13 @@ export default defineConfig({
       level: [2, 3],
       label: '目录',
     },
+    socialLinks: [
+      {
+        icon: 'github',
+        link: 'https://github.com/ccbreeze/qiankun_monorepo',
+        ariaLabel: 'GitHub 仓库',
+      },
+    ],
   },
   vite: {
     plugins: [groupIconVitePlugin(), llmstxt()],
