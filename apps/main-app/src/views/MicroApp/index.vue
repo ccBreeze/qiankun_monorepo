@@ -13,10 +13,13 @@
 import { storeToRefs } from 'pinia'
 import { useMicroAppStore } from '@/stores/microApp'
 import { installMicroAppAssetRuntime } from '@/utils/microApp/assetsPath'
+import { prefetchMicroApps } from '@/utils/microApp/prefetch'
 
 const { activeMicroApp, microAppConfigs } = storeToRefs(useMicroAppStore())
 
 installMicroAppAssetRuntime()
+
+prefetchMicroApps()
 </script>
 
 <style lang="scss" scoped>

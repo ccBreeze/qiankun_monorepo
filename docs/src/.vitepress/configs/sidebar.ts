@@ -130,6 +130,7 @@ export const sidebar: DefaultTheme.SidebarMulti = {
       text: '其他',
       items: [
         { text: 'Vite 动态修改 base', link: '/qiankun/asset-path' },
+        { text: '子应用资源预加载', link: '/qiankun/micro-app-prefetch' },
         { text: 'OCRM 接入问题排查', link: '/qiankun/ocrm-troubleshooting' },
         { text: '常见问题与解决方案', link: '/qiankun/troubleshooting' },
       ],
