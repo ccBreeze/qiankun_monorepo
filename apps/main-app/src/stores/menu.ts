@@ -20,17 +20,17 @@ interface MenuModule {
 
 const menuModuleConfigs = [
   {
+    menuKey: 'crmReadFunctionList',
+    fallbackActiveRule: MICRO_APP_ACTIVE_RULE.VUE3_HISTORY,
+    title: '会员管理',
+    iconName: 'menu-membership-management',
+  },
+  {
     // 对应 UserData 中的字段名
     menuKey: 'coms8ReadFunctionList',
     fallbackActiveRule: MICRO_APP_ACTIVE_RULE.OCRM,
     title: '餐饮管理',
     iconName: 'menu-catering-management',
-  },
-  {
-    menuKey: 'crmReadFunctionList',
-    fallbackActiveRule: MICRO_APP_ACTIVE_RULE.VUE3_HISTORY,
-    title: '会员管理',
-    iconName: 'menu-membership-management',
   },
 ]
 
