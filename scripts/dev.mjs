@@ -1,95 +1,54 @@
 #!/usr/bin/env node
 import { execSync } from 'child_process'
-import { readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
 
 /**
  * 所有可启动的 dev 服务 —— 唯一数据源
  * 新增应用只需在此追加一条记录，dev [name] 与 dev:all 自动生效
  *
- * @type {Array<{
- *   name: string
- *   cmd: string
- *   color: string
- *   portSource: { type: 'regex' | 'package-json-script', file: string, pattern?: RegExp, scriptName?: string }
- * }>}
+ * @type {Array<{ name: string; cmd: string; color: string; port: number }>}
  */
 const apps = [
   {
     name: 'mock',
     cmd: 'pnpm --filter @breeze/mock-server run dev',
     color: 'yellow',
-    portSource: {
-      type: 'package-json-script',
-      file: 'apps/mock-server/package.json',
-      scriptName: 'dev',
-    },
+    port: 8200,
   },
   {
     name: 'main',
     cmd: 'pnpm --filter main-app run dev',
     color: 'blue',
-    portSource: {
-      type: 'regex',
-      file: 'apps/main-app/vite.config.ts',
-      pattern: /port:\s*(\d+)/,
-    },
+    port: 8100,
   },
   {
     name: 'vue3-history',
     cmd: 'pnpm --filter vue3-history run dev',
     color: 'green',
-    portSource: {
-      type: 'regex',
-      file: 'apps/vue3-history/vite.config.ts',
-      pattern: /port:\s*(\d+)/,
-    },
+    port: 8101,
+  },
+  {
+    name: 'ocrm',
+    cmd: 'pnpm --filter ocrm run dev',
+    color: 'cyan',
+    port: 8102,
+  },
+  {
+    name: 'vue3-crm-v8',
+    cmd: 'pnpm --filter vue3-crm-v8 run dev',
+    color: 'gray',
+    port: 8103,
   },
   {
     name: 'docs',
     cmd: 'pnpm --prefix docs run dev',
     color: 'magenta',
-    portSource: {
-      type: 'regex',
-      file: 'docs/src/.vitepress/config.ts',
-      pattern: /port:\s*(\d+)/,
-    },
+    port: 8300,
   },
 ]
 
-function readWorkspaceFile(file) {
-  return readFileSync(resolve(process.cwd(), file), 'utf8')
-}
-
-function resolveAppPort(app) {
-  const source = app.portSource
-  const content = readWorkspaceFile(source.file)
-
-  if (source.type === 'regex') {
-    const match = content.match(source.pattern)
-    if (!match?.[1]) {
-      throw new Error(`未能从 ${source.file} 解析 ${app.name} 的端口`)
-    }
-    return Number(match[1])
-  }
-
-  const pkg = JSON.parse(content)
-  const script = pkg.scripts?.[source.scriptName]
-  const match =
-    typeof script === 'string' ? script.match(/--port\s+(\d+)/) : null
-
-  if (!match?.[1]) {
-    throw new Error(
-      `未能从 ${source.file} 的 ${source.scriptName} 脚本解析 ${app.name} 的端口`,
-    )
-  }
-
-  return Number(match[1])
-}
-
 function printKillPortCommands(appList) {
   console.error('\n检测到 dev 服务异常退出，可按需清理占用端口：')
-  const ports = appList.map(resolveAppPort).join(' ')
+  const ports = appList.map((a) => a.port).join(' ')
   console.error(
     `\n# 一次性清理上述全部端口\nfor PORT in ${ports}; do PIDS=$(lsof -nP -tiTCP:$PORT -sTCP:LISTEN); [ -n "$PIDS" ] && kill -9 $PIDS; done\n`,
   )
