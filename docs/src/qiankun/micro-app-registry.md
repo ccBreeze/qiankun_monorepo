@@ -12,24 +12,11 @@ title: 子应用注册表
 
 - 根据当前路由识别激活的子应用
 - 为菜单模块提供 `fallbackActiveRule`
-- 为主应用路由生成子应用别名
 - 为各运行环境解析子应用入口 URL
 
 ## 为什么单独一个文件，而不是放进 microApp store
 
-**原因一：Router 在 Pinia 之前初始化，无法调用 store**
-
-路由别名在应用启动时静态生成，此时 Pinia 尚未挂载：
-
-```ts
-// router/index.ts
-import { useMicroAppStore } from '@/stores/microApp' // ❌ Pinia 尚未初始化
-
-const { microApps } = useMicroAppStore() // 运行时报错：No active Pinia
-const microAppAliases = microApps.map(...)
-```
-
-**原因二：放进 store 会产生循环依赖**
+**原因：放进 store 会产生循环依赖**
 
 `menu store` 需要 `microApps` 来获取 `registeredActiveRules`；`microApp store` 需要 `menu store` 来读取 `authorizedRoutesByActiveRule`：
 
@@ -153,34 +140,20 @@ export const microApps = microAppDefinitions.map((config): ResolvedMicroApp => {
 
 </details>
 
-## 路由别名
+## 主应用路由匹配
 
-> 参考：[Vue Router 路由别名](https://router.vuejs.org/zh/guide/essentials/redirect-and-alias.html#%E5%88%AB%E5%90%8D)
-
-路由别名逻辑内联在主应用路由配置中，不再由注册表导出：
+主应用路由使用通配路由 `/:pathMatch(.*)*` 兜底，所有非 `/login` 的子应用路径均自动命中壳页面，无需依赖注册表为每个子应用单独生成别名：
 
 ```ts [apps/main-app/src/router/index.ts]
-/**
- * 子应用路由别名列表，使主应用路由能匹配所有子应用的子路径。
- *
- * 从每个子应用的 activeRule 提取路径前缀，生成通配别名。
- * @example
- * activeRule: '/ocrm/#' → '/ocrm/:subPath*'
- * activeRule: '/vue3-history' → '/vue3-history/:subPath*'
- */
-const microAppAliases = microApps.map(({ activeRule }) => {
-  const segment = activeRule.split('/')[1]
-  return `/${segment}/:subPath*`
-})
-
 const routes: RouteRecordRaw[] = [
-  // ...
+  { path: '/', redirect: '/login' },
+  { path: '/login', name: 'Login', component: LoginPage },
   {
-    path: '/microApp',
+    path: '/:pathMatch(.*)*',
     name: 'microApp',
-    // ['/ocrm/:subPath*', '/vue3-history/:subPath*', '/crm-v8/:subPath*']
-    alias: microAppAliases, // 将所有子应用路径别名到同一个宿主路由
-    component: Home,
+    component: HomePage, // 所有子应用路径均渲染同一个壳页面
   },
 ]
 ```
+
+Vue Router 静态路由优先级高于通配符路由，`/login` 会优先匹配；其余所有路径（`/vue3-history/...`、`/crm-v8/...`、`/ocrm/#/...` 等）均自动落到 `/:pathMatch(.*)*`。

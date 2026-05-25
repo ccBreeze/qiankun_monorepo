@@ -56,7 +56,7 @@ import drawioXml from './drawio/routing-mechanism.drawio?raw'
 
 | 层级         | 技术       | 职责                                          |
 | ------------ | ---------- | --------------------------------------------- |
-| 主应用路由层 | vue-router | 登录鉴权 + 子应用容器匹配（路由别名）         |
+| 主应用路由层 | vue-router | 登录鉴权 + 子应用容器匹配（通配路由兜底）     |
 | 子应用激活层 | qiankun    | 根据 URL 前缀加载/显示对应子应用              |
 | 子应用路由层 | vue-router | 根据授权路由动态注册页面（base = activeRule） |
 
@@ -94,9 +94,7 @@ import drawioXml from './drawio/routing-mechanism.drawio?raw'
 
 ### 第 1 步：主应用先把子应用 URL 命中到统一壳页面
 
-主应用路由表没有为每个子应用单独声明页面，而是把所有子应用前缀路径都通过 **alias** 指到同一个 `/microApp` 路由（详见 [子应用注册表 — 路由别名](./micro-app-registry.md#路由别名)）。
-
-因此，访问 `/vue3-history/CouponListTemp` 时，主应用 vue-router 会先命中别名 `/vue3-history/:subPath*`，最终渲染 `HomePage`。`HomePage` 本身只负责承载布局和子应用容器：
+主应用路由表只有两条静态路由（`/` 重定向和 `/login`），其余所有路径由通配路由 `/:pathMatch(.*)*` 兜底，最终渲染 `HomePage`。`HomePage` 本身只负责承载布局和子应用容器：
 
 ```vue [apps/main-app/src/views/HomePage/index.vue]
 <template>
@@ -212,7 +210,6 @@ export const generateRouter = (base?: string) => {
 | 角色            | 使用方                          | 用途                                                      |
 | --------------- | ------------------------------- | --------------------------------------------------------- |
 | URL 前缀匹配    | 主应用 `activeMicroApp`         | `route.fullPath.startsWith(activeRule)` 识别激活的子应用  |
-| 路由别名前缀    | 主应用路由配置                  | 生成 `/${segment}/:subPath*` 通配别名                     |
 | vue-router base | 子应用 `createWebHistory(base)` | 子应用路由以此为基准路径                                  |
 | 路由分组 key    | `@breeze/router`                | `routesByActiveRule` 按此分组，确保路由下发到正确的子应用 |
 
@@ -246,18 +243,7 @@ hash 子应用在本项目中的约定不是 `/#/ocrm/...`，而是 **`/ocrm/#/.
 
 **1. 主应用路由匹配只看 `pathname`，所以必须保留 `/ocrm` 这一段前缀**
 
-主应用通过别名把所有子应用前缀都映射到同一个 `/microApp` 壳路由。对于 hash 子应用，别名只取 `#` 之前的路径段：
-
-```ts [apps/main-app/src/router/index.ts]
-const microAppAliases = microApps.map(({ activeRule }) => {
-  const segment = activeRule.split('/')[1]
-  return `/${segment}/:subPath*`
-})
-
-// '/ocrm/#' -> '/ocrm/:subPath*'
-```
-
-这意味着 `/ocrm/#/...` 仍然能先命中主应用壳页面并渲染 `MicroApp` 容器；如果 URL 写成 `/#/ocrm/...`，那么 `pathname` 只有 `/`，主应用根本无法判断应该加载哪个子应用。
+主应用使用通配路由 `/:pathMatch(.*)*` 兜底，所有非 `/` 和非 `/login` 的路径均命中壳页面并渲染 `MicroApp` 容器。`/ocrm/#/...` 的 `pathname` 是 `/ocrm/`，自然命中通配路由；如果 URL 写成 `/#/ocrm/...`，`pathname` 只有 `/`，会被根路由的 `redirect` 拦走跳到 `/login`，主应用无法渲染子应用容器。
 
 **2. 子应用识别和菜单命中看的是 `fullPath`，所以 `#` 必须保留在 `activeRule` 里**
 
@@ -322,9 +308,9 @@ export const MICRO_APP_ACTIVE_RULE = {
 } as const
 ```
 
-**2. 让根路由 `/` 直接承接壳页面，并跳过 `pathname === '/'` 的 alias 生成**
+**2. 将根路由 `/` 改为直接渲染壳页面**
 
-因为 `/#/ocrm/...` 对主应用来说，`#` 前面的 `pathname` 永远是 `/`，所以它不能再像 `/ocrm/#` 一样生成独立 alias，只能由根路由兜底承接：
+因为 `/#/ocrm/...` 的 `pathname` 永远是 `/`，而通配路由 `/:pathMatch(.*)*` 不会匹配根路由，只能将根路由直接改为渲染壳页面：
 
 <!-- prettier-ignore -->
 ```ts [apps/main-app/src/router/index.ts]
@@ -332,7 +318,6 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     redirect: '/login', // [!code --]
-    alias: microAppAliases, // [!code ++]
     component: () => import('@/views/HomePage/index.vue'), // [!code ++]
   },
   {
@@ -340,19 +325,18 @@ const routes: RouteRecordRaw[] = [
     name: 'Login',
     component: () => import('@/views/LoginPage/index.vue'),
   },
-  { // [!code --]
-    path: '/microApp', // [!code --]
-    name: 'microApp', // [!code --]
-    alias: microAppAliases, // [!code --]
-    component: () => import('@/views/HomePage/index.vue'), // [!code --]
-  }, // [!code --]
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'microApp',
+    component: () => import('@/views/HomePage/index.vue'),
+  },
 ]
 ```
 
 这段配置的含义是：
 
-- `/#/ocrm` 不再生成 alias，而是直接落到根路由 `/`
-- `/vue3-history`、`/crm-v8` 这类仍有独立 `pathname` 前缀的子应用，继续使用 alias
+- `/#/ocrm` 直接落到根路由 `/`（已改为渲染壳页面）
+- `/vue3-history`、`/crm-v8` 这类仍有独立 `pathname` 前缀的子应用，继续由通配路由 `/:pathMatch(.*)*` 兜底
 
 主应用里 `activeMicroApp` 的识别逻辑本身不需要改，因为：
 
@@ -492,7 +476,7 @@ Memory 模式适用于**非浏览器环境**（如 Node.js SSR、单元测试）
 | `activeRule`     | `/vue3-history`                               |
 | 主应用 router    | `createWebHistory()`（无 base）               |
 | 子应用 router    | `createWebHistory(base)`，`base = activeRule` |
-| 主应用别名       | `/vue3-history/:subPath*`                     |
+| 主应用路由       | `/:pathMatch(.*)*`                            |
 | qiankun 匹配逻辑 | `fullPath.startsWith('/vue3-history')`        |
 
 ```ts [apps/vue3-history/src/router/index.ts]
@@ -509,13 +493,13 @@ export const generateRouter = (base?: string) => {
 
 **Hash 模式（`ocrm`）**
 
-| 配置项           | 值                                         |
-| ---------------- | ------------------------------------------ |
-| `activeRule`     | `/ocrm/#`                                  |
-| 主应用 router    | `createWebHistory()`（无 base）            |
-| 子应用 router    | `createWebHashHistory()`                   |
-| 主应用别名       | `/ocrm/:subPath*`（只取 `#` 之前的路径段） |
-| qiankun 匹配逻辑 | `fullPath.startsWith('/ocrm/#')`           |
+| 配置项           | 值                               |
+| ---------------- | -------------------------------- |
+| `activeRule`     | `/ocrm/#`                        |
+| 主应用 router    | `createWebHistory()`（无 base）  |
+| 子应用 router    | `createWebHashHistory()`         |
+| 主应用路由       | `/:pathMatch(.*)*`               |
+| qiankun 匹配逻辑 | `fullPath.startsWith('/ocrm/#')` |
 
 Hash 模式下 `activeRule` 带有 `#`，主应用生成别名时通过 `activeRule.split('/')[1]` 只截取 `ocrm` 用于路由匹配，但在 `startsWith` 判断和路由分组时使用完整的 `/ocrm/#`，从而让两种模式的子应用可以共存。
 
@@ -528,18 +512,17 @@ export const MICRO_APP_ACTIVE_RULE = {
 ```
 
 ```ts [apps/main-app/src/router/index.ts]
-// 主应用统一使用 HTML5 History 模式
-const router = createRouter({
-  history: createWebHistory(), // 无 base，管理 /login、/microApp 等自身路由
-  routes,
-})
+// 主应用统一使用 HTML5 History 模式，通配路由兜底所有子应用路径
+const routes: RouteRecordRaw[] = [
+  { path: '/', redirect: '/login' },
+  { path: '/login', name: 'Login', component: LoginPage },
+  // '/ocrm/#/...'、'/vue3-history/...'、'/crm-v8/...' 均命中此路由
+  { path: '/:pathMatch(.*)*', name: 'microApp', component: HomePage },
+]
 
-// 生成子应用别名：只取 activeRule 的第一个路径段
-// '/ocrm/#' → '/ocrm/:subPath*'
-// '/vue3-history' → '/vue3-history/:subPath*'
-const microAppAliases = microApps.map(({ activeRule }) => {
-  const segment = activeRule.split('/')[1]
-  return `/${segment}/:subPath*`
+const router = createRouter({
+  history: createWebHistory(),
+  routes,
 })
 ```
 
