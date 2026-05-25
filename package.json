@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "node scripts/dev.mjs",
     "build": "pnpm --filter \"./apps/*\" run build",
-    "preview": "pnpm --filter \"./apps/*\" run preview",
+    "preview": "pnpm --filter \"./apps/*\" --parallel run preview",
     "type-check": "pnpm -r --parallel --if-present run type-check",
     "lint": "eslint . --max-warnings=0 --cache && pnpm -r --parallel run lint",
     "lint:fix": "eslint . --fix --cache && pnpm -r --parallel run lint:fix",

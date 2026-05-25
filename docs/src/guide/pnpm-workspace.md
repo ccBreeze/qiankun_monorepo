@@ -119,7 +119,7 @@ pnpm --prefix docs run dev
   "scripts": {
     "dev": "node scripts/dev.mjs",
     "build": "pnpm --filter \"./apps/*\" run build",
-    "preview": "pnpm --filter \"./apps/*\" run preview",
+    "preview": "pnpm --filter \"./apps/*\" --parallel run preview",
     "type-check:all": "pnpm -r --parallel --if-present run type-check"
   }
 }
@@ -136,15 +136,15 @@ const apps = [
 ]
 ```
 
-| 命令                    | 说明                                                        |
-| ----------------------- | ----------------------------------------------------------- |
-| `pnpm dev`              | 启动全部开发服务（等价于 `pnpm dev all`）                   |
-| `pnpm dev main`         | 仅启动主应用                                                |
-| `pnpm dev vue3-history` | 仅启动 `vue3-history` 子应用                                |
-| `pnpm dev docs`         | 仅启动 docs 站点（内部仍通过 `pnpm --prefix docs run dev`） |
-| `pnpm build`            | 仅构建 `apps/*` 目录下的应用                                |
-| `pnpm preview`          | 仅预览 `apps/*` 目录下的应用                                |
-| `pnpm type-check:all`   | 并行对所有包执行类型检查（跳过无此脚本的包）                |
+| 命令                    | 说明                                                               |
+| ----------------------- | ------------------------------------------------------------------ |
+| `pnpm dev`              | 启动全部开发服务（等价于 `pnpm dev all`）                          |
+| `pnpm dev main`         | 仅启动主应用                                                       |
+| `pnpm dev vue3-history` | 仅启动 `vue3-history` 子应用                                       |
+| `pnpm dev docs`         | 仅启动 docs 站点（内部仍通过 `pnpm --prefix docs run dev`）        |
+| `pnpm build`            | 仅构建 `apps/*` 目录下的应用                                       |
+| `pnpm preview`          | 并行预览 `apps/*` 目录下的应用（`--parallel`，各 server 同时启动） |
+| `pnpm type-check:all`   | 并行对所有包执行类型检查（跳过无此脚本的包）                       |
 
 ::: tip 为什么改成 `scripts/dev.mjs`
 这样新增应用时只需要在一个地方追加记录，`pnpm dev <name>` 和“启动全部服务”的行为会自动同步，不需要再维护一组分散的 `dev:*` 根脚本。
