@@ -1,6 +1,4 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import HomeView from '@/views/HomeView.vue'
-import NotFound from '@/views/NotFound.vue'
 
 /**
  * 创建路由实例（hash 模式）
@@ -13,8 +11,15 @@ export const generateRouter = (activeRule?: string) => {
   return createRouter({
     history: createWebHashHistory(base),
     routes: [
-      { path: '/', component: HomeView },
-      { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
+      {
+        path: '/',
+        component: () => import('@/views/HomeView.vue'),
+      },
+      {
+        path: '/:pathMatch(.*)*',
+        name: 'NotFound',
+        component: () => import('@/views/NotFound.vue'),
+      },
     ],
   })
 }

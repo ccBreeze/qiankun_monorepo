@@ -121,17 +121,16 @@ resolveActiveRule({
 | `activeRule` | 区分微应用。详情查看 [qiankun 入门教程](https://qiankun.umijs.org/zh/cookbook)              |
 | `component`  | 默认不生成，交给 `transformResolvedRoute` 自定义                                            |
 
-这里的 `name` 不再只是“路由名”，更准确地说是**组件名称标识**。它同时用于：
+这里的 `name` 用于：
 
-- 页面组件 `defineOptions({ name })`
-- `KeepAlive` 的 `include` / `exclude` 匹配
 - `router.addRoute()` 注册动态路由时的 `name`
+- 需要通过 `KeepAlive exclude` 排除特定组件缓存时，页面组件显式声明 `defineOptions({ name })`（一般无需声明）
 
 例如：
 
 ```ts
 resolveRoute({ url: '/vue3-history/KeepAliveDemo/Detail' })
-// =>
+
 // {
 //   name: 'KeepAliveDemo-Detail',
 //   path: '/vue3-history/KeepAliveDemo/Detail',

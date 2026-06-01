@@ -59,6 +59,19 @@
 
 **`renderBuiltUrl` 无法处理这类路径**：该 API 只改写 JS bundle 内部生成的 chunk 引用，HTML 模板字符串不经过它的钩子。需要主应用通过 qiankun 的 `getTemplate` 钩子拿到模板后，把所有 `/assets/...` 统一替换成 `${entry}/assets/...` 的子应用绝对地址。
 
+::: details 为什么入口 CSS 看起来能正常拼接，但 modulepreload 不行？
+
+`apps/vue3-history/dist/index.html` 是 Vite 的原始构建产物，里面的 `modulepreload` 和入口 CSS 都只是 `/assets/...`，并没有被 Vite 自动拼成子应用完整 URL。两者在 qiankun 运行时表现不同，是因为 `import-html-entry` 只会主动收集并补全 `rel="stylesheet"`：
+
+```js [node_modules/import-html-entry/esm/process-tpl.js]
+const STYLE_TYPE_REGEX = /\s+rel=('|")?stylesheet\1.*/
+const LINK_PRELOAD_OR_PREFETCH_REGEX = /\srel=('|")?(preload|prefetch)\1/
+```
+
+入口 CSS 命中 `stylesheet` 分支，会按子应用 `entry` 派生出的 `assetPublicPath` 补成绝对地址，再 fetch 并内联为 `<style>`；`rel="modulepreload"` 不命中 `stylesheet`，也不在 `preload|prefetch` 正则里，所以会原样留在模板中。若不通过 `getTemplate` 提前改写，它插入主应用页面后会按主应用 origin 解析。
+
+:::
+
 > 关于 `manualChunks` 配置策略与两层机制的完整实现，参见 [Vite 构建拆包策略](../optimization/vite-code-splitting)。
 
 ### CSS 内联后的相对路径
@@ -188,6 +201,16 @@ experimental: {
   },
 },
 ```
+
+::: warning hostType === 'html' 不支持 runtime 返回值
+`hostType === 'html'` 分支不能返回 `{ runtime: ... }`，否则构建报错：
+
+```
+[vite:build-html] { runtime: "..." } is not supported for assets in html files: assets/index-D_vxc5dN.js
+```
+
+**必须返回 `{ relative: true }`。** 根因是 `<link href>` 等 HTML 属性不执行 JS——浏览器把属性值当字面量 URL 解析，`window.__assetsPath(...)` 写进去也不会被调用，Vite 插件同理无法解决。HTML 模板的根路径资源只能在运行时由 [`htmlProcessor.ts`](#主应用html-模板补丁) 通过 `getTemplate` 钩子改写。
+:::
 
 CSS 中的图片和字体都保持相对路径，有两层原因：
 

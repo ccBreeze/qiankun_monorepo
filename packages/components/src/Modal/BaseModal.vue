@@ -6,6 +6,7 @@
     :width="width"
     :bodyStyle="bodyStyle"
     :confirmLoading="confirmLoading"
+    wrapClassName="pack-modal-wrap"
     class="pack-modal"
     :class="[
       `pack-modal--${size}`,
@@ -98,6 +99,11 @@ const handleCancel = runAction(props.onCancel)
 </script>
 
 <style lang="scss">
+.pack-modal-wrap {
+  // 弹窗显示滚动条会有抖动效果
+  scrollbar-width: none;
+}
+
 /* a-modal 会 teleport 到 body,这里的规则作用于外部 DOM,靠 .pack-modal 类前缀隔离 */
 .pack-modal {
   /* 超长滚动 */

@@ -41,6 +41,43 @@ Vite 默认输出的入口是原生 ES Module：
 Uncaught SyntaxError: Cannot use import statement outside a module
 ```
 
+::: info `import` 语句 vs `import()` 表达式
+
+两者写法相近，但在 eval 上下文中行为截然不同，根本原因是**处理时机不同**。
+
+**静态 `import` 语句——解析期声明，Script 上下文里非法**
+
+JS 引擎处理一段代码分两阶段：先**解析（parse）**，后**执行（execute）**。静态 `import` 是 ES Module 的**声明语法**，引擎在解析阶段就要处理它——建立模块依赖图、确定导入绑定。因此它必须出现在 Module Record（即 `type="module"` 的脚本）顶层。
+
+`eval()` 执行的是 Script Record（非模块上下文），解析器遇到 `import` 声明直接抛 `SyntaxError`，代码根本跑不到执行阶段：
+
+```
+eval("import foo from './foo'")
+  │
+  └─ 解析阶段 → 发现 import 声明 → Script 上下文不允许 → SyntaxError ✗
+     （还没开始执行就挂了）
+```
+
+**动态 `import()` 表达式——运行期表达式，任意上下文合法**
+
+`import()` 是 TC39 专门设计的**运算符**，语法上与普通函数调用等价。解析阶段引擎只把它当作一个表达式节点，不做任何模块处理；运行时才把请求交给**浏览器原生 ESM loader** 去加载模块。ECMAScript 规范明确规定 `import()` 在 Script 和 Module 两种上下文里都合法：
+
+```
+eval("import('./foo.js').then(m => console.log(m))")
+  │
+  ├─ 解析阶段 → 看到的是一个表达式，合法 ✓
+  └─ 运行阶段 → 交给浏览器 ESM loader → 返回 Promise ✓
+```
+
+|                         | 处理时机 | 上下文要求           | `eval()` 里 |
+| ----------------------- | -------- | -------------------- | :---------: |
+| `import foo from '...'` | 解析期   | 只能在 Module Record |      ✗      |
+| `import('./foo')`       | 运行期   | Script / Module 均可 |      ✓      |
+
+`vite-plugin-qiankun` 正是利用了这一区别：把入口从 `<script type="module">` 改写成普通 `<script>` 里的 `import()` 调用，让 qiankun 沙箱 eval 只看到合法的运行期表达式，真正的 ESM 模块则由浏览器 ESM loader 负责加载。
+
+:::
+
 ### 路 B：放弃包装让浏览器原生加载 —— JS 沙箱集体逃逸
 
 `vite-plugin-qiankun` 把 `<script type="module">` 改写成 `import('xxx.js')` 之后，eval 是能跑了（外层只是个普通函数调用），但**真正执行子应用代码的是浏览器原生 ESM loader**：
@@ -216,7 +253,7 @@ var qiankunWindow = typeof window !== 'undefined' ? window.proxy || window : {}
 
 运行时 `qiankunWindow` 实际拿到的就是 qiankun JS 沙箱暴露出来的代理对象。详见 [《qiankun 原理》代理沙箱：Proxy 拦截每一次全局写入](./qiankun-principle#_1-代理沙箱-proxy-拦截每一次全局写入)。
 
-## useDevMode：dev 阶段让 HMR 绕开 qiankun JS 沙箱
+## useDevMode：dev 阶段消除 qiankun JS 沙箱 eval 报错
 
 ::: tip 一句话总结
 dev 阶段要同时解决两件事：
@@ -224,6 +261,12 @@ dev 阶段要同时解决两件事：
 - `server.origin` 提供子应用 dev server 的 origin，但不会自动改写 HTML 中已有的根路径；
 - `useDevMode` 负责改写 `@vite/client` 这类 dev module script：既完成路径拼接，也把会被 qiankun JS 沙箱 eval 报错的 ESM 改成普通脚本里的动态 `import()`。
   :::
+
+::: info useDevMode 与 HMR 的关系
+**`useDevMode: false` 时 HMR 照常工作。** qiankun 的 `import-html-entry` 在收集 `<script>` 时，对 `<script type="module">` 的处理方式与普通 script 不同——Vite 注入的 `@vite/client` 仍会由浏览器原生 ESM loader 加载，HMR WebSocket 连接和模块热更新机制不依赖沙箱 eval 通道。
+
+`useDevMode` 解决的是**沙箱 eval 时的 SyntaxError**，即让开发阶段的 module script 也能通过沙箱 eval 而不抛错。如果你的开发流程能接受沙箱 eval 阶段报错（通常只是控制台噪音，不影响实际运行），可以不开启 `useDevMode`。
+:::
 
 ### server.origin 只影响开发阶段生成的资源 origin
 

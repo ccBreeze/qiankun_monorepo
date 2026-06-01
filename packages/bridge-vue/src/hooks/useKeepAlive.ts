@@ -27,9 +27,9 @@ export const useKeepAlive = (microAppContext?: KeepAliveContext) => {
    */
   const wrapKeepAliveComponent = (component: VNode | null | undefined) => {
     // 没有组件名的不需要缓存
-    if (!component || !(component.type as { name?: string }).name) {
-      return component
-    }
+    // if (!component || !(component.type as { name?: string }).name) {
+    //   return component
+    // }
 
     const wrapperName = route.fullPath
     let wrapper = wrapperMap.get(wrapperName)
@@ -58,7 +58,7 @@ export const useKeepAlive = (microAppContext?: KeepAliveContext) => {
     () => route.fullPath,
     (fullPath) => {
       if (!matchActiveRule({ activeRule: microAppContext?.activeRule })) return
-      if (!route.name) return
+      if (!route.name) return // 防止没有这个页面
       if (tabSet.value.has(fullPath)) return
 
       tabSet.value.add(fullPath)

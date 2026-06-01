@@ -62,6 +62,8 @@ const menuItems = computed<MenuItems>(() => {
 
 /** 生成菜单 */
 function generateMenu(list: MenuRoute[], level = 0): MenuNode[] {
+  // TODO: N 叉树的前序遍历
+  // https://leetcode.cn/problems/n-ary-tree-preorder-traversal/submissions/502738298/
   if (!list.length) return []
 
   const items: MenuNode[] = []

@@ -26,13 +26,15 @@ export const useMicroAppStore = defineStore('microApp', () => {
   const unmountingTasks = new Map<string, Promise<void>>()
 
   const microAppConfigs = computed<MicroAppConfig[]>(() => {
+    // 所有子应用共享同一份 userData 引用，避免重复 toRaw
+    const userData = toRaw(userStore.userData)
     return microApps.map((app) => ({
       ...app,
       props: {
         activeRule: app.activeRule,
         authorizedRoutes:
           menuStore.authorizedRoutesByActiveRule.get(app.activeRule) ?? [],
-        userData: toRaw(userStore.userData),
+        userData,
       },
     }))
   })

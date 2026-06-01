@@ -26,7 +26,7 @@ import ConsoleTabs from './ConsoleTabs/index.vue'
 
 const route = useRoute()
 
-const consoleContainerRef = ref()
+const consoleContainerRef = useTemplateRef('consoleContainerRef')
 
 watch(
   () => route.fullPath,
