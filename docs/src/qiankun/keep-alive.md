@@ -15,14 +15,14 @@ import keepAliveBlankTransitionCycleXml from './drawio/keep-alive-blank-transiti
 
 ## 背景：Vue KeepAlive 的原生限制
 
-Vue 的 `<KeepAlive>` 组件以**组件名**（`component.name`）作为缓存 key。这意味着，同一个路由组件无论以什么 query 参数被访问，在 Vue 看来都是同一个组件——`/KeepAliveDemo?id=1` 与 `/KeepAliveDemo?id=2` 只会共用一个缓存实例，而不是各自独立缓存。
+Vue 的 `<KeepAlive>` 使用组件的 `key` 作为缓存键；没有设置 `key` 时，则使用组件类型作为缓存键。它缓存的是组件 VNode，并通过 VNode 关联和复用组件实例。`include` 和 `exclude` 则按组件的 `name` 筛选是否缓存，与缓存键是两个概念。
 
-这在多页签场景下会导致两类问题：
+同一个页面可以通过不同参数打开多个页签，例如分别编辑订单 A（`?id=1`）和订单 B（`?id=2`）：
 
-- **状态串扰**：用户在页签 A 填写了表单（`?id=1`），再打开页签 B（`?id=2`），两个页签共用同一份组件状态，切回 A 时看到的其实是 B 最后一次修改后的内容
-- **无法精确清理**：关闭某个页签时，`<KeepAlive :include>` 只能按组件名 `KeepAliveDemo` 整体控制，无法只清理某一个 `fullPath` 对应的缓存实例
+- **不设置 `key`**：同一个路由组件即使通过不同的路由路径或参数访问，通常也会复用同一个实例。修改 B 的表单内容后，切回 A 时，A 可能也会显示 B 修改后的内容。
+- **设置 `route.fullPath` 作为 `key`**：A 和 B 可以使用各自的缓存实例，但 `include` 和 `exclude` 只能按组件 `name` 筛选，无法直接按 `key` 单独清除某个页签的缓存。如果移除该组件名，会同时影响这个组件的其他缓存实例。
 
-::: details 复现这个限制
+::: details 不设置 key 的复现示意
 
 ```vue [apps/vue3-history/src/App.vue]
 <RouterView v-slot="{ Component }">
@@ -188,158 +188,3 @@ router.beforeEach((to) => {
 </ClientOnly>
 
 组件从"有"变"无"再变"有"，KeepAlive 完成完整的 deactivate → activate 周期。若用 `router.listening = false` 阻止了这次**空白**跳转，组件会一直停留在渲染状态，KeepAlive 反而**不会**触发这两个钩子。
-
-## 附录：按参数类型精细控制缓存 key 的旧方案
-
-当前实现对所有路由统一使用 `fullPath` 作为 wrapper 名，是最简单也最可靠的方案。
-
-如果业务上需要区分"有 query/params 的路由用 fullPath 缓存，无参数的路由用路由名缓存（与 Vue 原生行为一致）"，可以使用以下旧方案。
-
-### shouldWrapByFullPath
-
-判断路由是否需要按 fullPath 独立缓存，取决于它是否携带 query 参数或动态 path 参数：
-
-```ts
-/** 是否需要按 fullPath 独立缓存实例 */
-const shouldWrapByFullPath = ({
-  query,
-  params,
-}: Pick<RouteLocationNormalized, 'query' | 'params'>) => {
-  // /list?page=2（query）
-  // /order/123（动态参数 /o/:orderId）
-  return Object.keys({ ...query, ...params }).length > 0
-}
-```
-
-| 情形               | 缓存 key                               | 说明                       |
-| ------------------ | -------------------------------------- | -------------------------- |
-| 无 query 无 params | 路由 `name`（如 `KeepAliveDemo`）      | 与 Vue 原生行为一致        |
-| 有 query 参数      | `fullPath`（如 `/KeepAliveDemo?id=1`） | 每个 query 组合独立缓存    |
-| 有动态 path 参数   | `fullPath`（如 `/order/123`）          | 每个参数值对应独立缓存实例 |
-
-### tabMetaMap
-
-```ts
-type TabMeta = {
-  /** KeepAlive include 使用的名称 */
-  cacheName: string | undefined
-  /** 是否需要用 wrapper 包装（有 query 参数时为 true） */
-  shouldWrap: boolean
-}
-
-const tabMetaMap = ref(new Map<string, TabMeta>())
-
-const include = computed(() =>
-  Array.from(
-    new Set(
-      [...tabMetaMap.value.values()]
-        .map(({ cacheName }) => cacheName)
-        .filter(Boolean),
-    ),
-  ),
-)
-
-watch(
-  () => route.fullPath,
-  (fullPath) => {
-    if (!route.name || tabMetaMap.value.has(fullPath)) return
-    const routeLocation = router.resolve(fullPath)
-    const shouldWrap = shouldWrapByFullPath(routeLocation)
-    const cacheName = shouldWrap
-      ? fullPath
-      : typeof routeLocation.name === 'string'
-        ? routeLocation.name
-        : undefined
-    tabMetaMap.value.set(fullPath, { cacheName, shouldWrap })
-  },
-  { immediate: true },
-)
-```
-
-### wrapKeepAliveComponent
-
-```ts
-const wrapKeepAliveComponent = (component: VNode | null | undefined) => {
-  if (!component || !(component.type as { name?: string }).name)
-    return component
-
-  const meta = tabMetaMap.value.get(route.fullPath)
-  if (!meta?.shouldWrap) return component
-
-  const wrapperName = route.fullPath
-  let wrapper = wrapperMap.get(wrapperName)
-  if (!wrapper) {
-    wrapper = {
-      name: wrapperName,
-      render() {
-        return component
-      },
-    }
-    wrapperMap.set(wrapperName, wrapper)
-  }
-  return h(wrapper)
-}
-```
-
-### BUGFIX：关闭当前激活页时 KeepAlive 卸载时序冲突
-
-使用旧方案时，存在一个与 `shouldWrap` 逻辑相关的时序 bug。
-
-复现路径（`apps/vue3-history/src/views/KeepAliveDemo/index.vue`）：
-
-1. 进入 `/vue3-history/KeepAliveDemo`
-2. 点击"进入顺序 A"，切到 `/KeepAliveDemo?id=1&type=coupon`
-3. 点击"请求关闭当前 Tab"
-4. 主应用关闭该 tab，跳回 `/vue3-history/KeepAliveDemo`
-
-**表现**：控制台出现以下报错，内容区直接空白：
-
-![关闭当前激活页签时 parentComponent.ctx.deactivate 报错截图](./imgs/parentComponent_ctx_deactivate.png)
-
-#### 原因分析
-
-这是一个跨层时序问题。主应用的 `tabBar.removeTab` 先触发 `router.push(target)`，随后几乎同步地 `emitTabRemove({ fullPath })`，但两者作用于不同的层：
-
-- `emitTabRemove` 立即到达子应用
-- `router.push` 的变化需经过 qiankun → 浏览器 history 事件 → 子应用 router 三层传递，是异步的
-
-结果是子应用收到 `TAB_REMOVE` 时，`route.fullPath` 往往还停留在被关闭的路径上。若此时直接执行 `cleanupTab(fullPath)`，`tabMetaMap.delete(fullPath)` 同步触发 `include` 重算，KeepAlive 立即尝试卸载 wrapper——而此时目标页（`/KeepAliveDemo`）与被关闭页（`/KeepAliveDemo?id=1&type=coupon`）是**同一个底层组件**，KeepAlive 正处于"卸载 wrapper 实例 + 激活原始实例"的中间状态，引发冲突：
-
-```
-Unhandled error during execution of component update
-parentComponent.ctx.deactivate is not a function
-Cannot read properties of null (reading 'insertBefore')
-```
-
-> 若跳回完全不同的组件，渲染上下文已切换，KeepAlive 不会产生同实例冲突，此报错不会出现。
-
-`await router.push(target)` 也无法修复这个问题——它只保证了主应用侧的导航 Promise 完成，无法保证子应用的 `route.fullPath` 已更新。真正可靠的判断条件是"子应用是否已经离开这个 `fullPath`"。
-
-#### 修复方式
-
-清理动作延后到安全时机。在关闭当前激活页时不立即清理，而是通过 `watch(() => route.fullPath, { once: true })` 等子应用路由真正切走后再执行 `cleanupTab(fullPath)`：
-
-<!-- prettier-ignore -->
-```ts
-const cleanupTab = (fullPath: string) => {
-  tabMetaMap.value.delete(fullPath)
-  wrapperMap.delete(fullPath)
-}
-
-const removeTab = (fullPath: string) => {
-  if (fullPath === route.fullPath) { // [!code focus]
-    watch( // [!code focus]
-      () => route.fullPath, // [!code focus]
-      () => cleanupTab(fullPath), // [!code focus]
-      { once: true }, // [!code focus]
-    ) // [!code focus]
-    return // [!code focus]
-  } // [!code focus]
-
-  cleanupTab(fullPath)
-}
-```
-
-::: info 新方案为何不再需要此修复
-当前实现所有路由都用 `fullPath` 包 wrapper，`/KeepAliveDemo` 和 `/KeepAliveDemo?id=1&type=coupon` 对应的是**两个不同的 wrapper 组件**，KeepAlive 将它们视为不同组件，切换时不会产生"同实例冲突"，因此无需延迟清理。
-:::

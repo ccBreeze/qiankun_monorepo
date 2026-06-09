@@ -1,0 +1,298 @@
+<mxGraphModel dx="1184" dy="771" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+    <mxCell id="phase-check" connectable="0" parent="1" style="shape=swimlane;horizontal=1;startSize=44;fillColor=#EFF6FF;strokeColor=#3B82F6;strokeWidth=2;fontStyle=1;fontSize=18;fontColor=#3B82F6;align=left;verticalAlign=top;spacingLeft=20;rounded=1;shadow=0;collapsible=0;container=0;recursiveResize=0;html=1;" value="Phase 1 · 检查更新" vertex="1">
+      <mxGeometry height="1270" width="1260" x="40" y="40" as="geometry" />
+    </mxCell>
+    <mxCell id="U4nYEJYEKmzVhJg-lowJ-6" parent="phase-check" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#DBEAFE;strokeColor=#2563EB;strokeWidth=2;fontColor=#0F172A;spacing=8;arcSize=10;" value="request 获取最新版本号" vertex="1">
+      <mxGeometry height="64" width="190" x="50" y="80" as="geometry" />
+    </mxCell>
+    <mxCell id="U4nYEJYEKmzVhJg-lowJ-8" parent="phase-check" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#DBEAFE;strokeColor=#2563EB;strokeWidth=2;fontColor=#0F172A;spacing=8;arcSize=10;" value="检查更新" vertex="1">
+      <mxGeometry height="64" width="140" x="75" y="190" as="geometry" />
+    </mxCell>
+    <mxCell id="U4nYEJYEKmzVhJg-lowJ-9" edge="1" parent="phase-check" source="U4nYEJYEKmzVhJg-lowJ-6" style="edgeStyle=orthogonalEdgeStyle;orthogonalLoop=1;jettySize=auto;rounded=1;html=1;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;fontSize=12;strokeWidth=2;endSize=8;endArrow=classic;strokeColor=#475569;dashed=0;dashPattern=1 1;" target="U4nYEJYEKmzVhJg-lowJ-8" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="U4nYEJYEKmzVhJg-lowJ-11" parent="phase-check" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#DBEAFE;strokeColor=#2563EB;strokeWidth=2;fontColor=#0F172A;spacing=8;arcSize=10;" value="&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(15, 23, 42), rgb(211, 218, 234));&quot;&gt;检查全量更新&lt;/span&gt;&lt;/div&gt;" vertex="1">
+      <mxGeometry height="72" width="160" x="65" y="310" as="geometry" />
+    </mxCell>
+    <mxCell id="U4nYEJYEKmzVhJg-lowJ-12" edge="1" parent="phase-check" source="U4nYEJYEKmzVhJg-lowJ-8" style="edgeStyle=orthogonalEdgeStyle;orthogonalLoop=1;jettySize=auto;rounded=1;html=1;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;fontSize=12;strokeWidth=2;endSize=8;endArrow=classic;strokeColor=#475569;dashed=0;dashPattern=1 1;" target="U4nYEJYEKmzVhJg-lowJ-11" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="phase1-full-box" connectable="0" parent="phase-check" style="shape=swimlane;horizontal=1;startSize=32;fillColor=#FFEDD5;strokeColor=#EA580C;strokeWidth=2;dashed=0;fontStyle=1;fontSize=14;fontColor=#EA580C;align=left;verticalAlign=top;spacingLeft=14;rounded=1;shadow=0;collapsible=0;container=0;recursiveResize=0;html=1;fillOpacity=40;" value="全量更新" vertex="1">
+      <mxGeometry height="810" width="835" x="335" y="100" as="geometry" />
+    </mxCell>
+    <mxCell id="qQM5CCyiGKaEGuRPPLm9-40" edge="1" parent="phase1-full-box" source="U4nYEJYEKmzVhJg-lowJ-30" style="edgeStyle=orthogonalEdgeStyle;orthogonalLoop=1;jettySize=auto;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;rounded=1;html=1;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;fontSize=12;strokeWidth=2;endSize=8;endArrow=classic;strokeColor=#475569;dashed=0;dashPattern=1 1;" target="qQM5CCyiGKaEGuRPPLm9-39" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="U4nYEJYEKmzVhJg-lowJ-30" parent="phase1-full-box" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#FFEDD5;strokeColor=#EA580C;strokeWidth=2;fontColor=#0F172A;spacing=8;arcSize=10;" value="app.getVersion()&lt;br&gt;获取本地版本号" vertex="1">
+      <mxGeometry height="72" width="180" x="220.06" y="210" as="geometry" />
+    </mxCell>
+    <mxCell id="U4nYEJYEKmzVhJg-lowJ-31" parent="phase1-full-box" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#F3E8FF;strokeColor=#7C3AED;strokeWidth=2;fontColor=#0F172A;spacing=8;arcSize=10;" value="autoUpdater.checkForUpdates()&lt;div&gt;读取 OSS 上的 latest.yml&lt;/div&gt;" vertex="1">
+      <mxGeometry height="80" width="250" x="185" y="460" as="geometry" />
+    </mxCell>
+    <mxCell id="qQM5CCyiGKaEGuRPPLm9-120" edge="1" parent="phase1-full-box" source="U4nYEJYEKmzVhJg-lowJ-45" style="edgeStyle=orthogonalEdgeStyle;orthogonalLoop=1;jettySize=auto;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;rounded=1;html=1;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;fontSize=12;strokeWidth=2;endSize=8;endArrow=classic;strokeColor=#475569;dashed=0;dashPattern=1 1;" target="U4nYEJYEKmzVhJg-lowJ-47">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="U4nYEJYEKmzVhJg-lowJ-45" parent="phase1-full-box" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#FFEDD5;strokeColor=#EA580C;strokeWidth=2;fontColor=#0F172A;spacing=8;arcSize=10;" value="获取 latest.yml 返回的&lt;br&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;updateInfo.version&lt;br&gt;&lt;/span&gt;" vertex="1">
+      <mxGeometry height="72" width="220" x="200" y="569" as="geometry" />
+    </mxCell>
+    <mxCell id="U4nYEJYEKmzVhJg-lowJ-46" edge="1" parent="phase1-full-box" source="U4nYEJYEKmzVhJg-lowJ-31" style="edgeStyle=orthogonalEdgeStyle;orthogonalLoop=1;jettySize=auto;rounded=1;html=1;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;fontSize=12;strokeWidth=2;endSize=8;endArrow=classic;strokeColor=#475569;dashed=0;dashPattern=1 1;" target="U4nYEJYEKmzVhJg-lowJ-45" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="U4nYEJYEKmzVhJg-lowJ-44" parent="phase1-full-box" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#F3E8FF;strokeColor=#7C3AED;strokeWidth=2;fontColor=#0F172A;spacing=8;arcSize=10;dashed=1;dashPattern=8 4;" value="初始化配置&lt;div&gt;autoUpdater.setFeedURL(APP_UPDATE_OSS_URL)&lt;br&gt;autoUpdater.autoDownload=false&lt;br&gt;autoInstallOnAppQuit=true&lt;/div&gt;" vertex="1">
+      <mxGeometry height="110" width="390" x="115.88999999999999" y="60" as="geometry" />
+    </mxCell>
+    <mxCell id="qQM5CCyiGKaEGuRPPLm9-41" edge="1" parent="phase1-full-box" source="qQM5CCyiGKaEGuRPPLm9-39" style="edgeStyle=orthogonalEdgeStyle;orthogonalLoop=1;jettySize=auto;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;rounded=1;html=1;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;fontSize=12;strokeWidth=2;endSize=8;endArrow=classic;strokeColor=#475569;dashed=0;dashPattern=1 1;" target="U4nYEJYEKmzVhJg-lowJ-31" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="qQM5CCyiGKaEGuRPPLm9-140" connectable="0" parent="qQM5CCyiGKaEGuRPPLm9-41" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;fontStyle=1;fontColor=#334155;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;rounded=1;" value="接口允许更新" vertex="1">
+      <mxGeometry relative="1" x="0.0058" as="geometry">
+        <mxPoint x="-1" as="offset" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="qQM5CCyiGKaEGuRPPLm9-39" parent="phase1-full-box" style="rhombus;rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#FFEDD5;strokeColor=#EA580C;strokeWidth=2.5;fontColor=#0F172A;spacing=8;arcSize=10;" value="与 serverVersion比较" vertex="1">
+      <mxGeometry height="90" width="151.77" x="234.17000000000007" y="311" as="geometry" />
+    </mxCell>
+    <mxCell id="qQM5CCyiGKaEGuRPPLm9-184" edge="1" parent="phase1-full-box" source="U4nYEJYEKmzVhJg-lowJ-47" style="edgeStyle=orthogonalEdgeStyle;orthogonalLoop=1;jettySize=auto;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=1;html=1;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;fontSize=12;strokeWidth=2;endSize=8;endArrow=classic;strokeColor=#475569;dashed=0;dashPattern=1 1;" target="qQM5CCyiGKaEGuRPPLm9-183">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="qQM5CCyiGKaEGuRPPLm9-185" connectable="0" parent="qQM5CCyiGKaEGuRPPLm9-184" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;fontStyle=1;fontColor=#334155;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;rounded=1;" value="OSS 存在更新文件" vertex="1">
+      <mxGeometry relative="1" x="-0.101" as="geometry">
+        <mxPoint as="offset" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="U4nYEJYEKmzVhJg-lowJ-47" parent="phase1-full-box" style="rhombus;rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#FFEDD5;strokeColor=#EA580C;strokeWidth=2.5;fontColor=#0F172A;spacing=8;arcSize=10;" value="app.getVersion()&lt;br&gt;与本地版本号比较" vertex="1">
+      <mxGeometry height="90" width="169.89" x="225.94" y="680" as="geometry" />
+    </mxCell>
+    <mxCell id="qQM5CCyiGKaEGuRPPLm9-183" parent="phase1-full-box" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#DBEAFE;strokeColor=#2563EB;strokeWidth=2;fontColor=#0F172A;spacing=8;arcSize=10;" value="全量更新" vertex="1">
+      <mxGeometry height="64" width="150" x="589" y="693" as="geometry" />
+    </mxCell>
+    <mxCell id="U4nYEJYEKmzVhJg-lowJ-19" edge="1" parent="phase-check" source="U4nYEJYEKmzVhJg-lowJ-11" style="edgeStyle=orthogonalEdgeStyle;orthogonalLoop=1;jettySize=auto;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=1;html=1;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;fontSize=12;strokeWidth=2;endSize=8;endArrow=classic;strokeColor=#9333EA;dashed=1;dashPattern=8 4;" target="U4nYEJYEKmzVhJg-lowJ-30" value="">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="474" y="358.0000000000001" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="U4nYEJYEKmzVhJg-lowJ-27" connectable="0" parent="U4nYEJYEKmzVhJg-lowJ-19" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;fontStyle=1;fontColor=#334155;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;rounded=1;" value="&lt;span style=&quot;color: rgba(0, 0, 0, 0); font-family: monospace; font-size: 0px; text-align: start; background-color: rgb(236, 236, 236);&quot;&gt;%3CmxGraphModel%3E%3Croot%3E%3CmxCell%20id%3D%220%22%2F%3E%3CmxCell%20id%3D%221%22%20parent%3D%220%22%2F%3E%3CmxCell%20id%3D%222%22%20connectable%3D%220%22%20parent%3D%221%22%20style%3D%22edgeLabel%3Bhtml%3D1%3Balign%3Dcenter%3BverticalAlign%3Dmiddle%3Bresizable%3D0%3Bpoints%3D%5B%5D%3B%22%20value%3D%22%26lt%3Bspan%20style%3D%26quot%3Bfont-size%3A%2012px%3B%20white-space%3A%20normal%3B%20background-color%3A%20rgb(236%2C%20236%2C%20236)%3B%26quot%3B%26gt%3BipcRenderer%26lt%3Bbr%26gt%3B%26lt%3B%2Fspan%26gt%3B%22%20vertex%3D%221%22%3E%3CmxGeometry%20x%3D%22359.8461538461538%22%20y%3D%22360%22%20as%3D%22geometry%22%2F%3E%3C%2FmxCell%3E%3C%2Froot%3E%3C%2FmxGraphModel%3E&lt;/span&gt;" vertex="1">
+      <mxGeometry relative="1" x="0.15" y="2" as="geometry">
+        <mxPoint as="offset" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="U4nYEJYEKmzVhJg-lowJ-28" connectable="0" parent="U4nYEJYEKmzVhJg-lowJ-19" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;fontStyle=1;fontColor=#334155;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;rounded=1;" value="ipcRender" vertex="1">
+      <mxGeometry relative="1" x="-0.1" y="3" as="geometry">
+        <mxPoint x="4" y="3" as="offset" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="phase1-hot-box" connectable="0" parent="phase-check" style="shape=swimlane;horizontal=1;startSize=32;fillColor=#FEF3C7;strokeColor=#F59E0B;strokeWidth=2;dashed=0;fontStyle=1;fontSize=14;fontColor=#F59E0B;align=left;verticalAlign=top;spacingLeft=14;rounded=1;shadow=0;collapsible=0;container=0;recursiveResize=0;html=1;fillOpacity=40;" value="热更新" vertex="1">
+      <mxGeometry height="290" width="835" x="335" y="950" as="geometry" />
+    </mxCell>
+    <mxCell id="phase1-hot-get-version" parent="phase1-hot-box" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#FEF3C7;strokeColor=#F59E0B;strokeWidth=2;fontColor=#0F172A;spacing=8;arcSize=10;" value="getRendererVersion()&lt;br&gt;读取配置文件中的版本号" vertex="1">
+      <mxGeometry height="82" width="240" x="40" y="114" as="geometry" />
+    </mxCell>
+    <mxCell id="phase1-hot-get-version-note" parent="phase1-hot-box" style="rounded=1;whiteSpace=wrap;html=1;shadow=0;fontSize=12;fontStyle=0;align=center;verticalAlign=middle;overflow=hidden;fillColor=#FFFBEB;strokeColor=#F59E0B;strokeWidth=1;fontColor=#7C2D12;spacing=6;arcSize=8;dashed=1;dashPattern=4 4;" value="全量更新成功后不会同步 rendererVersion&lt;br&gt;低于 appVersion 时使用 appVersion 兜底比较" vertex="1">
+      <mxGeometry height="52" width="270" x="25" y="205" as="geometry" />
+    </mxCell>
+    <mxCell id="phase1-hot-compare" parent="phase1-hot-box" style="rhombus;rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#FEF3C7;strokeColor=#F59E0B;strokeWidth=2.5;fontColor=#0F172A;spacing=8;arcSize=10;" value="serverVersion&lt;br&gt;比较" vertex="1">
+      <mxGeometry height="96" width="180" x="340" y="107" as="geometry" />
+    </mxCell>
+    <mxCell id="phase1-hot-no-update" parent="phase1-hot-box" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#DBEAFE;strokeColor=#2563EB;strokeWidth=2;fontColor=#0F172A;spacing=8;arcSize=10;" value="不需要热更新" vertex="1">
+      <mxGeometry height="64" width="150" x="595" y="50" as="geometry" />
+    </mxCell>
+    <mxCell id="phase1-hot-update" parent="phase1-hot-box" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#DBEAFE;strokeColor=#2563EB;strokeWidth=2;fontColor=#0F172A;spacing=8;arcSize=10;" value="热更新" vertex="1">
+      <mxGeometry height="64" width="150" x="595" y="196" as="geometry" />
+    </mxCell>
+    <mxCell id="phase1-hot-edge-version-compare" edge="1" parent="phase1-hot-box" source="phase1-hot-get-version" style="edgeStyle=orthogonalEdgeStyle;orthogonalLoop=1;jettySize=auto;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=1;html=1;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;fontSize=12;strokeWidth=2;endSize=8;endArrow=classic;strokeColor=#475569;dashed=0;dashPattern=1 1;" target="phase1-hot-compare" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="phase1-hot-edge-no-update" edge="1" parent="phase1-hot-box" source="phase1-hot-compare" style="edgeStyle=orthogonalEdgeStyle;orthogonalLoop=1;jettySize=auto;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=1;html=1;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;fontSize=12;strokeWidth=2;endSize=8;endArrow=classic;strokeColor=#475569;dashed=0;dashPattern=1 1;" target="phase1-hot-no-update" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="phase1-hot-label-no-update" connectable="0" parent="phase1-hot-edge-no-update" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;fontStyle=1;fontColor=#334155;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;rounded=1;" value="版本相同" vertex="1">
+      <mxGeometry relative="1" x="-0.1" as="geometry">
+        <mxPoint as="offset" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="phase1-hot-edge-update" edge="1" parent="phase1-hot-box" source="phase1-hot-compare" style="edgeStyle=orthogonalEdgeStyle;orthogonalLoop=1;jettySize=auto;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=1;html=1;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;fontSize=12;strokeWidth=2;endSize=8;endArrow=classic;strokeColor=#475569;dashed=0;dashPattern=1 1;" target="phase1-hot-update" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="phase1-hot-label-update" connectable="0" parent="phase1-hot-edge-update" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;fontStyle=1;fontColor=#334155;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;rounded=1;" value="存在差异" vertex="1">
+      <mxGeometry relative="1" x="-0.1" as="geometry">
+        <mxPoint y="18" as="offset" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="06llKh2OTYQyAKzPKhvX-1" edge="1" parent="phase-check" source="U4nYEJYEKmzVhJg-lowJ-21" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;dashed=1;dashPattern=8 4;strokeColor=#9333EA;strokeWidth=2;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBorderColor=#CBD5E1;labelBackgroundColor=#FFFFFF;endArrow=classic;endSize=8;" target="phase1-hot-get-version">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="U4nYEJYEKmzVhJg-lowJ-21" parent="phase-check" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#DBEAFE;strokeColor=#2563EB;strokeWidth=2;fontColor=#0F172A;spacing=8;arcSize=10;" value="检查热更新" vertex="1">
+      <mxGeometry height="64" width="140" x="75" y="680" as="geometry" />
+    </mxCell>
+    <mxCell id="U4nYEJYEKmzVhJg-lowJ-50" edge="1" parent="phase-check" source="U4nYEJYEKmzVhJg-lowJ-79" style="edgeStyle=orthogonalEdgeStyle;orthogonalLoop=1;jettySize=auto;rounded=1;html=1;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;fontSize=12;strokeWidth=2;endSize=8;endArrow=classic;strokeColor=#475569;dashed=0;dashPattern=1 1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;align=center;verticalAlign=middle;fontFamily=Helvetica;fontColor=default;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="U4nYEJYEKmzVhJg-lowJ-21">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="210" y="700" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="U4nYEJYEKmzVhJg-lowJ-79" parent="phase-check" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#DBEAFE;strokeColor=#2563EB;strokeWidth=2;fontColor=#0F172A;spacing=8;arcSize=10;" value="不需要全量更新" vertex="1">
+      <mxGeometry height="64" width="150" x="70" y="530" as="geometry" />
+    </mxCell>
+    <mxCell id="qQM5CCyiGKaEGuRPPLm9-187" edge="1" parent="phase-check" source="U4nYEJYEKmzVhJg-lowJ-47" style="edgeStyle=orthogonalEdgeStyle;orthogonalLoop=1;jettySize=auto;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;rounded=1;html=1;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;fontSize=12;strokeWidth=2;endSize=8;endArrow=classic;strokeColor=#9333EA;dashed=1;dashPattern=8 4;align=center;verticalAlign=middle;fontFamily=Helvetica;fontColor=default;" target="U4nYEJYEKmzVhJg-lowJ-79">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="580" y="456.0000000000002" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="qQM5CCyiGKaEGuRPPLm9-186" edge="1" parent="phase-check" source="qQM5CCyiGKaEGuRPPLm9-39" style="edgeStyle=orthogonalEdgeStyle;orthogonalLoop=1;jettySize=auto;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;rounded=1;html=1;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;fontSize=12;strokeWidth=2;endSize=8;endArrow=classic;strokeColor=#9333EA;dashed=1;dashPattern=8 4;align=center;verticalAlign=middle;fontFamily=Helvetica;fontColor=default;" target="U4nYEJYEKmzVhJg-lowJ-79">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="580" y="456.0000000000002" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="phase-download" connectable="0" parent="1" style="shape=swimlane;horizontal=1;startSize=44;fillColor=#ECFDF5;strokeColor=#10B981;strokeWidth=2;fontStyle=1;fontSize=18;fontColor=#10B981;align=left;verticalAlign=top;spacingLeft=20;rounded=1;shadow=0;collapsible=0;container=0;recursiveResize=0;html=1;" value="Phase 2 · 下载安装包" vertex="1">
+      <mxGeometry height="990" width="1300" x="40" y="1400" as="geometry" />
+    </mxCell>
+    <mxCell id="phase-install" connectable="0" parent="1" style="shape=swimlane;horizontal=1;startSize=44;fillColor=#F5F3FF;strokeColor=#8B5CF6;strokeWidth=2;fontStyle=1;fontSize=18;fontColor=#8B5CF6;align=left;verticalAlign=top;spacingLeft=20;rounded=1;shadow=0;collapsible=0;container=0;recursiveResize=0;html=1;arcSize=14;" value="Phase 3 · 安装更新并生效" vertex="1">
+      <mxGeometry height="560" width="1300" x="40" y="2490" as="geometry" />
+    </mxCell>
+    <mxCell id="phase3-hot-box" connectable="0" parent="phase-install" style="shape=swimlane;horizontal=1;startSize=32;fillColor=#FEF3C7;strokeColor=#F59E0B;strokeWidth=2;dashed=0;fontStyle=1;fontSize=14;fontColor=#F59E0B;align=left;verticalAlign=top;spacingLeft=14;rounded=1;shadow=0;collapsible=0;container=0;recursiveResize=0;html=1;fillOpacity=40;" value="热更新" vertex="1">
+      <mxGeometry height="440" width="670" x="580" y="70" as="geometry" />
+    </mxCell>
+    <mxCell id="phase3-hot-start" parent="phase3-hot-box" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#DBEAFE;strokeColor=#2563EB;strokeWidth=2;fontColor=#0F172A;spacing=8;arcSize=10;" value="通知主进程&lt;br&gt;安装热更新包" vertex="1">
+      <mxGeometry height="72" width="190" x="80" y="58" as="geometry" />
+    </mxCell>
+    <mxCell id="phase3-hot-unzip" parent="phase3-hot-box" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#FEF3C7;strokeColor=#F59E0B;strokeWidth=2;fontColor=#0F172A;spacing=8;arcSize=10;" value="AdmZip()&lt;br&gt;解压到 renderer 目录" vertex="1">
+      <mxGeometry height="72" width="220" x="65" y="155" as="geometry" />
+    </mxCell>
+    <mxCell id="phase3-hot-package-dir-note" parent="phase3-hot-box" style="rounded=1;whiteSpace=wrap;html=1;shadow=0;fontSize=12;fontStyle=0;align=center;verticalAlign=middle;overflow=hidden;fillColor=#FFFBEB;strokeColor=#F59E0B;strokeWidth=1;fontColor=#7C2D12;spacing=6;arcSize=8;dashed=1;dashPattern=4 4;" value="app.getAppPath()&lt;br&gt;../app.asar.unpacked/renderer" vertex="1">
+      <mxGeometry height="56" width="220" x="370" y="163" as="geometry" />
+    </mxCell>
+    <mxCell id="phase3-hot-edge-unzip-dir-note" edge="1" parent="phase3-hot-box" source="phase3-hot-unzip" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;dashPattern=8 4;strokeColor=#9333EA;strokeWidth=2;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBorderColor=#CBD5E1;labelBackgroundColor=#FFFFFF;endArrow=classic;endSize=8;" target="phase3-hot-package-dir-note">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="phase3-hot-clean" parent="phase3-hot-box" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#FEF3C7;strokeColor=#F59E0B;strokeWidth=2;fontColor=#0F172A;spacing=8;arcSize=10;" value="删除 tempPackage&lt;br&gt;清理临时下载目录" vertex="1">
+      <mxGeometry height="72" width="220" x="65" y="250" as="geometry" />
+    </mxCell>
+    <mxCell id="phase3-hot-version" parent="phase3-hot-box" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#FEF3C7;strokeColor=#F59E0B;strokeWidth=2;fontColor=#0F172A;spacing=8;arcSize=10;" value="配置文件更新&lt;br&gt;rendererVersion" vertex="1">
+      <mxGeometry height="72" width="220" x="65" y="345" as="geometry" />
+    </mxCell>
+    <mxCell id="phase3-hot-reload" parent="phase3-hot-box" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=15;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#FEF3C7;strokeColor=#F59E0B;strokeWidth=4;fontColor=#7C2D12;spacing=8;arcSize=12;" value="location.reload()&lt;br&gt;刷新页面加载新 renderer" vertex="1">
+      <mxGeometry height="72" width="250" x="370" y="345" as="geometry" />
+    </mxCell>
+    <mxCell id="phase3-hot-edge-start-unzip" edge="1" parent="phase3-hot-box" source="phase3-hot-start" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=0;dashPattern=1 1;strokeColor=#475569;strokeWidth=2;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBorderColor=#CBD5E1;labelBackgroundColor=#FFFFFF;endArrow=classic;endSize=8;" target="phase3-hot-unzip">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="phase3-hot-edge-unzip-clean" edge="1" parent="phase3-hot-box" source="phase3-hot-unzip" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=0;dashPattern=1 1;strokeColor=#475569;strokeWidth=2;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBorderColor=#CBD5E1;labelBackgroundColor=#FFFFFF;endArrow=classic;endSize=8;" target="phase3-hot-clean">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="phase3-hot-edge-clean-version" edge="1" parent="phase3-hot-box" source="phase3-hot-clean" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=0;dashPattern=1 1;strokeColor=#475569;strokeWidth=2;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBorderColor=#CBD5E1;labelBackgroundColor=#FFFFFF;endArrow=classic;endSize=8;" target="phase3-hot-version">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="phase3-hot-edge-version-reload" edge="1" parent="phase3-hot-box" source="phase3-hot-version" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;dashPattern=8 4;strokeColor=#9333EA;strokeWidth=2;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBorderColor=#CBD5E1;labelBackgroundColor=#FFFFFF;endArrow=classic;endSize=8;" target="phase3-hot-reload">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="phase3-full-box" connectable="0" parent="1" style="shape=swimlane;horizontal=1;startSize=32;fillColor=#FFEDD5;strokeColor=#EA580C;strokeWidth=2;dashed=0;fontStyle=1;fontSize=14;fontColor=#EA580C;align=left;verticalAlign=top;spacingLeft=14;rounded=1;shadow=0;collapsible=0;container=0;recursiveResize=0;html=1;fillOpacity=40;" value="全量更新" vertex="1">
+      <mxGeometry height="360" width="510" x="60" y="2560" as="geometry" />
+    </mxCell>
+    <mxCell id="phase3-full-start" parent="phase3-full-box" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#DBEAFE;strokeColor=#2563EB;strokeWidth=2;fontColor=#0F172A;spacing=8;arcSize=10;" value="通知主进程&lt;br&gt;安装全量更新" vertex="1">
+      <mxGeometry height="72" width="180" x="150" y="70" as="geometry" />
+    </mxCell>
+    <mxCell id="phase3-full-edge-start-install" edge="1" parent="phase3-full-box" source="phase3-full-start" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=0;dashPattern=1 1;strokeColor=#475569;strokeWidth=2;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBorderColor=#CBD5E1;labelBackgroundColor=#FFFFFF;endArrow=classic;endSize=8;" target="U4nYEJYEKmzVhJg-lowJ-76">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="U4nYEJYEKmzVhJg-lowJ-76" parent="phase3-full-box" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=15;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#FEF3C7;strokeColor=#F59E0B;strokeWidth=4;fontColor=#7C2D12;spacing=8;arcSize=12;" value="autoUpdater.quitAndInstall()&lt;br&gt;重启应用并安装更新" vertex="1">
+      <mxGeometry height="84" width="300" x="90" y="205" as="geometry" />
+    </mxCell>
+    <mxCell id="phase2-full-box" connectable="0" parent="1" style="shape=swimlane;horizontal=1;startSize=32;fillColor=#FFEDD5;strokeColor=#EA580C;strokeWidth=2;dashed=0;fontStyle=1;fontSize=14;fontColor=#EA580C;align=left;verticalAlign=top;spacingLeft=14;rounded=1;shadow=0;collapsible=0;container=0;recursiveResize=0;html=1;fillOpacity=40;" value="全量更新" vertex="1">
+      <mxGeometry height="568" width="510" x="60" y="1462" as="geometry" />
+    </mxCell>
+    <mxCell id="U4nYEJYEKmzVhJg-lowJ-60" parent="phase2-full-box" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#F3E8FF;strokeColor=#7C3AED;strokeWidth=2;fontColor=#0F172A;spacing=8;arcSize=10;fontFamily=Helvetica;" value="autoUpdater.downloadUpdate(cancellationToken)&lt;br&gt;开始下载" vertex="1">
+      <mxGeometry height="72" width="400" x="40" y="448" as="geometry" />
+    </mxCell>
+    <mxCell id="qQM5CCyiGKaEGuRPPLm9-211" edge="1" parent="phase2-full-box" source="U4nYEJYEKmzVhJg-lowJ-65" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=0;dashPattern=1 1;strokeColor=#475569;strokeWidth=2;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBorderColor=#CBD5E1;labelBackgroundColor=#FFFFFF;endArrow=classic;endSize=8;" target="U4nYEJYEKmzVhJg-lowJ-66">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="U4nYEJYEKmzVhJg-lowJ-65" parent="phase2-full-box" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#FFEDD5;strokeColor=#EA580C;strokeWidth=2;fontColor=#0F172A;spacing=8;arcSize=10;" value="new CancellationToken()&lt;br&gt;创建取消令牌" vertex="1">
+      <mxGeometry height="72" width="240" x="120" y="218" as="geometry" />
+    </mxCell>
+    <mxCell id="qQM5CCyiGKaEGuRPPLm9-208" edge="1" parent="phase2-full-box" source="U4nYEJYEKmzVhJg-lowJ-57" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=8 4;strokeColor=#9333EA;strokeWidth=2;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBorderColor=#CBD5E1;labelBackgroundColor=#FFFFFF;endArrow=classic;endSize=8;" target="U4nYEJYEKmzVhJg-lowJ-65">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="qQM5CCyiGKaEGuRPPLm9-209" connectable="0" parent="qQM5CCyiGKaEGuRPPLm9-208" style="edgeLabel;html=1;align=center;verticalAlign=middle;points=[];rounded=1;dashed=1;dashPattern=8 4;strokeColor=#9333EA;strokeWidth=2;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBorderColor=#CBD5E1;labelBackgroundColor=#FFFFFF;" value="ipcRender" vertex="1">
+      <mxGeometry relative="1" x="-0.1968" as="geometry">
+        <mxPoint as="offset" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="U4nYEJYEKmzVhJg-lowJ-57" parent="phase2-full-box" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#DBEAFE;strokeColor=#2563EB;strokeWidth=2;fontColor=#0F172A;spacing=8;arcSize=10;" value="通知主进程下载" vertex="1">
+      <mxGeometry height="72" width="170" x="155" y="58" as="geometry" />
+    </mxCell>
+    <mxCell id="qQM5CCyiGKaEGuRPPLm9-212" edge="1" parent="phase2-full-box" source="U4nYEJYEKmzVhJg-lowJ-66" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=0;dashPattern=1 1;strokeColor=#475569;strokeWidth=2;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBorderColor=#CBD5E1;labelBackgroundColor=#FFFFFF;endArrow=classic;endSize=8;" target="U4nYEJYEKmzVhJg-lowJ-60">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="U4nYEJYEKmzVhJg-lowJ-66" parent="phase2-full-box" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#F3E8FF;strokeColor=#7C3AED;strokeWidth=2;fontColor=#0F172A;spacing=8;arcSize=10;" value="autoUpdater.on(&#39;download-progress&#39;, ipcReplyProgress)&lt;br&gt;监听下载进度" vertex="1">
+      <mxGeometry height="72" width="380" x="50" y="328" as="geometry" />
+    </mxCell>
+    <mxCell id="phase2-hot-box" connectable="0" parent="1" style="shape=swimlane;horizontal=1;startSize=32;fillColor=#FEF3C7;strokeColor=#F59E0B;strokeWidth=2;dashed=0;fontStyle=1;fontSize=14;fontColor=#F59E0B;align=left;verticalAlign=top;spacingLeft=14;rounded=1;shadow=0;collapsible=0;container=0;recursiveResize=0;html=1;fillOpacity=40;" value="热更新" vertex="1">
+      <mxGeometry height="898" width="670" x="620" y="1460" as="geometry" />
+    </mxCell>
+    <mxCell id="phase2-hot-rename-note" parent="phase2-hot-box" style="rounded=1;whiteSpace=wrap;html=1;shadow=0;fontSize=12;fontStyle=0;align=center;verticalAlign=middle;overflow=hidden;fillColor=#FFFBEB;strokeColor=#F59E0B;strokeWidth=1;fontColor=#7C2D12;spacing=6;arcSize=8;dashed=1;dashPattern=4 4;" value="先写入临时文件，下载成功后再改名&lt;br&gt;避免未完整下载的包被当作可安装 zip" vertex="1">
+      <mxGeometry height="56" width="220" x="400" y="674" as="geometry" />
+    </mxCell>
+    <mxCell id="phase2-hot-rename" parent="phase2-hot-box" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#FEF3C7;strokeColor=#F59E0B;strokeWidth=2;fontColor=#0F172A;spacing=8;arcSize=10;" value="fsPromises.rename()&lt;br&gt;renderer.tmp → renderer.zip" vertex="1">
+      <mxGeometry height="72" width="240" x="80" y="776" as="geometry" />
+    </mxCell>
+    <mxCell id="qQM5CCyiGKaEGuRPPLm9-218" edge="1" parent="phase2-hot-box" source="phase2-hot-download" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=0;dashPattern=1 1;strokeColor=#475569;strokeWidth=2;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBorderColor=#CBD5E1;labelBackgroundColor=#FFFFFF;endArrow=classic;endSize=8;" target="qQM5CCyiGKaEGuRPPLm9-215">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="phase2-hot-download" parent="phase2-hot-box" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#FEF3C7;strokeColor=#F59E0B;strokeWidth=2;fontColor=#0F172A;spacing=8;arcSize=10;" value="axios onUploadProgress&lt;br&gt;监听下载进度" vertex="1">
+      <mxGeometry height="72" width="230" x="85" y="556" as="geometry" />
+    </mxCell>
+    <mxCell id="qQM5CCyiGKaEGuRPPLm9-217" edge="1" parent="phase2-hot-box" source="qQM5CCyiGKaEGuRPPLm9-215" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=0;dashPattern=1 1;strokeColor=#475569;strokeWidth=2;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBorderColor=#CBD5E1;labelBackgroundColor=#FFFFFF;endArrow=classic;endSize=8;" target="phase2-hot-rename">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="qQM5CCyiGKaEGuRPPLm9-222" edge="1" parent="phase2-hot-box" source="qQM5CCyiGKaEGuRPPLm9-215" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;strokeColor=#9333EA;strokeWidth=2;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBorderColor=#CBD5E1;labelBackgroundColor=#FFFFFF;endArrow=classic;endSize=8;dashPattern=8 4;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="phase2-hot-rename-note">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="350" y="702" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="qQM5CCyiGKaEGuRPPLm9-215" parent="phase2-hot-box" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#FEF3C7;strokeColor=#F59E0B;strokeWidth=2;fontColor=#0F172A;spacing=8;arcSize=10;" value="下载到 renderer.tmp" vertex="1">
+      <mxGeometry height="72" width="230" x="85" y="666" as="geometry" />
+    </mxCell>
+    <mxCell id="phase2-hot-start" parent="phase2-hot-box" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#DBEAFE;strokeColor=#2563EB;strokeWidth=2;fontColor=#0F172A;spacing=8;arcSize=10;" value="通知主进程&lt;br&gt;下载热更新包" vertex="1">
+      <mxGeometry height="72" width="180" x="110" y="50" as="geometry" />
+    </mxCell>
+    <mxCell id="phase2-hot-build-url" parent="phase2-hot-box" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#FEF3C7;strokeColor=#F59E0B;strokeWidth=2;fontColor=#0F172A;spacing=8;arcSize=10;" value="热更新包下载地址&lt;br&gt;OSS地址 + renderer.zip + 时间戳防缓存" vertex="1">
+      <mxGeometry height="92" width="260" x="70" y="165" as="geometry" />
+    </mxCell>
+    <mxCell id="phase2-hot-check-package" parent="phase2-hot-box" style="rhombus;rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#FEF3C7;strokeColor=#F59E0B;strokeWidth=2.5;fontColor=#0F172A;spacing=8;arcSize=10;" value="renderer.zip&lt;br&gt;是否已存在" vertex="1">
+      <mxGeometry height="96" width="160" x="120" y="300" as="geometry" />
+    </mxCell>
+    <mxCell id="phase2-hot-completed" parent="phase2-hot-box" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#DBEAFE;strokeColor=#2563EB;strokeWidth=2;fontColor=#0F172A;spacing=8;arcSize=10;" value="已存在&lt;br&gt;返回下载完成" vertex="1">
+      <mxGeometry height="64" width="165" x="340" y="316" as="geometry" />
+    </mxCell>
+    <mxCell id="phase2-hot-abort" parent="phase2-hot-box" style="rounded=1;whiteSpace=wrap;html=1;shadow=1;fontSize=13;fontStyle=1;align=center;verticalAlign=middle;overflow=hidden;fillColor=#F3E8FF;strokeColor=#7C3AED;strokeWidth=2;fontColor=#0F172A;spacing=8;arcSize=10;" value="new AbortController()&lt;br&gt;创建取消令牌" vertex="1">
+      <mxGeometry height="72" width="210" x="95" y="450" as="geometry" />
+    </mxCell>
+    <mxCell id="phase2-hot-edge-start-build" edge="1" parent="phase2-hot-box" source="phase2-hot-start" style="edgeStyle=orthogonalEdgeStyle;orthogonalLoop=1;jettySize=auto;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;rounded=1;html=1;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;fontSize=12;strokeWidth=2;endSize=8;endArrow=classic;strokeColor=#475569;dashed=0;dashPattern=1 1;" target="phase2-hot-build-url" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="phase2-hot-edge-build-check" edge="1" parent="phase2-hot-box" source="phase2-hot-build-url" style="edgeStyle=orthogonalEdgeStyle;orthogonalLoop=1;jettySize=auto;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;rounded=1;html=1;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;fontSize=12;strokeWidth=2;endSize=8;endArrow=classic;strokeColor=#475569;dashed=0;dashPattern=1 1;" target="phase2-hot-check-package" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="phase2-hot-edge-cache-hit" edge="1" parent="phase2-hot-box" source="phase2-hot-check-package" style="edgeStyle=orthogonalEdgeStyle;orthogonalLoop=1;jettySize=auto;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=1;html=1;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;fontSize=12;strokeWidth=2;endSize=8;endArrow=classic;strokeColor=#475569;dashed=0;dashPattern=1 1;" target="phase2-hot-completed" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="phase2-hot-label-cache-hit" connectable="0" parent="phase2-hot-edge-cache-hit" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;fontStyle=1;fontColor=#334155;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;rounded=1;" value="是" vertex="1">
+      <mxGeometry relative="1" x="-0.15" as="geometry">
+        <mxPoint as="offset" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="phase2-hot-edge-cache-miss" edge="1" parent="phase2-hot-box" source="phase2-hot-check-package" style="edgeStyle=orthogonalEdgeStyle;orthogonalLoop=1;jettySize=auto;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;rounded=1;html=1;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;fontSize=12;strokeWidth=2;endSize=8;endArrow=classic;strokeColor=#475569;dashed=0;dashPattern=1 1;" target="phase2-hot-abort" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="phase2-hot-label-cache-miss" connectable="0" parent="phase2-hot-edge-cache-miss" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;fontStyle=1;fontColor=#334155;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;rounded=1;" value="否" vertex="1">
+      <mxGeometry relative="1" x="-0.2" as="geometry">
+        <mxPoint y="2" as="offset" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="phase2-hot-edge-abort-download" edge="1" parent="phase2-hot-box" source="phase2-hot-abort" style="edgeStyle=orthogonalEdgeStyle;orthogonalLoop=1;jettySize=auto;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;rounded=1;html=1;labelBackgroundColor=#FFFFFF;labelBorderColor=#CBD5E1;fontSize=12;strokeWidth=2;endSize=8;endArrow=classic;strokeColor=#475569;dashed=0;dashPattern=1 1;" target="phase2-hot-download" value="">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+  </root>
+</mxGraphModel>

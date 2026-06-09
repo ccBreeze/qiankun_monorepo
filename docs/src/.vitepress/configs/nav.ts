@@ -26,6 +26,10 @@ export const nav: DefaultTheme.NavItem[] = [
     link: firstLink('/optimization/'),
   },
   {
+    text: '面试题',
+    link: firstLink('/interview/'),
+  },
+  {
     text: 'Packages',
     items: [
       {

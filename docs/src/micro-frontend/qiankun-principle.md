@@ -433,12 +433,12 @@ eval(`
 
 光代理 `window` 还不够。子应用在运行时还会调用一类有副作用的 API，它们会绕过 `window` 直接污染主应用：
 
-| 副作用类型                                             | qiankun 的处理                                         |
-| ------------------------------------------------------ | ------------------------------------------------------ |
-| `setTimeout` / `setInterval`                           | 记录每个子应用注册的定时器 ID，`unmount` 时统一 clear  |
-| `addEventListener` 挂在 `window` / `document` 上的事件 | 记录监听器列表，`unmount` 时统一 `removeEventListener` |
-| `document.body.appendChild(<script>)`                  | 拦截动态脚本，使其走沙箱执行链路                       |
-| `document.head.appendChild(<style/link>)`              | 拦截动态样式，使其挂载到子应用容器，便于卸载时移除     |
+| 副作用类型                                            | qiankun 的处理                                   |
+| ----------------------------------------------------- | ------------------------------------------------ |
+| 定时器 `setInterval`                                  | `setTimeout` 不处理                              |
+| 全局事件监听 `window.addEventListener`                | document.addEventListener 不处理                 |
+| 拦截动态脚本`document.body.appendChild(<script>)`     | 普通脚本通过沙箱执行                             |
+| 拦截动态样式`document.head.appendChild(<style/link>)` | 将样式挂载到子应用容器，并在容器卸载时一并移除。 |
 
 这些 patch 集中在 qiankun 源码的 `sandbox/patchers` 目录下，统称 **patcher**。每个子应用 `mount` 时安装 patch，`unmount` 时执行 free 函数还原。这就是为什么子应用切换时，**不会出现"上一个子应用的定时器还在跑、监听器还没解绑"的脏状态**——前提是它通过沙箱 patch 的 API 注册的副作用。
 
@@ -568,6 +568,8 @@ div[data-qiankun='app1'] {
 }
 ```
 
+SCSS 嵌套和 PostCSS 命名空间可以在编译期完成类似的选择器改写，不需要运行时遍历样式。它们只处理构建产物，`document.head` 动态插入的样式仍需由组件库或运行时适配；`html`、`body`、`:root` 等全局规则也要单独转换为应用容器规则。
+
 ### 3. `strictStyleIsolation`：Shadow DOM 强隔离
 
 启用 `sandbox: { strictStyleIsolation: true }` 后，qiankun 会在子应用容器里创建 Shadow Root，并把子应用模板挂到 Shadow Root 内：
@@ -598,7 +600,22 @@ shadow.innerHTML = appContent
 
 它解决的是"组件之间不互相污染"，**对全局选择器（`body`、`html`、`*`）和挂在 `document.body` 的弹出层无能为力**。
 
-### 5. React CSS-in-JS：唯一类名
+### 5. React CSS-in-JS 与 CSS Modules
+
+这两类方案都能减少组件之间的类名冲突，但实现时机不同：
+
+- **CSS-in-JS**：在 JS/TS 中定义样式，由运行时或构建工具生成唯一类名并注入样式；如果样式运行时注入到 `document.head`，仍要配置注入容器和卸载策略。
+- **CSS Modules**：构建时将 `.module.css` 中的类名转换为局部唯一名称，运行时开销较小；它主要解决组件级样式冲突，不能自动限制 `body`、`:root` 等全局规则。
+
+两者都不能替代应用级隔离。跨组件的 reset、主题变量、第三方库样式和挂到 `body` 的弹层，仍需按应用边界单独处理。
+
+### 6. 工程落地：全局样式、第三方库与弹窗
+
+在实际项目中，我会按样式是否统一来决定是否增加命名空间：
+
+- **统一样式**：整个项目使用同一套 reset、主题和基础组件样式时，各子应用重复加载通常不会产生样式冲突，代价主要是重复下载和解析。
+- **差异化样式**：不同子应用需要不同主题时，为第三方库配置应用级前缀。例如 Ant Design Vue 可以通过 `ConfigProvider` 的 `prefixCls` 生成不同的类名前缀；使用 Shadow DOM 时，还要把组件库动态样式通过 `StyleProvider` 注入对应的 Shadow Root。
+- **弹窗容器**：选择器前缀方案下，弹窗应挂到带有应用命名空间的子应用容器；Shadow DOM 方案下，弹窗 DOM 和动态样式都应挂到同一个 Shadow Root。否则弹窗会脱离作用域、样式失效，或重新产生全局冲突。
 
 ## 参考资料
 

@@ -160,7 +160,7 @@ configuration: {
 
 两层配合后，子应用可以安全使用 `manualChunks`。
 
-> `htmlProcessor.ts` 的完整实现与 `isRewritableUrl` 判断逻辑，参见 [Vite 动态修改 base → 主应用：HTML 模板补丁](../qiankun/asset-path#主应用html-模板补丁)。
+> HTML 模板中资源路径的补全说明，参见 [Vite 动态修改 base → 主应用：HTML 模板补丁](../qiankun/asset-path#主应用-html-模板补丁)。
 
 ::: details 为什么修复后 modulepreload 只出现在 qiankun-head 里
 <img src="./imgs/vite-code-splitting-figure-06.png" alt="改写后只保留 qiankun-head 中的 preload 链接" style="display: block; width: 80%; margin: 0 auto;" />
