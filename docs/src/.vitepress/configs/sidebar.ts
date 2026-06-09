@@ -34,6 +34,47 @@ export const sidebar: DefaultTheme.SidebarMulti = {
       ],
     },
   ],
+  '/interview/': [
+    {
+      text: '微前端',
+      items: [
+        {
+          text: '微前端面试 QA',
+          link: '/interview/micro-frontend/interview-qa-four-questions',
+        },
+      ],
+    },
+    {
+      text: 'Electron',
+      items: [
+        {
+          text: 'Electron 热更新方案',
+          link: '/interview/electron/electron-hot-update',
+        },
+        {
+          text: 'Electron 自启权限处理',
+          link: '/interview/electron/electron-auto-start-permission',
+        },
+        {
+          text: 'Electron 桌面客户端面试题',
+          link: '/interview/electron/electron-interview-qa',
+        },
+      ],
+    },
+    {
+      text: 'RN',
+      items: [
+        {
+          text: 'iOS WebView H5 字体短暂异常放大',
+          link: '/interview/rn/ios-webview-rem-flash',
+        },
+        {
+          text: '移动端深链与应用商店跳转',
+          link: '/interview/rn/mobile-deep-link-app-store',
+        },
+      ],
+    },
+  ],
   '/micro-frontend/': [
     {
       text: '微前端原理',
@@ -52,15 +93,6 @@ export const sidebar: DefaultTheme.SidebarMulti = {
         // },
       ],
     },
-    // {
-    //   text: '面试 QA',
-    //   items: [
-    //     {
-    //       text: '微前端中台架构升级 · 面试 QA',
-    //       link: '/micro-frontend/interview-qa',
-    //     },
-    //   ],
-    // },
   ],
   '/packages/i18n/': [
     {
