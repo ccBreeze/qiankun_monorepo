@@ -26,6 +26,10 @@ export const nav: DefaultTheme.NavItem[] = [
     link: firstLink('/optimization/'),
   },
   {
+    text: 'Electron',
+    link: firstLink('/electron/'),
+  },
+  {
     text: 'Packages',
     items: [
       {
