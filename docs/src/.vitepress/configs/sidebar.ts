@@ -34,6 +34,29 @@ export const sidebar: DefaultTheme.SidebarMulti = {
       ],
     },
   ],
+  '/electron/': [
+    {
+      text: 'Electron',
+      items: [
+        {
+          text: 'Electron 热更新方案',
+          link: '/electron/electron-hot-update',
+        },
+        {
+          text: 'Electron 自启权限处理',
+          link: '/electron/electron-auto-start-permission',
+        },
+        {
+          text: 'iOS WebView H5 字体短暂异常放大',
+          link: '/electron/ios-webview-rem-flash',
+        },
+        {
+          text: '移动端深链与应用商店跳转',
+          link: '/electron/mobile-deep-link-app-store',
+        },
+      ],
+    },
+  ],
   '/micro-frontend/': [
     {
       text: '微前端原理',
