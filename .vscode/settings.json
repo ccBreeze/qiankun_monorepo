@@ -23,9 +23,9 @@
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.patterns": {
     "package.json": "package-lock.json, pnpm-lock.yaml, pnpm-workspace.yaml, .npmrc, .yarnrc*, yarn.lock, .gitattributes, .gitignore, .czrc, .lintstagedrc*, commitlint.config.*",
-    "eslint.config.*": ".eslintcache, .eslintrc*, .prettier*, .editorconfig, stylelint.config.*, .stylelint*",
+    "eslint.config.*": ".eslintcache, .eslintrc*, .prettier*, .editorconfig, stylelint.config.*, .stylelint*, postcss.config.*",
     "tsconfig.json": "tsconfig.*.json, *.tsbuildinfo, env.d.ts",
-    "vite.config.*": "vitest.config.*, postcss.config.*, index.html"
+    "vite.config.*": "vitest.config.*, index.html"
   },
 
   "i18n-ally.localesPaths": ["apps/*/src/locales", "packages/*/src/locales"],
