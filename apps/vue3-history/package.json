@@ -20,13 +20,15 @@
     "@breeze/bridge-vue": "workspace:*",
     "@breeze/components": "workspace:*",
     "@breeze/i18n": "workspace:*",
+    "@breeze/plugins": "workspace:*",
     "@breeze/router": "workspace:*",
     "@breeze/runtime": "workspace:*",
     "ant-design-vue": "catalog:",
     "pinia": "catalog:",
     "vue": "catalog:",
     "vue-i18n": "catalog:",
-    "vue-router": "catalog:"
+    "vue-router": "catalog:",
+    "vxe-table": "^4.19.13"
   },
   "devDependencies": {
     "@breeze/eslint-config": "workspace:*",

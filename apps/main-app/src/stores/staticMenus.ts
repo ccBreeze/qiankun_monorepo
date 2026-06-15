@@ -56,6 +56,28 @@ const vue3HistoryStaticMenuData: RawMenuItem[] = [
     icon: '',
     status: 1,
   },
+  {
+    id: -10007,
+    name: '表格交叉高亮 antdv',
+    code: 'STATIC_VUE3_HISTORY_TABLE_CROSS_HIGHLIGHT',
+    parentCode: 'STATIC_VUE3_HISTORY_EXAMPLES',
+    sort: -9994,
+    manualSort: -9994,
+    url: '/TableCrossHighlight',
+    icon: '',
+    status: 1,
+  },
+  {
+    id: -10008,
+    name: '表格交叉高亮 vxe',
+    code: 'STATIC_VUE3_HISTORY_VXE_TABLE_CROSS_HIGHLIGHT',
+    parentCode: 'STATIC_VUE3_HISTORY_EXAMPLES',
+    sort: -9993,
+    manualSort: -9993,
+    url: '/VxeTableCrossHighlight',
+    icon: '',
+    status: 1,
+  },
 ]
 
 const staticMenuDataByMenuKey: Record<string, RawMenuItem[]> = {

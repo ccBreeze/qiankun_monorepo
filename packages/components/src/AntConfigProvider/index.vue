@@ -7,6 +7,13 @@ import { useAntdLocale } from './locale'
 ensureGlobalStyle()
 
 const { antdLocale } = useAntdLocale()
+
+withDefaults(
+  defineProps<{
+    getPopupContainer?: (triggerNode?: HTMLElement) => HTMLElement
+  }>(),
+  { getPopupContainer: () => document.body },
+)
 </script>
 
 <template>
@@ -14,6 +21,7 @@ const { antdLocale } = useAntdLocale()
     componentSize="large"
     :theme="themeToken"
     :locale="antdLocale"
+    :get-popup-container="getPopupContainer"
   >
     <slot></slot>
   </ConfigProvider>

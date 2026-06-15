@@ -14,10 +14,14 @@ const { include, wrapKeepAliveComponent, removeTab } =
 
 useTabRemoveListener(microAppContext, removeTab)
 useHostLocaleSync()
+
+// 将 antd 弹窗挂载到子应用根节点内，使弹窗内事件能冒泡到插件的 listener
+const getPopupContainer = (): HTMLElement =>
+  microAppContext.rootContainer ?? document.body
 </script>
 
 <template>
-  <AntConfigProvider>
+  <AntConfigProvider :getPopupContainer="getPopupContainer">
     <RouterView v-slot="{ Component }">
       <KeepAlive :include="include">
         <component

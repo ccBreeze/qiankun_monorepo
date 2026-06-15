@@ -15,17 +15,11 @@ import {
   type QiankunLifecycleProps,
 } from './utils/microAppContext'
 import { setupLocaleMessages } from './locales'
+import { aTableCrossHighlight, vxeTableCrossHighlight } from '@breeze/plugins'
 
 let app: App | null = null
 
 function renderApp() {
-  app = createApp(AppComponent)
-  const router = generateRouter(microAppContext.activeRule)
-
-  app.use(router)
-  app.use(createPinia())
-  setupLocaleMessages(app)
-
   /**
    * 注意：子应用的根组件必须在主应用指定的 DOM 节点上查找，否则会导致子应用无法正常卸载。
    *
@@ -36,8 +30,19 @@ function renderApp() {
    */
   const rootId = `#${import.meta.env.VITE_APP_NAME}`
   const rootContainer =
-    microAppContext.container?.querySelector(rootId) || rootId
-  app.mount(rootContainer)
+    microAppContext.container?.querySelector<HTMLElement>(rootId) ??
+    document.querySelector<HTMLElement>(rootId)
+  microAppContext.rootContainer = rootContainer
+
+  app = createApp(AppComponent)
+  const router = generateRouter(microAppContext.activeRule)
+  app.use(router)
+  app.use(createPinia())
+  app.use(aTableCrossHighlight, rootContainer)
+  app.use(vxeTableCrossHighlight, rootContainer)
+  setupLocaleMessages(app)
+
+  app.mount(rootContainer ?? rootId)
 }
 
 // 独立运行时

@@ -33,6 +33,8 @@ export type QiankunLifecycleProps<
  */
 export class MicroAppContext<T extends MicroAppHostProps = MicroAppHostProps> {
   protected _props = {} as QiankunLifecycleProps<T>
+  /** 子应用挂载的根 DOM 节点，由 mount 阶段写入，unmount 时重置 */
+  rootContainer: HTMLElement | null = null
 
   setProps(p: QiankunLifecycleProps<T>) {
     this._props = p
@@ -40,6 +42,7 @@ export class MicroAppContext<T extends MicroAppHostProps = MicroAppHostProps> {
 
   reset() {
     this._props = {} as QiankunLifecycleProps<T>
+    this.rootContainer = null
   }
 
   get activeRule() {

@@ -558,6 +558,9 @@ importers:
       '@breeze/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@breeze/plugins':
+        specifier: workspace:*
+        version: link:../../packages/plugins
       '@breeze/router':
         specifier: workspace:*
         version: link:../../packages/router
@@ -579,6 +582,9 @@ importers:
       vue-router:
         specifier: 'catalog:'
         version: 4.6.4(vue@3.5.25(typescript@5.9.3))
+      vxe-table:
+        specifier: ^4.19.13
+        version: 4.19.13(vue@3.5.25(typescript@5.9.3))
     devDependencies:
       '@breeze/eslint-config':
         specifier: workspace:*
@@ -776,6 +782,18 @@ importers:
       vue-i18n:
         specifier: 'catalog:'
         version: 11.4.0(vue@3.5.25(typescript@5.9.3))
+
+  packages/plugins:
+    devDependencies:
+      '@breeze/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+      vue:
+        specifier: 'catalog:'
+        version: 3.5.25(typescript@5.9.3)
 
   packages/router:
     dependencies:
@@ -2412,6 +2430,7 @@ packages:
 
   '@ungap/structured-clone@1.3.0':
     resolution: {integrity: sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==}
+    deprecated: Potential CWE-502 - Update to 1.3.1 or higher
 
   '@vercel/nft@0.30.4':
     resolution: {integrity: sha512-wE6eAGSXScra60N2l6jWvNtVK0m+sh873CpfZW4KI2v8EHuUQp+mSEi4T+IcdPCSEDgCdAS/7bizbhQlkjzrSA==}
@@ -2624,6 +2643,11 @@ packages:
     resolution: {integrity: sha512-EcKxtYvn6gx1F8z9J5/rsg3+lTQnvOruQd8fUecW99DCK04BkWD7z5KQ/wTAx+DazyoEE9dJt/zV8OIEQbM6kw==}
     peerDependencies:
       vue: ^3.5.0
+
+  '@vxe-ui/core@4.4.13':
+    resolution: {integrity: sha512-ViWvzmsW7ZWrowzJrXxQzOJhJwEqOgcX9LNjddF1B5KD49tyNsG5UkeMMAtgV8qSpR8qvJ8TukdIqRN4wgmH4w==}
+    peerDependencies:
+      vue: ^3.2.0
 
   JSONStream@1.3.5:
     resolution: {integrity: sha512-E+iruNOY8VV9s4JEbe1aNEm6MiszPRr/UfcHMz0TQh1BXSxHK+ASV1R6W4HpjBhSeS+54PIsAMCBmwD06LLsqQ==}
@@ -3444,6 +3468,9 @@ packages:
 
   dom-serializer@2.0.0:
     resolution: {integrity: sha512-wIkAryiqt/nV5EQKqQpo3SToSOV9J0DnbJqwK7Wv/Trc92zIAYZ4FlMu+JPFW1DfGFt81ZTCGgDEabffXeLyJg==}
+
+  dom-zindex@1.0.7:
+    resolution: {integrity: sha512-cKU/h8v8IPBgdZOTPbPmq3Ib+Ac5C+kKoh9I4LbGR9BM3GwbmB16KYWKJcj5M2BavnA66EbgYzxYDLd1IytnlQ==}
 
   domelementtype@1.3.1:
     resolution: {integrity: sha512-BSKB+TSpMpFI/HOxCNr1O8aMOTZ8hT3pM3GQ0w/mWRmkhEDSFJkkyzz4XQsBV44BChwGkrDfMyjVD0eA2aFV3w==}
@@ -6707,6 +6734,12 @@ packages:
       typescript:
         optional: true
 
+  vxe-pc-ui@4.14.37:
+    resolution: {integrity: sha512-fbwGZ8Sot0TFqXzYiSB6A0uNirBMnoN0kEauoA06qXZQOb3Xu2PAEQ8H66zLvXPKb6nHooMB75lT+KmlMLgEDQ==}
+
+  vxe-table@4.19.13:
+    resolution: {integrity: sha512-UHGLq7VRu/CPeqQzNUWL9d7XFOo7PzdgsXd5FL0HrupFKtrKApjz+XYmDGS4HSPTLWfQK68TISqyG5d45ltbkw==}
+
   warning@4.0.3:
     resolution: {integrity: sha512-rpJyN222KWIvHJ/F53XSZv0Zl/accqHR8et1kpaMTD/fLCRxtV8iX8czMzY7sVZupTI3zcUTg8eycS2kNF9l6w==}
 
@@ -6791,6 +6824,9 @@ packages:
   wsl-utils@0.3.1:
     resolution: {integrity: sha512-g/eziiSUNBSsdDJtCLB8bdYEUMj4jR7AGeUo96p/3dTafgjHhpF4RiCFPiRILwjQoDXx5MqkBr4fwWtR3Ky4Wg==}
     engines: {node: '>=20'}
+
+  xe-utils@4.0.8:
+    resolution: {integrity: sha512-l+p++9iPtSxpf/5ZCzkPXsyV0avE34KzieAC9oAhi+3e98PLJaBQHNiY2V8Lnbiux4JFAbU10p8AT6oujXkP9A==}
 
   xml-name-validator@4.0.0:
     resolution: {integrity: sha512-ICP2e+jsHvAj2E2lIHxa5tjXRlKDJo4IdvPvCXbXQGdzSfmSpNVyIKMvoZHjDY9DP0zV17iI85o90vRFXNccRw==}
@@ -8540,6 +8576,12 @@ snapshots:
     dependencies:
       vue: 3.5.25(typescript@5.9.3)
 
+  '@vxe-ui/core@4.4.13(vue@3.5.25(typescript@5.9.3))':
+    dependencies:
+      dom-zindex: 1.0.7
+      vue: 3.5.25(typescript@5.9.3)
+      xe-utils: 4.0.8
+
   JSONStream@1.3.5:
     dependencies:
       jsonparse: 1.3.1
@@ -9390,6 +9432,8 @@ snapshots:
       domelementtype: 2.3.0
       domhandler: 5.0.3
       entities: 4.5.0
+
+  dom-zindex@1.0.7: {}
 
   domelementtype@1.3.1: {}
 
@@ -13184,6 +13228,18 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
+  vxe-pc-ui@4.14.37(vue@3.5.25(typescript@5.9.3)):
+    dependencies:
+      '@vxe-ui/core': 4.4.13(vue@3.5.25(typescript@5.9.3))
+    transitivePeerDependencies:
+      - vue
+
+  vxe-table@4.19.13(vue@3.5.25(typescript@5.9.3)):
+    dependencies:
+      vxe-pc-ui: 4.14.37(vue@3.5.25(typescript@5.9.3))
+    transitivePeerDependencies:
+      - vue
+
   warning@4.0.3:
     dependencies:
       loose-envify: 1.4.0
@@ -13295,6 +13351,8 @@ snapshots:
     dependencies:
       is-wsl: 3.1.0
       powershell-utils: 0.1.0
+
+  xe-utils@4.0.8: {}
 
   xml-name-validator@4.0.0: {}
 

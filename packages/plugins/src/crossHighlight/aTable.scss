@@ -1,0 +1,15 @@
+.cross-highlight-host {
+  .ant-table-tbody > tr.ant-table-row:hover > td,
+  .ant-table-tbody > tr > td.ant-table-cell-row-hover {
+    background: transparent;
+  }
+
+  .cross-highlight-off {
+    .ant-table-tbody > tr.ant-table-row:hover > td,
+    .ant-table-tbody > tr > td.ant-table-cell-row-hover {
+      // antd 4.x 没有CSS 变量 --ant-table-row-hover-bg
+      // TODO: 临时写死颜色值
+      background: #fafbfb;
+    }
+  }
+}

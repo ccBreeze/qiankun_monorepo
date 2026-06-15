@@ -1,0 +1,6 @@
+// 表格行列交叉高亮公共样式
+tr.cross-row-active,
+col.cross-col-active {
+  // 交叉单元格叠加，自然加深
+  background-color: rgb(22 119 255 / 10%);
+}

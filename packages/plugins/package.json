@@ -1,0 +1,22 @@
+{
+  "name": "@breeze/plugins",
+  "version": "1.0.0",
+  "description": "Breeze 公共 Vue 插件集",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "type-check": "tsc",
+    "lint": "eslint . --max-warnings=0 --cache",
+    "lint:fix": "eslint . --fix --cache"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.25"
+  },
+  "devDependencies": {
+    "@breeze/eslint-config": "workspace:*",
+    "typescript": "catalog:",
+    "vue": "catalog:"
+  }
+}
