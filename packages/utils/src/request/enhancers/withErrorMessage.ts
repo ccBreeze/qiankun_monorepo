@@ -16,6 +16,11 @@ export const withErrorMessage = <T>({
 
   return () =>
     api().catch((error) => {
+      // AbortError 由竞态防护主动取消
+      if ((error as DOMException)?.name === 'AbortError') {
+        return Promise.reject(error)
+      }
+
       context.onError!(error)
       return Promise.reject(error)
     })

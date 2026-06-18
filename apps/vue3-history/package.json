@@ -22,6 +22,7 @@
     "@breeze/i18n": "workspace:*",
     "@breeze/router": "workspace:*",
     "@breeze/runtime": "workspace:*",
+    "@breeze/utils": "workspace:*",
     "ant-design-vue": "catalog:",
     "pinia": "catalog:",
     "vue": "catalog:",

@@ -46,6 +46,8 @@ export const withRetry = <T>({ api, config }: EnhancerArgs<T>): ApiFn<T> => {
       try {
         return await api()
       } catch (error) {
+        // AbortError 由竞态防护主动取消，不应重试
+        if ((error as DOMException)?.name === 'AbortError') throw error
         // 已达最大重试次数，直接抛出
         if (attempt >= maxRetries) {
           throw error

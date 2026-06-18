@@ -10,6 +10,7 @@ import { withErrorMessage } from './withErrorMessage'
 import { withCache } from './withCache'
 import { withRawResponse } from './withRawResponse'
 import { withRetry } from './withRetry'
+import { withRaceGuard } from './withRaceGuard'
 
 /** 增强器函数类型 */
 type EnhancerFn = <T>(args: EnhancerArgs<T>) => ApiFn<T>
@@ -18,6 +19,7 @@ type EnhancerFn = <T>(args: EnhancerArgs<T>) => ApiFn<T>
  * 增强器列表（按执行顺序）
  */
 const enhancers: EnhancerFn[] = [
+  withRaceGuard,
   withLoading,
   withSuccessMessage,
   withErrorMessage,

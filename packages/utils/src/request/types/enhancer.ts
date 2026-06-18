@@ -40,6 +40,11 @@ export interface RequestEnhancerConfig {
    * - `RetryConfig`: 自定义重试配置
    */
   retry?: boolean | RetryConfig
+  /**
+   * 开启竞态防护。相同接口的新请求发起时，会取消前一个未完成请求。
+   * 适用于 tab 切换等场景，防止旧响应覆盖新数据。
+   */
+  raceGuard?: boolean
 }
 
 /** 成功消息提示函数类型 */

@@ -23,8 +23,8 @@ cache
 *.sln
 *.sw?
 
+# 工程化增量文件
 *.tsbuildinfo
-
 .eslintcache
 .stylelintcache
 .prettiercache

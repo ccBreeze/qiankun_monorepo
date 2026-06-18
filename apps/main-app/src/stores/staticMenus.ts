@@ -56,6 +56,17 @@ const vue3HistoryStaticMenuData: RawMenuItem[] = [
     icon: '',
     status: 1,
   },
+  {
+    id: -10009,
+    name: 'Request 竞态防护',
+    code: 'STATIC_VUE3_HISTORY_REQUEST_RACE_DEMO',
+    parentCode: 'STATIC_VUE3_HISTORY_EXAMPLES',
+    sort: -9992,
+    manualSort: -9992,
+    url: '/RequestRaceDemo',
+    icon: '',
+    status: 1,
+  },
 ]
 
 const staticMenuDataByMenuKey: Record<string, RawMenuItem[]> = {
