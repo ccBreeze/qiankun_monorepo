@@ -359,6 +359,86 @@ await Promise.all([
 
 [Source](https://github.com/ccBreeze/qiankun_monorepo/blob/func_qiankun/packages/utils/src/request/enhancers/withLoading.ts)
 
+#### 局部 loading（按钮级）
+
+`withLoading` 是全局全屏遮罩，适合页面初始化等阻塞场景。**按钮级 loading** 需要的是每个组件实例独立持有的响应式 `Ref<boolean>`，两者语义不同，不应混用。
+
+| 场景                 | 方案                      | 说明                                |
+| -------------------- | ------------------------- | ----------------------------------- |
+| 全屏遮罩、页面初始化 | `showLoading: true`       | 全局单例 + 引用计数，多并发自动合并 |
+| 按钮防重、表单提交   | `useAsyncState`（VueUse） | 每个调用独立一份 `isLoading` ref    |
+
+项目已集成 `@vueuse/core`，直接使用 [`useAsyncState`](https://vueuse.org/core/useAsyncState/)：
+
+::: code-group
+
+```vue [表单提交示例 ~vscode-icons:file-type-vue~]
+<script setup lang="ts">
+import { useAsyncState } from '@vueuse/core'
+import { postAction } from '@/utils/request'
+
+const { isLoading, execute } = useAsyncState(
+  (payload: { orderId: string }) =>
+    postAction<void>({ actionName: 'submitOrder', content: payload }),
+  null,
+  { immediate: false }, // 不自动执行，点击时触发
+)
+</script>
+
+<template>
+  <!-- execute 第一参数为 delay，后续参数透传给上方函数 -->
+  <a-button
+    type="primary"
+    :loading="isLoading"
+    @click="execute(0, { orderId })"
+  >
+    提交订单
+  </a-button>
+</template>
+```
+
+```vue [同时需要返回数据 ~vscode-icons:file-type-vue~]
+<script setup lang="ts">
+import { useAsyncState } from '@vueuse/core'
+import { postDC } from '@/utils/request'
+
+interface UserInfo {
+  name: string
+  role: string
+}
+
+// state 初始值类型决定返回值类型
+const {
+  isLoading,
+  state: userInfo,
+  execute: fetchUser,
+} = useAsyncState(
+  () => postDC<UserInfo>({ actionName: 'getUserInfo' }),
+  null as UserInfo | null,
+  { immediate: false },
+)
+</script>
+
+<template>
+  <a-button :loading="isLoading" @click="fetchUser()">刷新用户信息</a-button>
+  <span v-if="userInfo">{{ userInfo.name }}</span>
+</template>
+```
+
+:::
+
+:::warning 注意
+`useAsyncState` 默认**吞掉异常**，只写入 `error` ref 而不抛出。若业务逻辑依赖 `catch`，需传入 `{ throwError: true }`：
+
+```ts
+const { isLoading, execute } = useAsyncState(apiFn, null, {
+  immediate: false,
+  throwError: true, // [!code highlight]
+})
+```
+
+:::
+
 ### withErrorMessage
 
 错误提示增强器，默认 `true`。请求失败时调用注入的 `onError` 显示错误信息。
