@@ -26,10 +26,13 @@ export const useKeepAlive = (microAppContext?: KeepAliveContext) => {
    * @see https://github.com/vuejs/core/pull/4339#issuecomment-1238984279
    */
   const wrapKeepAliveComponent = (component: VNode | null | undefined) => {
-    // 没有组件名的不需要缓存
-    // if (!component || !(component.type as { name?: string }).name) {
-    //   return component
-    // }
+    // name 注释为显式组件名：defineOptions({ name }) / export default { name }
+    // __name 注释为 Vue 3.2.34+ 对 <script setup> SFC 基于文件名自动推断的组件名
+
+    // 没有显示定义组件名的不需要缓存
+    if (!component || !(component.type as { name?: string }).name) {
+      return component
+    }
 
     const wrapperName = route.fullPath
     let wrapper = wrapperMap.get(wrapperName)
