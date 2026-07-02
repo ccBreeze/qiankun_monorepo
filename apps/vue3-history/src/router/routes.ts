@@ -12,6 +12,11 @@ export const routes: RouteRecordRaw[] = [
     component: () => import('@/views/AssetPathTest/index.vue'),
   },
   {
+    path: '/ExposeForwardDemo',
+    name: 'ExposeForwardDemo',
+    component: () => import('@/views/ExposeForwardDemo/index.vue'),
+  },
+  {
     path: '/KeepAliveDemo',
     name: 'KeepAliveDemo',
     component: () => import('@/views/KeepAliveDemo/index.vue'),

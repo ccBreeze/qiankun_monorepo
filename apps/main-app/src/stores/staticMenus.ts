@@ -56,6 +56,17 @@ const vue3HistoryStaticMenuData: RawMenuItem[] = [
     icon: '',
     status: 1,
   },
+  {
+    id: -10006,
+    name: '组件二次封装',
+    code: 'STATIC_VUE3_HISTORY_EXPOSE_FORWARD_DEMO',
+    parentCode: 'STATIC_VUE3_HISTORY_EXAMPLES',
+    sort: -9995,
+    manualSort: -9995,
+    url: '/ExposeForwardDemo',
+    icon: '',
+    status: 1,
+  },
 ]
 
 const staticMenuDataByMenuKey: Record<string, RawMenuItem[]> = {
