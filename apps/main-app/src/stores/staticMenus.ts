@@ -67,6 +67,17 @@ const vue3HistoryStaticMenuData: RawMenuItem[] = [
     icon: '',
     status: 1,
   },
+  {
+    id: -10006,
+    name: '组件懒加载',
+    code: 'STATIC_VUE3_HISTORY_COMPONENT_LAZY_DEMO',
+    parentCode: 'STATIC_VUE3_HISTORY_EXAMPLES',
+    sort: -9995,
+    manualSort: -9995,
+    url: '/ComponentLazyDemo',
+    icon: '',
+    status: 1,
+  },
 ]
 
 const staticMenuDataByMenuKey: Record<string, RawMenuItem[]> = {
