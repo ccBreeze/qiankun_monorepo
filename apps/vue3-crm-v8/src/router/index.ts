@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { NotFound } from '@breeze/components'
 
 /** 创建路由实例（history 模式） */
 export const generateRouter = (base?: string) => {
@@ -12,7 +13,11 @@ export const generateRouter = (base?: string) => {
       {
         path: '/:pathMatch(.*)*',
         name: 'NotFound',
-        component: () => import('@/views/NotFound.vue'),
+        props: (route) => ({
+          appName: import.meta.env.VITE_APP_NAME,
+          path: route.fullPath,
+        }),
+        component: NotFound,
       },
     ],
   })

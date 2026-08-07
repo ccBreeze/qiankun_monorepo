@@ -1,15 +1,22 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
+interface NotFoundProps {
+  /** 应用显示名称 */
+  appName?: string
+  /** 当前未匹配的完整路径 */
+  path?: string
+}
 
-const route = useRoute()
-const appName = import.meta.env.VITE_APP_NAME
+const props = withDefaults(defineProps<NotFoundProps>(), {
+  appName: '主应用',
+  path: '-',
+})
 </script>
 
 <template>
   <div class="not-found">
     <h1>404 Not Found</h1>
-    <p>应用：{{ appName }}</p>
-    <p>路径：{{ route.fullPath }}</p>
+    <p>应用：{{ props.appName }}</p>
+    <p>路径：{{ props.path }}</p>
   </div>
 </template>
 

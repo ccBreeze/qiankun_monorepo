@@ -12,11 +12,24 @@ title: 子应用注册表
 
 - 根据当前路由识别激活的子应用
 - 为菜单模块提供 `fallbackActiveRule`
+- 为主应用路由生成子应用别名
 - 为各运行环境解析子应用入口 URL
 
 ## 为什么单独一个文件，而不是放进 microApp store
 
-**原因：放进 store 会产生循环依赖**
+**原因一：Router 在 Pinia 之前初始化，无法调用 store**
+
+路由别名在应用启动时静态生成，此时 Pinia 尚未挂载：
+
+```ts
+// router/index.ts
+import { useMicroAppStore } from '@/stores/microApp' // ❌ Pinia 尚未初始化
+
+const { microApps } = useMicroAppStore() // 运行时报错：No active Pinia
+const microAppAliases = microApps.map(...)
+```
+
+**原因二：放进 store 会产生循环依赖**
 
 `menu store` 需要 `microApps` 来获取 `registeredActiveRules`；`microApp store` 需要 `menu store` 来读取 `authorizedRoutesByActiveRule`：
 
@@ -140,20 +153,76 @@ export const microApps = microAppDefinitions.map((config): ResolvedMicroApp => {
 
 </details>
 
-## 主应用路由匹配
+## 路由别名
 
-主应用路由使用通配路由 `/:pathMatch(.*)*` 兜底，所有非 `/login` 的子应用路径均自动命中壳页面，无需依赖注册表为每个子应用单独生成别名：
+> 参考：[Vue Router 路由别名](https://router.vuejs.org/zh/guide/essentials/redirect-and-alias.html#%E5%88%AB%E5%90%8D)
+
+路由别名逻辑内联在主应用路由配置中，不再由注册表导出：
 
 ```ts [apps/main-app/src/router/index.ts]
+import { NotFound } from '@breeze/components'
+
+/**
+ * 子应用路由别名列表，使主应用路由能匹配所有子应用的子路径。
+ *
+ * 从每个子应用的 activeRule 提取路径前缀，生成通配别名。
+ * @example
+ * activeRule: '/ocrm/#' → '/ocrm/:subPath*'
+ * activeRule: '/vue3-history' → '/vue3-history/:subPath*'
+ */
+const microAppAliases = microApps.map(({ activeRule }) => {
+  const segment = activeRule.split('/')[1]
+  return `/${segment}/:subPath*`
+})
+
 const routes: RouteRecordRaw[] = [
-  { path: '/', redirect: '/login' },
-  { path: '/login', name: 'Login', component: LoginPage },
+  // ...
   {
-    path: '/:pathMatch(.*)*',
-    name: 'microApp',
-    component: HomePage, // 所有子应用路径均渲染同一个壳页面
+    path: '/',
+    component: HomePage,
+    children: [
+      {
+        path: 'microApp',
+        name: 'microApp',
+        // ['/ocrm/:subPath*', '/vue3-history/:subPath*', '/crm-v8/:subPath*']
+        alias: microAppAliases, // 将所有子应用路径别名到同一个宿主路由
+        component: MicroApp,
+      },
+      {
+        path: ':pathMatch(.*)*',
+        name: 'NotFound',
+        props: (route) => ({ path: route.fullPath }),
+        component: NotFound,
+      },
+    ],
   },
 ]
 ```
 
-Vue Router 静态路由优先级高于通配符路由，`/login` 会优先匹配；其余所有路径（`/vue3-history/...`、`/crm-v8/...`、`/ocrm/#/...` 等）均自动落到 `/:pathMatch(.*)*`。
+`HomePage` 是主应用布局路由，内部通过 `<router-view>` 承载 `microApp`、`NotFound` 以及未来新增的其他主应用页面，并由 `<keep-alive>` 缓存这些子路由组件。这样它们既共享同一个 `Layout`，又能在切换后保留组件状态：
+
+```vue [apps/main-app/src/views/HomePage/index.vue]
+<template>
+  <Layout>
+    <router-view v-slot="{ Component }">
+      <keep-alive>
+        <component :is="Component" />
+      </keep-alive>
+    </router-view>
+  </Layout>
+</template>
+```
+
+### 为什么需要让 HomePage 分发 404
+
+`/:pathMatch(.*)*` 不能直接指向 `HomePage/index.vue`。当前 `HomePage` 是布局父组件，只渲染 `<Layout><router-view /></Layout>`；如果全局通配路由直接命中它，就没有匹配的子路由，`router-view` 为空，最终只显示布局。即使回到旧版直接渲染 `<MicroApp />` 的实现，非法路径也无法从注册表找到 `activeRule`，同样只会得到空白内容区。正确做法是把通配路由放在 `HomePage.children`：合法子应用路径由 alias 命中 `microApp`，其他路径命中 `NotFound`。
+
+alias 方案只为注册表中的子应用生成匹配规则，保留了“合法子应用地址”和“未知地址”之间的路由边界：
+
+| 地址                       | alias 方案                                          | `/:pathMatch(.*)*` 方案                 |
+| -------------------------- | --------------------------------------------------- | --------------------------------------- |
+| `/vue3-history/CouponList` | 命中 `/vue3-history/:subPath*`，渲染 `HomePage`     | 直接命中 `HomePage`，`router-view` 为空 |
+| `/ocrm/#/index`            | 命中 `/ocrm/:subPath*`，渲染 `HomePage`             | 直接命中 `HomePage`，`router-view` 为空 |
+| `/unknown/page`            | 命中 `HomePage -> NotFound`，在 `Layout` 内展示 404 | 直接命中 `HomePage`，`router-view` 为空 |
+
+因此，`HomePage` 应作为主应用布局父路由，`microApp`、`NotFound` 和未来主应用页面都注册为其 children；公共 `NotFound` 组件只负责 404 内容，不负责布局和路由匹配。

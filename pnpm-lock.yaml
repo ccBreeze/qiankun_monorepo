@@ -424,6 +424,9 @@ importers:
 
   apps/ocrm:
     dependencies:
+      '@breeze/components':
+        specifier: workspace:*
+        version: link:../../packages/components
       '@breeze/runtime':
         specifier: workspace:*
         version: link:../../packages/runtime
@@ -485,6 +488,9 @@ importers:
 
   apps/vue3-crm-v8:
     dependencies:
+      '@breeze/components':
+        specifier: workspace:*
+        version: link:../../packages/components
       '@breeze/runtime':
         specifier: workspace:*
         version: link:../../packages/runtime
