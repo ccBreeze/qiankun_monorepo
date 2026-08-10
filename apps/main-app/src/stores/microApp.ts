@@ -1,11 +1,16 @@
 import { defineStore } from 'pinia'
-import { computed, watch } from 'vue'
+import { computed, onScopeDispose, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { loadMicroApp, type MicroApp } from 'qiankun'
 import { useMenuStore } from '@/stores/menu'
 import { useUserStore } from '@/stores/user'
 import { microApps, type ResolvedMicroApp } from '@/utils/microApp/registry'
-import type { MicroAppHostProps } from '@breeze/runtime'
+import {
+  RUNTIME_EVENTS,
+  qiankunRuntime,
+  type MicroAppHostProps,
+  type TabRemovePayload,
+} from '@breeze/runtime'
 import type { UserData } from '@/types/user'
 
 /** 运行时子应用配置 */
@@ -59,6 +64,8 @@ export const useMicroAppStore = defineStore('microApp', () => {
     const task = (async () => {
       try {
         await app.unmount()
+      } catch (error) {
+        console.error(`[MicroApp] 子应用 ${appName} 卸载失败`, error)
       } finally {
         loadedMicroApps.delete(appName)
         unmountingTasks.delete(appName)
@@ -67,21 +74,6 @@ export const useMicroAppStore = defineStore('microApp', () => {
 
     unmountingTasks.set(appName, task)
     await task
-  }
-
-  const releaseMicroAppIfOrphaned = async (
-    activeRule: string | undefined,
-    tabs: Array<{
-      activeRule?: string
-    }>,
-  ) => {
-    if (!activeRule) return
-
-    const hasRemainingTab = tabs.some((item) => item.activeRule === activeRule)
-    if (hasRemainingTab) return
-
-    const microApp = microApps.find((app) => app.activeRule === activeRule)
-    await unmountMicroAppInstance(microApp!.name)
   }
 
   watch(
@@ -108,10 +100,26 @@ export const useMicroAppStore = defineStore('microApp', () => {
     { immediate: true },
   )
 
+  /** 当最后一个使用某个子应用的 tab 被关闭时，卸载该子应用实例 */
+  const handleTabRemove = ({
+    activeRule,
+    hasRemainingTab,
+  }: TabRemovePayload) => {
+    if (!activeRule || hasRemainingTab !== false) return
+
+    const microApp = microApps.find((app) => app.activeRule === activeRule)
+    if (microApp) {
+      void unmountMicroAppInstance(microApp.name)
+    }
+  }
+  qiankunRuntime.channel.on(RUNTIME_EVENTS.TAB_REMOVE, handleTabRemove)
+  onScopeDispose(() => {
+    qiankunRuntime.channel.off(RUNTIME_EVENTS.TAB_REMOVE, handleTabRemove)
+  })
+
   return {
     microAppConfigs,
     activeMicroApp,
-    releaseMicroAppIfOrphaned,
     unmountMicroAppInstance,
   }
 })

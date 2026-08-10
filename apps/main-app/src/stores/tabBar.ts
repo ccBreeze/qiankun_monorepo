@@ -4,7 +4,6 @@ import { useRoute, useRouter } from 'vue-router'
 import type { RouteLocationRaw } from 'vue-router'
 import type { TabRemoveRequestPayload } from '@breeze/runtime'
 import { useMenuStore } from '@/stores/menu'
-import { useMicroAppStore } from '@/stores/microApp'
 import { emitTabRemove } from '@/utils/channel'
 
 type Tab = {
@@ -40,7 +39,6 @@ const normalizeFullPath = (path: string) =>
 export const useTabBarStore = defineStore('tabBar', () => {
   const route = useRoute()
   const router = useRouter()
-  const microAppStore = useMicroAppStore()
   const { activeMenuRoute } = storeToRefs(useMenuStore())
 
   const tabs = useLocalStorage<Map<string, Tab>>('tabBar:tabs', new Map(), {
@@ -126,10 +124,17 @@ export const useTabBarStore = defineStore('tabBar', () => {
     }
 
     tabs.value.delete(fullPath)
-    emitTabRemove({ fullPath })
-    await microAppStore.releaseMicroAppIfOrphaned(tab.activeRule, [
-      ...tabs.value.values(),
-    ])
+    // 是否仍有使用相同 activeRule 的 tab（用于子应用卸载判定）
+    const hasRemainingTab = tab.activeRule
+      ? [...tabs.value.values()].some(
+          (remainingTab) => remainingTab.activeRule === tab.activeRule,
+        )
+      : false
+    emitTabRemove({
+      fullPath,
+      activeRule: tab.activeRule,
+      hasRemainingTab,
+    })
   }
 
   const clearTabs = () => {

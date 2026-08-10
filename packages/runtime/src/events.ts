@@ -1,3 +1,5 @@
+import type { MicroAppHostProps } from './MicroAppContext'
+
 /**
  * 主子应用通信事件
  *
@@ -28,6 +30,10 @@ export interface TabRemoveRequestPayload {
 
 export interface TabRemovePayload {
   fullPath: string
+  /** 被关闭 tab 所属子应用的激活规则 */
+  activeRule?: MicroAppHostProps['activeRule']
+  /** 关闭后是否仍有使用相同 activeRule 的 tab */
+  hasRemainingTab?: boolean
 }
 
 export interface LocaleChangePayload {
