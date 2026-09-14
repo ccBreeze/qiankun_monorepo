@@ -56,7 +56,7 @@ export const useAuthStore = defineStore('auth', () => {
     let hasShownLogoutModal = false
     return (content: string): void => {
       // 确保只弹出一次
-      if (!hasShownLogoutModal) return
+      if (hasShownLogoutModal) return
       hasShownLogoutModal = true
       Modal.error({
         content,
