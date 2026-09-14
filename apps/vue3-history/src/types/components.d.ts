@@ -12,6 +12,8 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AButton: typeof import('ant-design-vue/es')['Button']
+    ASegmented: typeof import('ant-design-vue/es')['Segmented']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
@@ -19,6 +21,8 @@ declare module 'vue' {
 
 // For TSX support
 declare global {
+  const AButton: typeof import('ant-design-vue/es')['Button']
+  const ASegmented: typeof import('ant-design-vue/es')['Segmented']
   const RouterLink: typeof import('vue-router')['RouterLink']
   const RouterView: typeof import('vue-router')['RouterView']
 }
