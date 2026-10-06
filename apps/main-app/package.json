@@ -20,6 +20,7 @@
     "@breeze/router": "workspace:*",
     "@breeze/runtime": "workspace:*",
     "@breeze/utils": "workspace:*",
+    "@module-federation/vite": "catalog:",
     "@vueuse/core": "catalog:",
     "ant-design-vue": "catalog:",
     "axios": "catalog:",
