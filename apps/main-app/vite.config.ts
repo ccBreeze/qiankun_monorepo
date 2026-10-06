@@ -3,7 +3,7 @@ import { resolve } from 'node:path'
 import { defineConfig, mergeConfig } from 'vite'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
-import { createVue3BaseConfig } from '@breeze/vite-config/base'
+import { createVue3BaseConfig } from '@breeze/vite-config/vue3'
 
 export default defineConfig(
   mergeConfig(

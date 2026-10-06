@@ -1,11 +1,12 @@
 {
   "name": "@breeze/vite-config",
   "version": "1.0.0",
-  "description": "Vue3 + Vite 共享配置工厂",
+  "description": "Vite 共享配置工厂",
   "type": "module",
   "exports": {
-    "./base": "./src/base.ts",
-    "./micro": "./src/micro.ts"
+    "./vue3": "./src/vue3.ts",
+    "./qiankun": "./src/qiankun.ts",
+    "./vue3Micro": "./src/vue3Micro.ts"
   },
   "scripts": {
     "type-check": "tsc",
@@ -21,6 +22,18 @@
     "vite-plugin-qiankun": ">=1.0.0"
   },
   "peerDependenciesMeta": {
+    "@vitejs/plugin-vue": {
+      "optional": true
+    },
+    "@vitejs/plugin-vue-jsx": {
+      "optional": true
+    },
+    "unplugin-auto-import": {
+      "optional": true
+    },
+    "unplugin-vue-components": {
+      "optional": true
+    },
     "vite-plugin-qiankun": {
       "optional": true
     }

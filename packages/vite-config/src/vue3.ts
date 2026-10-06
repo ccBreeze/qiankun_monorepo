@@ -7,15 +7,15 @@ import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 
-/** 基础 Vue3 配置参数 */
+/** Vue3 通用配置参数 */
 export type SharedVueOptions = {
   /** 开发服务器端口（同时用作 preview 端口） */
   port: number
 }
 
 /**
- * 创建 Vue3 + Vite 基础配置。
- * 适用于主应用 / 子应用。
+ * 创建 Vue3 通用的 Vite 配置。
+ * 主应用可直接使用，子应用通过 vue3Micro.ts 叠加 qiankun 配置。
  */
 export const createVue3BaseConfig = (options: SharedVueOptions): UserConfig => {
   const { port } = options

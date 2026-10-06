@@ -18,6 +18,8 @@
   "dependencies": {
     "@breeze/components": "workspace:*",
     "@breeze/runtime": "workspace:*",
+    "pinia": "catalog:",
+    "vue-i18n": "catalog:",
     "vue": "catalog:",
     "vue-router": "catalog:"
   },
