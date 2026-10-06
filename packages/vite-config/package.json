@@ -6,7 +6,8 @@
   "exports": {
     "./vue3": "./src/vue3.ts",
     "./qiankun": "./src/qiankun.ts",
-    "./vue3Micro": "./src/vue3Micro.ts"
+    "./vue3Micro": "./src/vue3Micro.ts",
+    "./federation/vue3": "./src/federation/vue3.ts"
   },
   "scripts": {
     "type-check": "tsc",
@@ -37,6 +38,9 @@
     "vite-plugin-qiankun": {
       "optional": true
     }
+  },
+  "dependencies": {
+    "@module-federation/vite": "catalog:"
   },
   "devDependencies": {
     "@breeze/eslint-config": "workspace:*",
