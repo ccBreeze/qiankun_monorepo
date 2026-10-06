@@ -1,4 +1,4 @@
-import { defineConfig, loadEnv, mergeConfig } from 'vite'
+import { defineConfig, mergeConfig } from 'vite'
 import type { UserConfig } from 'vite'
 import qiankun from 'vite-plugin-qiankun'
 
@@ -9,20 +9,22 @@ import type { SharedVueOptions } from './base.ts'
  * 创建 qiankun 子应用专用的 Vite 配置。
  */
 export const createVue3MicroAppConfig = (options: SharedVueOptions) => {
-  return defineConfig((env) => {
+  return defineConfig(() => {
     const { port } = options
-    const envMap = loadEnv(env.mode, process.cwd())
 
     // 提前校验，避免 appName 为 undefined 时产生静默 404
-    const appName = envMap.VITE_APP_NAME
+    const appName = process.env.npm_package_name
     if (!appName) {
       throw new Error(
-        '[vite-config] VITE_APP_NAME is required in .env for micro app config',
+        '[vite-config] 缺少 npm_package_name，请通过包管理器运行子应用脚本，以读取 package.json 中的应用名称。',
       )
     }
 
     // 子应用专属配置：qiankun 插件 + 运行时资源路径 + server.origin
     const microAppConfig: UserConfig = {
+      define: {
+        'import.meta.env.VITE_APP_NAME': JSON.stringify(appName),
+      },
       experimental: {
         /**
          * 替代静态 base 配置，将资源路径解析推迟到运行时。

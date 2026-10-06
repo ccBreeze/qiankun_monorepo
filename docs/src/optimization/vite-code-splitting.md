@@ -70,7 +70,9 @@ qiankun 子应用运行在主应用的沙箱环境里，没有自己独立的域
 
 对于 JS 模块内部引用的 chunk 地址，Vite 提供了 `experimental.renderBuiltUrl` 钩子，可以把静态路径改写为运行时表达式：
 
-```ts [apps/vue3-history/vite.config.ts]
+以下为公共子应用配置的片段，`appName` 取自包管理器提供的 `process.env.npm_package_name`，与客户端 `import.meta.env.VITE_APP_NAME` 保持一致。
+
+```ts [packages/vite-config/src/micro.ts]
 experimental: {
   /**
    * 替代静态 base 配置，将资源路径解析推迟到运行时。
@@ -90,7 +92,7 @@ experimental: {
     // JS/CSS 运行时动态路径 // [!code focus]
     if (hostType === 'js' || hostType === 'css') { // [!code focus]
       return { // [!code focus]
-        runtime: `window.__assetsPath(${JSON.stringify(env.VITE_APP_NAME)},${JSON.stringify(filename)})`, // [!code focus]
+        runtime: `window.__assetsPath(${JSON.stringify(appName)},${JSON.stringify(filename)})`, // [!code focus]
       } // [!code focus]
     } // [!code focus]
     return { relative: true }

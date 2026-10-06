@@ -177,7 +177,9 @@ apps/
 两者互为补充，覆盖不同阶段。
 :::
 
-```ts [apps/vue3-history/vite.config.ts]
+以下为公共子应用配置的片段，`appName` 取自 `process.env.npm_package_name`，与注入客户端的 `import.meta.env.VITE_APP_NAME` 使用同一来源，详见 [子应用名称与构建常量](../packages/vite-config/index.md#子应用名称与构建常量)。
+
+```ts [packages/vite-config/src/micro.ts]
 experimental: {
   renderBuiltUrl(filename, { hostType }) {
     // CSS 中引用的图片保持相对路径
@@ -192,7 +194,7 @@ experimental: {
     if (hostType === 'js' || hostType === 'css') {
       return {
         runtime: `window.__assetsPath(
-          ${JSON.stringify(env.VITE_APP_NAME)},
+          ${JSON.stringify(appName)},
           ${JSON.stringify(filename)}
         )`,
       }

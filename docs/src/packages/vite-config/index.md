@@ -59,6 +59,7 @@ export default defineConfig(
 在 `createVue3BaseConfig` 的基础上，通过 `mergeConfig` 叠加 qiankun 子应用专属配置：
 
 - **`vite-plugin-qiankun`**：向子应用注入 qiankun 生命周期钩子（`mount/unmount/bootstrap`）
+- **`define`**：从 `package.json.name` 派生 `import.meta.env.VITE_APP_NAME`，统一应用代码与 HTML 挂载节点的名称
 - **`server.origin`**：让开发模式下子应用的 `modulepreload` 链接携带完整 origin
 - **`experimental.renderBuiltUrl`**：将 JS/CSS 中的静态资源路径改写为运行时表达式，解决子应用嵌入主应用后的 404 问题，详见 [Vite 动态修改 base](../../qiankun/asset-path)
 
@@ -76,18 +77,71 @@ export default createVue3MicroAppConfig({ port: 8101 })
 
 子应用只需提供端口，无需重复配置插件或构建选项。
 
-## 子应用 .env 配置要求
+## 子应用名称与构建常量
 
-子应用的 `.env` 文件必须包含 `VITE_APP_NAME`，值与主应用注册表中的应用名一致：
+子应用名称统一以 `package.json.name` 为来源，值须与主应用 qiankun 注册表中的应用名一致。例如 `vue3-history` 的名称字段为：
 
-```ini [apps/vue3-history/.env]
-VITE_APP_NAME=vue3-history
+```json [apps/vue3-history/package.json]
+{
+  "name": "vue3-history"
+}
 ```
 
-`VITE_APP_NAME` 缺失时构建或启动 dev server 会立即报错：
+包管理器运行应用脚本时，会通过 `process.env.npm_package_name` 提供这个名称。`createVue3MicroAppConfig` 读取并校验一次，再将同一个 `appName` 用于以下位置：
+
+| 使用位置                        | 名称的用途                                                         |
+| ------------------------------- | ------------------------------------------------------------------ |
+| `qiankun(appName)`              | qiankun 生命周期注册                                               |
+| `renderBuiltUrl`                | 构建产物调用 `window.__assetsPath(appName, filename)` 时的应用标识 |
+| `import.meta.env.VITE_APP_NAME` | Vue 挂载节点查找、404 页面的 `appName` 参数                        |
+| HTML 中的 `%VITE_APP_NAME%`     | 子应用根节点 ID                                                    |
+
+公共配置通过 `define` 注入客户端字段，配置片段如下：
+
+```ts [packages/vite-config/src/micro.ts]
+const appName = process.env.npm_package_name
+const microAppConfig = {
+  define: {
+    'import.meta.env.VITE_APP_NAME': JSON.stringify(appName),
+  },
+}
+```
+
+`VITE_APP_NAME` 是固定的应用元数据，在生产构建时写入产物，无需在 `.env` 中重复维护。继续保留 `VITE_` 命名，应用代码和 HTML 沿用原有读取方式。其他随环境变化的 `VITE_*` 配置仍可放在 `.env` 文件中，由 Vite 正常加载。Vite 7.3.2 的 HTML 替换也会读取 `define` 中的 `import.meta.env.*` 定义。[Vite HTML 替换实现](https://github.com/vitejs/vite/blob/v7.3.2/packages/vite/src/node/plugins/html.ts)
+
+应用代码与 HTML 使用同一个名称：
+
+```ts [apps/vue3-history/src/main.ts]
+const rootId = `#${import.meta.env.VITE_APP_NAME}`
+const rootContainer = microAppContext.container?.querySelector(rootId) || rootId
+app.mount(rootContainer)
+```
+
+```html [apps/vue3-history/index.html]
+<div id="%VITE_APP_NAME%"></div>
+```
+
+各子应用的 `env.d.ts` 为该字段提供类型声明：
+
+```ts [apps/vue3-history/env.d.ts]
+/// <reference types="vite/client" />
+
+interface ImportMetaEnv {
+  readonly VITE_APP_NAME: string
+}
+```
+
+通过子应用脚本启动或构建，以确保包管理器提供正确的包名：
+
+```bash
+pnpm --filter vue3-history run dev
+pnpm --filter vue3-history run build
+```
+
+如果直接调用 Vite 且未提供 `npm_package_name`，配置工厂会立即报错：
 
 ```
-[vite-config] VITE_APP_NAME is required in .env for micro app config
+[vite-config] 缺少 npm_package_name，请通过包管理器运行子应用脚本，以读取 package.json 中的应用名称。
 ```
 
 ## peer dependencies

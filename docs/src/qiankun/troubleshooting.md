@@ -27,13 +27,13 @@ title: 常见问题与解决方案
 </body>
 ```
 
-```ts
+```ts [apps/vue3-history/src/main.ts]
 const rootId = `#${import.meta.env.VITE_APP_NAME}`
 const rootContainer = microAppContext.container?.querySelector(rootId) || rootId
 app.mount(rootContainer)
 ```
 
-`index.html` 中的挂载节点 `id="%VITE_APP_NAME%"` 必须与入口代码中的 `import.meta.env.VITE_APP_NAME` 保持一致。
+`index.html` 中的挂载节点 `id="%VITE_APP_NAME%"` 必须与入口代码中的 `import.meta.env.VITE_APP_NAME` 保持一致。两处名称均由公共 Vite 配置从 `package.json.name` 派生，并通过 `define` 注入，无需在 `.env` 中重复维护，详见 [子应用名称与构建常量](../packages/vite-config/index.md#子应用名称与构建常量)。
 
 > 参考：[qiankun 官方 FAQ](https://qiankun.umijs.org/zh/faq#application-died-in-status-not_mounted-target-container-with-container-not-existed-after-xxx-mounted)
 
