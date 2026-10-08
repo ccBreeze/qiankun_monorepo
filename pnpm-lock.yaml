@@ -430,9 +430,15 @@ importers:
       '@breeze/runtime':
         specifier: workspace:*
         version: link:../../packages/runtime
+      pinia:
+        specifier: 'catalog:'
+        version: 3.0.4(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3))
       vue:
         specifier: 'catalog:'
         version: 3.5.25(typescript@5.9.3)
+      vue-i18n:
+        specifier: 'catalog:'
+        version: 11.4.0(vue@3.5.25(typescript@5.9.3))
       vue-router:
         specifier: 'catalog:'
         version: 4.6.4(vue@3.5.25(typescript@5.9.3))
@@ -494,9 +500,15 @@ importers:
       '@breeze/runtime':
         specifier: workspace:*
         version: link:../../packages/runtime
+      pinia:
+        specifier: 'catalog:'
+        version: 3.0.4(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3))
       vue:
         specifier: 'catalog:'
         version: 3.5.25(typescript@5.9.3)
+      vue-i18n:
+        specifier: 'catalog:'
+        version: 11.4.0(vue@3.5.25(typescript@5.9.3))
       vue-router:
         specifier: 'catalog:'
         version: 4.6.4(vue@3.5.25(typescript@5.9.3))
