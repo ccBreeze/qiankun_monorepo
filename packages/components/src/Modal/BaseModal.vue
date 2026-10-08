@@ -1,26 +1,29 @@
 <template>
-  <a-modal
-    v-bind="$attrs"
-    v-model:open="open"
-    :centered="centered"
-    :width="width"
-    :bodyStyle="bodyStyle"
-    :confirmLoading="confirmLoading"
-    wrapClassName="pack-modal-wrap"
-    class="pack-modal"
-    :class="[
-      `pack-modal--${size}`,
-      {
-        'pack-modal--ok-invalid': !okButtonReady,
-      },
-    ]"
-    @cancel="handleCancel"
-    @ok="handleOk"
-  >
-    <template v-for="(_, name) in $slots" #[name]="scope">
-      <slot :name="name" v-bind="scope || {}" />
-    </template>
-  </a-modal>
+  <div class="pack-modal-scope">
+    <a-modal
+      v-bind="$attrs"
+      v-model:open="open"
+      :centered="centered"
+      :width="width"
+      :bodyStyle="bodyStyle"
+      :confirmLoading="confirmLoading"
+      :getContainer="false"
+      wrapClassName="pack-modal-wrap"
+      class="pack-modal"
+      :class="[
+        `pack-modal--${size}`,
+        {
+          'pack-modal--ok-invalid': !okButtonReady,
+        },
+      ]"
+      @cancel="handleCancel"
+      @ok="handleOk"
+    >
+      <template v-for="(_, name) in $slots" #[name]="scope">
+        <slot :name="name" v-bind="scope || {}" />
+      </template>
+    </a-modal>
+  </div>
 </template>
 
 <script lang="ts">
@@ -49,11 +52,11 @@ export interface BaseModalOwnProps extends Pick<
 
 /**
  * 透传给底层 a-modal 的剩余 props。
- * 已剔除:BaseModalOwnProps 重写的字段、由 BaseModal 内部接管的字段(confirmLoading / bodyStyle / open)。
+ * 已剔除:BaseModalOwnProps 重写的字段、由 BaseModal 内部接管的字段(confirmLoading / bodyStyle / open / getContainer)。
  */
 export type BaseModalPassthroughProps = Omit<
   ModalProps,
-  keyof BaseModalOwnProps | 'confirmLoading' | 'open'
+  keyof BaseModalOwnProps | 'confirmLoading' | 'open' | 'getContainer'
 >
 
 /** BaseModal 完整 Props 契约 = 自身 props + 透传给 a-modal 的 props */
@@ -98,37 +101,43 @@ const handleOk = runAction(props.onOk)
 const handleCancel = runAction(props.onCancel)
 </script>
 
-<style lang="scss">
-.pack-modal-wrap {
-  // 弹窗显示滚动条会有抖动效果
-  scrollbar-width: none;
-}
+<style lang="scss" scoped>
+.pack-modal-scope {
+  display: contents;
 
-/* a-modal 会 teleport 到 body,这里的规则作用于外部 DOM,靠 .pack-modal 类前缀隔离 */
-.pack-modal {
-  /* 超长滚动 */
-  .ant-modal-content {
-    padding: 24px 24px 16px;
-    margin: 80px 0;
+  :deep(.pack-modal-wrap) {
+    // 弹窗显示滚动条会有抖动效果
+    scrollbar-width: none;
   }
 
-  .ant-modal-close {
-    inset-inline-end: 24px;
-    top: 28px;
+  /* BaseModal 强制就地渲染, scoped 容器负责限制样式边界, :deep() 只穿透 a-modal 内部 DOM */
+  :deep(.pack-modal) {
+    /* 超长滚动 */
+    .ant-modal-content {
+      padding: 24px 24px 16px;
+      margin: 80px 0;
+    }
 
-    &:hover {
-      background-color: transparent;
+    .ant-modal-close {
+      inset-inline-end: 24px;
+      top: 28px;
+
+      &:hover {
+        background-color: transparent;
+      }
+    }
+
+    /** 取消按钮 */
+    .ant-modal-footer .ant-btn-default:not(:hover) {
+      color: rgb(22 35 61 / 65%);
     }
   }
 
-  /** 取消按钮 */
-  .ant-modal-footer .ant-btn-default:not(:hover) {
-    color: rgb(22 35 61 / 65%);
-  }
-
   /** 确定按钮 - 无效（可点击）状态 */
-  &--ok-invalid .ant-modal-footer .ant-btn-primary {
-    background: rgb(22 35 61 / 15%);
+  :deep(.pack-modal--ok-invalid) {
+    .ant-modal-footer .ant-btn-primary {
+      background: rgb(22 35 61 / 15%);
+    }
   }
 }
 </style>

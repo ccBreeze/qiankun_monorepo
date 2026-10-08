@@ -547,7 +547,7 @@ div[data-qiankun='app1'] {
 缺点：
 
 - 运行时遍历改写，首屏有一次额外开销；
-- 弹出层挂在 `document.body` 时仍会逃出容器作用域。
+- 弹出层 Modal 挂在 `document.body` 时仍会逃出容器作用域。需要通过 getPopupContainer 指回 Shadow 内节点
 - **不能阻止主应用样式污染子应用**；
 
 #### 编译期等效方案：SCSS 嵌套
@@ -598,7 +598,11 @@ shadow.innerHTML = appContent
 
 它解决的是"组件之间不互相污染"，**对全局选择器（`body`、`html`、`*`）和挂在 `document.body` 的弹出层无能为力**。
 
-### 5. React CSS-in-JS：唯一类名
+### 5. React
+
+- css modules
+- css in js `styled-components`
+- css 原子化 `TailWind Css`
 
 ## 参考资料
 

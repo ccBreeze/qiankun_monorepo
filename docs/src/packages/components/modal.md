@@ -32,7 +32,7 @@ import { AntConfigProvider, ModalContainer } from '@breeze/components'
 </script>
 ```
 
-`ModalContainer` 内部会使用 `Teleport to="body"`，所以弹窗最终仍然渲染在 `body` 下，不会被页面局部容器的 `overflow`、`z-index` 或布局层级影响。
+`ModalContainer` 内部会使用 `Teleport to="body"`，先把命令式弹窗组件移动到 `body`。`BaseModal` 再通过 `getContainer=false` 让底层 `a-modal` 就地渲染在自身的 `.pack-modal-scope` 中，避免 `a-modal` 再次 Teleport。因而命令式弹窗的最终 DOM 仍位于 `body` 下，不会被原业务页面局部容器的 `overflow`、`z-index` 或布局层级影响。
 
 ### 命令式打开内置弹窗
 
@@ -162,6 +162,10 @@ const handleOk = async () => {
 </template>
 ```
 
+::: warning 声明式挂载位置
+`BaseModal` 固定使用 `getContainer=false`，声明式使用时会在当前组件位置就地渲染，不会自动移动到 `body`。需要确认祖先节点没有会裁剪弹窗的 `overflow`，并留意 `transform`、`z-index` 等属性创建的层叠上下文。命令式调用不受此限制，因为 `ModalContainer` 已经先把弹窗组件 Teleport 到 `body`。
+:::
+
 ### 不同尺寸预设
 
 ```ts
@@ -255,7 +259,7 @@ export type DemoActionModalRequest = DemoActionModalOwnProps & BaseModalProps
 | `bodyStyle`     | body 样式；会和 `size` 计算的 `min-height` 合并                                          | `CSSProperties`                            | -         |
 | `onOk`          | 点击确定回调，返回 Promise 时按钮自动进入 loading；resolve 后弹窗关闭，reject 时保持打开 | `() => unknown \| Promise<unknown>`        | -         |
 | `onCancel`      | 点击取消回调，行为与 `onOk` 一致                                                         | `() => unknown \| Promise<unknown>`        | -         |
-| 其他            | 任意 antdv `ModalProps`（除 `confirmLoading` / `open` 由内部接管）                       | `ModalProps`                               | -         |
+| 其他            | 任意 antdv `ModalProps`（除 `confirmLoading` / `open` / `getContainer` 由内部接管）      | `ModalProps`                               | -         |
 
 `MODAL_SIZES` 常量：
 
@@ -270,7 +274,9 @@ export type DemoActionModalRequest = DemoActionModalOwnProps & BaseModalProps
 
 - `confirmLoading` 由 `BaseModal` 内部托管：`onOk` / `onCancel` 是 Promise 时自动加 loading；
 - `onOk` / `onCancel` 抛错时保持弹窗打开，业务侧可用 `try/catch` 自行提示；
-- `.pack-modal` 类前缀作用于 teleport 后的 DOM，不会污染外部样式。
+- `getContainer` 固定为 `false`，底层 `a-modal` 在 `.pack-modal-scope` 内就地渲染，不允许业务侧覆盖挂载容器；
+- `.pack-modal-scope` 使用 `display: contents`，不额外参与页面布局；
+- 组件样式使用 `scoped`，并通过 `.pack-modal-scope` 下的 `:deep()` 选择器定向覆盖 antdv 内部 DOM，避免样式泄漏到其他弹窗。
 
 #### Slots
 
@@ -311,6 +317,8 @@ type Props = MyOwnProps & Pick<ModalInjectedProps<MyResult>, 'onOk'>
 3. **`render.ts`**：为单个弹窗生成唯一 `id`，把组件、props 和注入回调写入 `modalStore`；
 4. **`ModalContainer.vue`**：订阅 `modalStore`，通过 `Teleport to="body"` 渲染当前弹窗实例；容器卸载时清空 store，避免 qiankun 子应用卸载后遗留 pending 弹窗。
 
+渲染到 `body` 后，`BaseModal` 会把底层 `a-modal` 保留在自身的 `.pack-modal-scope` 内。这里的 `getContainer=false` 只阻止 antdv 发起第二次 Teleport，不会改变命令式弹窗已经由 `ModalContainer` 移动到 `body` 的结果。
+
 `render.ts` 在创建 Promise 时把 `onOk` 绑到 `resolve`、把 `onCancel` 绑到 `reject`，并把 `afterClose` 绑到 `removeModalInstance(id)`：
 
 ```ts
@@ -344,7 +352,7 @@ addModalInstance({
 
 这是 `openModal` 对调用方的核心契约：**取消即抛出**。业务侧可以借此让 `await` 链在用户取消时自然中断，无需在父组件维护"取消标记"或额外回调。
 
-和早期每次 `openModal` 都创建独立 Vue app 的方案不同，现在命令式弹窗仍在根应用组件树里，只是 DOM 位置被 `Teleport` 到 `body`。因此它可以自然继承根应用上安装的能力，例如 `AntConfigProvider`、`vue-i18n`、主题配置和依赖注入；不需要再额外维护 `configureModalApp()`。
+和早期每次 `openModal` 都创建独立 Vue app 的方案不同，现在命令式弹窗仍在根应用组件树里，只是组件 DOM 先由 `ModalContainer` Teleport 到 `body`，底层 `a-modal` 再就地渲染。它可以自然继承根应用上安装的能力，例如 `AntConfigProvider`、`vue-i18n`、主题配置和依赖注入；不需要再额外维护 `configureModalApp()`。
 
 ## Teleport 方案的接入约束
 
