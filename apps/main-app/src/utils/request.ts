@@ -15,11 +15,7 @@ type PostConfig = Omit<RequestConfig, 'method' | 'url' | 'data'>
 const instance = axios.create()
 
 /** 请求拦截器 */
-instance.interceptors.request.use(
-  createRequestInterceptor({
-    getAuthToken: () => useAuthStore().accessToken ?? '',
-  }),
-)
+instance.interceptors.request.use(createRequestInterceptor())
 
 /** 响应拦截器 */
 instance.interceptors.response.use(

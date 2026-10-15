@@ -1,27 +1,23 @@
-import type {
-  AxiosInterceptorManager,
-  AxiosResponse,
-  InternalAxiosRequestConfig,
-} from 'axios'
-import { grayDir as defaultGrayDir, isGray as defaultIsGray } from '../env'
-import { RES_STATUS } from './constants'
-import type { ApiResponse, RequestData } from './types'
+import type { AxiosInterceptorManager, AxiosResponse } from 'axios'
+import type { ApiResponse } from './types'
+
+/** 接口响应状态 */
+export const enum RES_STATUS {
+  SUCCESS = 1,
+  /** 暂无权限 */
+  NO_PERMISSION = 2,
+  /** 没有登入 */
+  NO_LOGIN = 4,
+  /** 登入过期 */
+  LOGIN_EXPIRED = 9,
+  /** 切换环境( 灰度<->正式 ) - 切换URL /new/ */
+  GRAY = 1001,
+}
 
 /** 响应拦截器函数类型，与 axios 响应拦截器 use 方法第一个参数类型一致 */
 type ResponseInterceptorFulfilled = Parameters<
   AxiosInterceptorManager<AxiosResponse>['use']
 >[0]
-
-/** 请求拦截器配置选项 */
-export interface RequestInterceptorOptions {
-  getAuthToken: () => string
-  /** 系统码，默认为 'oms_crm' */
-  systemCode?: string
-  /** 获取是否为灰度环境，默认使用 env.ts 中的 isGray */
-  getIsGray?: () => boolean
-  /** 灰度目录前缀，默认使用 env.ts 中的 grayDir */
-  grayDir?: string
-}
 
 /** 响应拦截器配置选项 */
 export interface ResponseInterceptorOptions {
@@ -29,31 +25,6 @@ export interface ResponseInterceptorOptions {
   onLoginExpired?: (data: ApiResponse) => void
   /** 成功状态码，默认为 RES_STATUS.SUCCESS */
   successStatus?: number
-}
-
-/** 创建请求拦截器 */
-export const createRequestInterceptor = (
-  options: RequestInterceptorOptions,
-) => {
-  return (config: InternalAxiosRequestConfig) => {
-    const token = options.getAuthToken()
-    const isGray = options.getIsGray?.() ?? defaultIsGray
-    const grayDir = options.grayDir ?? defaultGrayDir
-    const data = (config.data ?? {}) as RequestData
-
-    config.headers.set('crm-token', token)
-    // 改写 URL：拼接灰度目录前缀与 actionName 查询参数
-    config.url = `${grayDir}${config.url}?_name=${data.actionName}`
-    config.data = {
-      clientIsGray: isGray ? 1 : 0, // 灰度标识
-      token,
-      systemCode: options.systemCode ?? 'oms_crm',
-      content: {},
-      ...data,
-    }
-
-    return config
-  }
 }
 
 /** 创建响应拦截器 */

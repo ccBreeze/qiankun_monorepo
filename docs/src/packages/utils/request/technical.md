@@ -5,6 +5,8 @@ outline: [2, 3]
 
 # @breeze/utils/request
 
+本文介绍请求协议适配、响应处理和可组合增强器的实现及应用侧接入方式。
+
 ## 设计目标
 
 - **封装通用请求拦截器**
@@ -28,8 +30,8 @@ import drawioXml from './drawio/request-architecture.drawio?raw'
 ```text [tree ~vscode-icons:default-folder-opened~]
 packages/utils/src/request/
 ├── index.ts                         # 统一导出
-├── constants.ts                     # 常量/枚举定义
-├── interceptors.ts                  # 请求/响应拦截器
+├── requestInterceptor.ts            # 请求拦截器、默认 token 获取
+├── responseInterceptor.ts           # 响应拦截器、业务状态码枚举
 ├── types/
 │   ├── index.ts                     # 类型统一导出
 │   ├── common.ts                    # 通用类型
@@ -49,33 +51,66 @@ packages/utils/src/request/
         ├── MemoryCacheStrategy.ts   # 内存缓存
         ├── LRUCacheStrategy.ts      # LRU 缓存
         ├── ForceRefreshStrategy.ts  # 强制刷新（跳过缓存，更新已有条目）
-        ├── resolveStrategy.ts       # 策略解析（配置 → 策略实例）
+        ├── resolveStrategy.ts       # 缓存策略枚举、策略解析（配置 → 策略实例）
         └── utils.ts                 # 缓存键生成、缓存清理
 ```
+
+请求、响应拦截器按职责拆分，`RES_STATUS` 与响应处理放在同一模块，`CACHE_STRATEGY` 与策略解析放在同一模块，不再单独维护 `request/constants.ts`。这些能力仍通过 `@breeze/utils/request` 统一导出。
 
 ## Axios 拦截器实现
 
 ### createRequestInterceptor - 请求协议适配
 
+配置参数可以省略，默认值集中在函数参数解构中。默认 token 获取器在每次请求时读取 `localStorage` 中用户数据的 `token`；传入 `getAuthToken` 时改为调用自定义获取器，不再读取默认存储。
+
+用户数据存储键由请求模块和主应用用户 store 共享：
+
+```typescript [packages/utils/src/constants/business.ts]
+/** 用户数据存储键 */
+export const USER_STORAGE_KEY = 'userData'
+```
+
 **核心行为**：
 
-```typescript [packages/utils/src/request/interceptors.ts]
+```typescript [packages/utils/src/request/requestInterceptor.ts]
+import type { InternalAxiosRequestConfig } from 'axios'
+import { USER_STORAGE_KEY } from '../constants'
+import { grayDir as defaultGrayDir, isGray as defaultIsGray } from '../env'
+import type { RequestData } from './types'
+
 /** 请求拦截器配置选项 */
-interface RequestInterceptorOptions {
-  getAuthToken: () => string // 获取 Token（必需）
+export interface RequestInterceptorOptions {
+  getAuthToken?: () => string // 获取 token（可选，默认从用户数据存储读取）
   systemCode?: string // 系统码（可选，默认 'oms_crm'）
-  getIsGray?: () => boolean // 灰度判定（可选）
-  grayDir?: string // 灰度目录前缀（可选，默认 '/new'）
+  getIsGray?: () => boolean // 灰度判定（可选，默认使用 env.ts 的 isGray）
+  grayDir?: string // 灰度目录前缀（可选，默认使用 env.ts 的 grayDir）
+}
+
+type UserData = {
+  token?: string
+}
+
+const getDefaultAuthToken = (): string => {
+  try {
+    const userData = JSON.parse(
+      localStorage.getItem(USER_STORAGE_KEY) ?? '{}',
+    ) as UserData
+    return userData.token ?? ''
+  } catch {
+    return ''
+  }
 }
 
 /** 创建请求拦截器 */
-export const createRequestInterceptor = (
-  options: RequestInterceptorOptions,
-) => {
+export const createRequestInterceptor = ({
+  getAuthToken = getDefaultAuthToken,
+  getIsGray = () => defaultIsGray,
+  grayDir = defaultGrayDir,
+  systemCode = 'oms_crm',
+}: RequestInterceptorOptions = {}) => {
   return (config: InternalAxiosRequestConfig) => {
-    const token = options.getAuthToken()
-    const isGray = options.getIsGray?.() ?? defaultIsGray
-    const grayDir = options.grayDir ?? defaultGrayDir
+    const token = getAuthToken()
+    const isGray = getIsGray()
     const data = (config.data ?? {}) as RequestData
 
     // 1. 注入 token 到请求头
@@ -88,7 +123,7 @@ export const createRequestInterceptor = (
     config.data = {
       clientIsGray: isGray ? 1 : 0, // 灰度标识
       token,
-      systemCode: options.systemCode ?? 'oms_crm',
+      systemCode,
       content: {}, // 默认补齐
       ...data,
     }
@@ -102,7 +137,12 @@ export const createRequestInterceptor = (
 | 决策 | 原因 |
 | -------------------------- | -------------------------------- |
 | token 同时放请求头和请求体 | 兼容后端双重校验机制 |
+| 默认 token 每次请求时读取 | 获取最新持久化数据，主应用无需额外注入获取器 |
+| 存储键使用 `USER_STORAGE_KEY` | 与用户 store 保存、恢复和清除数据时使用的键保持一致 |
+| 保留可选的 `getAuthToken` | 支持应用自行提供 token 来源；传入后优先使用其返回值 |
 :::
+
+默认获取器在存储缺失、`token` 缺失或读取、解析抛出异常时返回空字符串。`getAuthToken` 和 `getIsGray` 都在每次请求时调用；自定义 `getAuthToken` 返回空字符串时也直接使用该值。
 
 ### createResponseInterceptor - 响应业务语义收敛
 
@@ -118,7 +158,7 @@ interface ApiResponse<T = unknown> {
 
 **核心行为**：
 
-```typescript [packages/utils/src/request/interceptors.ts]
+```typescript [packages/utils/src/request/responseInterceptor.ts]
 /** 响应拦截器配置选项 */
 interface ResponseInterceptorOptions {
   onLoginExpired?: (data: ApiResponse) => void // 登录失效回调
@@ -171,8 +211,10 @@ export const createResponseInterceptor = (
 
 ### 业务状态码枚举
 
-```typescript [packages/utils/src/request/constants.ts]
-const enum RES_STATUS {
+`RES_STATUS` 定义在响应拦截器所在模块，并通过请求模块入口导出。
+
+```typescript [packages/utils/src/request/responseInterceptor.ts]
+export const enum RES_STATUS {
   SUCCESS = 1, // 成功
   NO_PERMISSION = 2, // 暂无权限
   NO_LOGIN = 4, // 没有登入
@@ -185,10 +227,12 @@ const enum RES_STATUS {
 
 ### 增强器类型
 
-```typescript [packages/utils/src/request/types/enhancer.ts]
+```typescript [packages/utils/src/request/types/common.ts]
 /** 请求函数签名 */
 type ApiFn<T> = () => Promise<T>
+```
 
+```typescript [packages/utils/src/request/types/enhancer.ts]
 /** 重试配置选项 */
 interface RetryConfig {
   count?: number // 最大重试次数（默认 3）
@@ -491,9 +535,13 @@ interface CacheStrategy {
   delete(key: string): void
   clear(): void
 }
+```
 
+**策略枚举**与解析函数 `resolveCacheStrategy` 放在同一个文件，`types/enhancer.ts` 通过 `import type` 引用枚举类型；应用侧继续从 `@breeze/utils/request` 导入 `CACHE_STRATEGY`。
+
+```typescript [packages/utils/src/request/enhancers/cacheStrategies/resolveStrategy.ts]
 /** 缓存策略枚举 */
-enum CACHE_STRATEGY {
+export enum CACHE_STRATEGY {
   MEMORY, // 内存缓存
   LRU, // LRU 缓存
   FORCE_REFRESH, // 强制刷新
@@ -577,13 +625,8 @@ type PostConfig = Omit<RequestConfig, 'method' | 'url' | 'data'>
 const instance = axios.create() // [!code focus]
 
 // 2. 请求拦截器（协议适配） // [!code focus]
-instance.interceptors.request.use(
-  // [!code focus]
-  createRequestInterceptor({
-    // [!code focus]
-    getAuthToken: () => useAuthStore().accessToken ?? '', // [!code focus]
-  }), // [!code focus]
-)
+// 默认每次请求从 localStorage 的 userData 中读取 token
+instance.interceptors.request.use(createRequestInterceptor()) // [!code focus]
 
 // 3. 响应拦截器（业务语义收敛） // [!code focus]
 instance.interceptors.response.use(

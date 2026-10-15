@@ -1,9 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { USER_STORAGE_KEY } from '@breeze/utils/constants'
 import type { UserData } from '@/types/user'
 import { useMenuStore } from '@/stores/menu'
-
-const USER_STORAGE_KEY = 'userData'
 
 export const useUserStore = defineStore('user', () => {
   const userData = ref<UserData>({})

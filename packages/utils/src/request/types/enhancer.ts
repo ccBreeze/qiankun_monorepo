@@ -3,7 +3,7 @@
  */
 
 import type { AxiosError } from 'axios'
-import { type CACHE_STRATEGY } from '../constants'
+import type { CACHE_STRATEGY } from '../enhancers/cacheStrategies/resolveStrategy'
 import type { ApiFn, ApiResponse, RequestConfig } from './common'
 
 /** 重试配置选项 */
