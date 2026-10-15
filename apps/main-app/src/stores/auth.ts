@@ -6,7 +6,6 @@ import { useRouter } from 'vue-router'
 import { useUserStore } from './user'
 import { useMenuStore } from './menu'
 import { useTabBarStore } from './tabBar'
-import { resetUserConfig } from '@/hooks/useConfig'
 import { LOGIN_PATH } from '@/constant'
 import type { UserData, LogoutOptions } from '@/types/user'
 
@@ -19,9 +18,6 @@ export const useAuthStore = defineStore('auth', () => {
   const accessToken = ref<string | undefined>(userStore.userData.token)
 
   const authLogin = (data: UserData): void => {
-    // 清空用户配置（保留全局配置）
-    resetUserConfig()
-
     userStore.setUserData(data)
     accessToken.value = data.token
     localStorage.setItem('userId', data.aid ?? '')
@@ -40,10 +36,9 @@ export const useAuthStore = defineStore('auth', () => {
       // TODO: logout api
     }
 
-    // 清空用户数据和用户配置（保留全局配置）
+    // 清空数据
     userStore.resetUserData()
     tabBarStore.clearTabs()
-    resetUserConfig()
     accessToken.value = undefined
 
     if (router.currentRoute.value.path !== LOGIN_PATH) {
