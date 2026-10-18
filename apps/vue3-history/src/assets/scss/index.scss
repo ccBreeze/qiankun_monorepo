@@ -6,3 +6,28 @@ body {
     'Microsoft YaHei', '微软雅黑', 'Helvetica Neue', Helvetica, STHeiTi, tahoma,
     Arial, sans-serif;
 }
+
+/* 入口 CSS 图片测试：验证样式内联后 url() 的资源解析基准。 */
+.asset-path-test::before {
+  display: block;
+  width: 522px;
+  height: 240px;
+  margin-bottom: 16px;
+  content: '入口 CSS url() 图片测试';
+  background: url('../../views/AssetPathTest/images/add.png') center / cover
+    no-repeat;
+  border-radius: 6px;
+}
+
+/* 入口 CSS base64 图片测试：验证 data: 地址在路径改写后保持原样。 */
+.asset-path-test::after {
+  display: block;
+  width: 522px;
+  height: 120px;
+  margin-top: 16px;
+  content: '入口 CSS base64 图片测试';
+  background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgdmlld0JveD0iMCAwIDY0IDY0Ij48cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHJ4PSIxMiIgZmlsbD0iIzUyYzQxYSIvPjxwYXRoIGQ9Im0xNyAzMyAxMCAxMCAyMC0yMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjwvc3ZnPg==')
+    center / 64px 64px no-repeat #f6ffed;
+  border: 1px dashed #52c41a;
+  border-radius: 6px;
+}

@@ -1,5 +1,5 @@
 /**
- * 替换 CSS 文本中的资源路径（url()、@import）。
+ * 替换 base: './' 生成的 CSS 资源路径（仅处理 url()、@import 中 ./ 开头的地址）。
  * @param css - CSS 文本
  * @param mapFn - 路径转换函数
  */
@@ -9,11 +9,11 @@ export const replacePathInCSS = (
 ): string => {
   const hasQuote = /^\s*('|")/
   const patterns = [
-    /(@import\s+)(')(.+?)(')/gi,
-    /(@import\s+)(")(.+?)(")/gi,
-    /(url\s*\()(\s*')([^']+?)(')/gi,
-    /(url\s*\()(\s*")([^"]+?)(")/gi,
-    /(url\s*\()(\s*)([^\s'"].*?)(\s*\))/gi,
+    /(@import\s+)(')(\.\/[^']*)(')/gi,
+    /(@import\s+)(")(\.\/[^"]*)(")/gi,
+    /(url\s*\()(\s*')(\.\/[^']*)(')/gi,
+    /(url\s*\()(\s*")(\.\/[^"]*)(")/gi,
+    /(url\s*\()(\s*)(\.\/[^\s'")]*)(\s*\))/gi,
   ]
 
   return patterns.reduce((result, reg) => {
@@ -27,29 +27,23 @@ export const replacePathInCSS = (
 }
 
 /**
- * 拦截子应用 CSS 文件的 fetch 请求，将其中的相对路径改写为绝对路径。
+ * 拦截子应用 CSS 文件的 fetch 请求，将其中 ./ 开头的资源地址补全为绝对路径。
  *
  * 解决问题：qiankun 将子应用 CSS 注入主应用 document 后，CSS 内的相对路径
- * （如 url(image.png)）会相对于主应用域名解析，导致资源 404。
+ * （如 url(./image.png)）会相对于主应用页面解析，导致资源 404。
  *
- * base URL 直接从 CSS 文件 URL 取目录部分推导，无需额外传入。
+ * 以 CSS 文件 URL 为基准，通过 new URL() 保留其原有的资源解析目录。
  */
 export const cssFetchInterceptor: typeof window.fetch = (url, ...args) => {
   if (import.meta.env.DEV || typeof url !== 'string' || !url.endsWith('.css')) {
     return window.fetch(url, ...args)
   }
 
-  const base = url.substring(0, url.lastIndexOf('/') + 1)
   return Promise.resolve({
     async text() {
       const res = await window.fetch(url, ...(args as [RequestInit?]))
-      let css = await res.text()
-      css = replacePathInCSS(css, (path) => {
-        // base64 内嵌资源不处理
-        if (path.startsWith('data:')) return path
-        return base + path
-      })
-      return css
+      const css = await res.text()
+      return replacePathInCSS(css, (path) => new URL(path, url).href)
     },
   } as unknown as Response)
 }

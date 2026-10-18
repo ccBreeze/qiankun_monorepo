@@ -22,37 +22,10 @@ export const createQiankunConfig = (options: QiankunOptions): UserConfig => {
   }
 
   return {
+    // 由 Vite 生成相对资源路径，HTML 入口由主应用基于子应用 entry 补全。
+    base: './',
     define: {
       'import.meta.env.VITE_APP_NAME': JSON.stringify(appName),
-    },
-    experimental: {
-      /**
-       * 替代静态 base 配置，将资源路径解析推迟到运行时。
-       * 主应用需在加载子应用前注入 window.__assetsPath。
-       * @see apps/main-app/src/utils/microApp/assetsPath.ts
-       */
-      renderBuiltUrl(filename, { hostType }) {
-        // CSS 中引用的图片保持相对路径
-        // async chunk CSS 以 <link> 加载，url() 相对 CSS 文件自身 URL 解析，无需改写
-        if (
-          hostType === 'css' &&
-          /\.(png|jpe?g|gif|svg|webp|woff2?|ttf|otf|eot)$/i.test(filename)
-        ) {
-          return { relative: true }
-        }
-        // JS/CSS 运行时动态路径
-        if (hostType === 'js' || hostType === 'css') {
-          return {
-            runtime: `window.__assetsPath(
-              ${JSON.stringify(appName)},
-              ${JSON.stringify(filename)}
-            )`,
-          }
-        }
-        // hostType === 'html'
-        // modulepreload/script src 等由 qiankun HTML fetcher 在运行时补全 origin
-        return { relative: true }
-      },
     },
     plugins: [
       qiankun(appName, {
