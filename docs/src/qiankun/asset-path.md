@@ -2,28 +2,29 @@
 
 本文说明 qiankun 场景下子应用静态资源（图片、字体、JS chunk、CSS）路径失效的根因，以及本项目的完整解决方案。
 
-## 背景：为什么子应用加载的资源会 404？
+## 为什么子应用加载的资源会 404？
 
-::: danger 根因一句话
-**URL 的解析基准由"当前执行上下文所在的页面"决定，而不是由"资源所在的服务器"决定。** qiankun 把子应用的代码搬到了主应用的页面上执行，但浏览器不知道这件事——它只认当前页面的 origin。
+::: info 入口 JS / CSS 的地址补全
+qiankun 借助 `import-html-entry` 解析子应用 HTML 时，会把收集到的外部样式 `href` 和外部脚本 `src` 中的资源地址，根据子应用入口 URL 补全为完整 URL 再请求资源。
 :::
 
-子应用**独立运行**时，资源路径相对于自己的 origin（`http://sub-app.com`）解析，一切正常。
+例如，子应用 `entry` 为 `http://localhost:8101/` 时：
 
-进入 qiankun 后，整个加载链路发生了本质改变：
+| HTML 中收集到的资源                                | 补全后请求的地址                         |
+| -------------------------------------------------- | ---------------------------------------- |
+| `<link rel="stylesheet" href="/assets/index.css">` | `http://localhost:8101/assets/index.css` |
+| `<script src="/assets/index.js"></script>`         | `http://localhost:8101/assets/index.js`  |
 
-1. 主应用通过 **`fetch`** 把子应用的 HTML 拉取为**字符串**
-2. qiankun 解析该字符串，将 `<script>` / `<style>` / `<link>` 提取出来
-3. 这些资源被**注入主应用的 `document`** 中执行
+**Vite 构建产物中以下两类资源引用还需单独处理：**
 
-> 步骤 3 是关键：一旦 script/style 在主应用 `document` 中执行，浏览器对所有**相对路径**的解析基准就从子应用的 origin（`localhost:8101`）悄然切换成了主应用的 origin（`localhost:8100`）。<br>
-> <span style="font-weight: bold; color: var(--vp-c-danger-1);">子应用静态资源的"origin"就此丢失。</span>
+1. **HTML 中的资源地址**：`<link rel="modulepreload">` 的 `href` 和内联脚本中的 `import()` 地址。
+2. **异步 chunk 预加载**：动态 `import()` 触发时，Vite 为 JS / CSS chunk 创建的 `modulepreload` / `stylesheet` 链接地址。
 
-具体会遇到两类结构性问题，分别由 HTML 模板和 CSS 文本引发。
+::: tip 两类地址受同一个 base 配置影响
+使用 Vite 默认的 `base: '/'` 构建时，这两类地址会生成 `/assets/...` 这样的绝对 URL 路径名（下文简称根路径），其中不包含 origin。它们直接用于主应用页面的链接或内联脚本时，会按主应用的 origin（协议、主机及端口）解析，导致资源 404。
+:::
 
-### HTML 模板中的根路径 URL
-
-子应用 `index.html` 不是直接作为页面打开：主应用先通过 `fetch` 把它拉为字符串，再交给 `import-html-entry` 解析后注入到主应用 `document`。**这一过程里，HTML 模板中以 `/` 开头的路径会原样保留**——它们看起来是绝对路径，实则是"站点根路径"，浏览器会用当前页面 origin（主应用域名）来拼接解析，资源随之跑偏：
+### HTML 中的资源地址
 
 ![错误解析到主应用域名的根路径资源](./imgs/asset-path-figure-06.png)
 
@@ -53,40 +54,159 @@
 
 | 模板中的形式                                    | 来自构建的哪一步                        |
 | ----------------------------------------------- | --------------------------------------- |
-| inline `<script>` 里的 `import('/assets/...')`  | `vite-plugin-qiankun` 注入的入口脚本    |
+| 内联 `<script>` 里的 `import('/assets/...')`    | `vite-plugin-qiankun` 注入的入口脚本    |
 | `<link rel="modulepreload" href="/assets/...">` | `manualChunks` 拆包后 Vite 写入的预加载 |
 | `<link rel="stylesheet" href="/assets/...">`    | Vite 构建产出的入口 CSS 静态声明        |
 
-**`renderBuiltUrl` 无法处理这类路径**：该 API 只改写 JS bundle 内部生成的 chunk 引用，HTML 模板字符串不经过它的钩子。需要主应用通过 qiankun 的 `getTemplate` 钩子拿到模板后，把所有 `/assets/...` 统一替换成 `${entry}/assets/...` 的子应用绝对地址。
+解决方案：主应用通过 qiankun 的 `getTemplate` 钩子拿到模板后，把所有 `/assets/...` 统一替换成 `${entry}/assets/...` 的子应用完成 URL。
 
-::: details 为什么入口 CSS 看起来能正常拼接，但 modulepreload 不行？
+### 异步 chunk 预加载
 
-`apps/vue3-history/dist/index.html` 是 Vite 的原始构建产物，里面的 `modulepreload` 和入口 CSS 都只是 `/assets/...`，并没有被 Vite 自动拼成子应用完整 URL。两者在 qiankun 运行时表现不同，是因为 `import-html-entry` 只会主动收集并补全 `rel="stylesheet"`：
+- 触发动态 `import()` 时，Vite 的预加载辅助函数会为异步 chunk 及其公共 JS 依赖动态创建 `<link rel="modulepreload">` 标签并插入 `document.head`（已存在的链接会复用），提前并行发起请求，减少逐层发现依赖产生的网络等待。详见 [Vite 异步 Chunk 加载优化](https://cn.vitejs.dev/guide/features#async-chunk-loading-optimization)。
 
-```js [node_modules/import-html-entry/esm/process-tpl.js]
-const STYLE_TYPE_REGEX = /\s+rel=('|")?stylesheet\1.*/
-const LINK_PRELOAD_OR_PREFETCH_REGEX = /\srel=('|")?(preload|prefetch)\1/
+- 启用 CSS 代码分割时，异步 chunk 的 CSS 会通过 `<link rel="stylesheet">` 加载。详见 [Vite CSS 代码分割](https://cn.vitejs.dev/guide/features#css-code-splitting)。
+
+#### 预加载地址与实际 import() 地址的区别
+
+以默认 `base: '/'` 构建的产物为例，动态导入被包装成预加载辅助函数 `i` 的调用：
+
+```js [apps/vue3-history/dist/assets/index-By4YD9se.js]
+i(() => import('./LazyDetail-DfgodzIU.js'), __vite__mapDeps([0, 1, 2, 3]))
 ```
 
-入口 CSS 命中 `stylesheet` 分支，会按子应用 `entry` 派生出的 `assetPublicPath` 补成绝对地址，再 fetch 并内联为 `<style>`；`rel="modulepreload"` 不命中 `stylesheet`，也不在 `preload|prefetch` 正则里，所以会原样留在模板中。若不通过 `getTemplate` 提前改写，它插入主应用页面后会按主应用 origin 解析。
+![默认 `base: '/'` 构建的 chunk 资源路径](image-2.png)
+
+`__vite__mapDeps` 从依赖表中取出 `assets/LazyDetail-DfgodzIU.js`、`assets/LazyDetail-CQIUOEMn.css` 等地址。辅助函数按 `base: '/'` 为它们添加 `/` 前缀，再创建 JS 的 `modulepreload` 和 CSS 的 `stylesheet` 链接。这些根路径链接插入主应用页面后，会请求到主应用 origin。
+
+而实际的 `import('./LazyDetail-DfgodzIU.js')` 使用 `./` 相对路径，以当前模块自身的 URL 为基准。假设主应用为 `http://localhost:8100/`，入口模块加载自 `http://localhost:8101/assets/index-By4YD9se.js`，则两类请求分别指向：
+
+```text
+JS 预加载：http://localhost:8100/assets/LazyDetail-DfgodzIU.js
+CSS 加载：http://localhost:8100/assets/LazyDetail-CQIUOEMn.css
+实际 import()：http://localhost:8101/assets/LazyDetail-DfgodzIU.js
+```
+
+因此，即使实际 `import()` 的地址正确，预加载链接因指向主应用而返回 404；入口 HTML 的路径补全不会处理这部分运行时创建的链接。
+
+## 完整的 URL
+
+以 HTTP(S) 资源地址为例，需要区分以下三种形式，详见 [Vite base 配置](https://vite.dev/config/shared-options#base)：
+
+| 形式            | 示例                         | 含义                                                  |
+| --------------- | ---------------------------- | ----------------------------------------------------- |
+| 完整的 URL      | `http://localhost:8101/foo/` | 包含协议、主机（含可选端口）和路径                    |
+| 绝对 URL 路径名 | `/foo/`                      | 只指定从根目录起算的路径，仍需结合解析上下文的 origin |
+| 相对路径        | `./foo/`                     | 按基准 URL 所在目录解析                               |
+
+生产构建时，将子应用 `base` 配置为完整的 URL，可以让生成的资源 URL 固定指向子应用资源服务器：
+
+```ts [apps/vue3-history/vite.config.ts]
+export default defineConfig({
+  base: 'http://localhost:8101', // 简单，但有局限
+})
+```
+
+Vite 在开发模式下会忽略完整 URL 中的 origin，仅使用其中的路径名；开发资源的来源地址需通过 `server.origin` 指定。
+
+::: details Webpack 对应的静态配置 `output.publicPath`
+Webpack 可以通过 `output.publicPath` 指定完整的资源 URL 前缀：
+
+```js [webpack.config.js]
+export default {
+  output: {
+    publicPath: 'http://localhost:8101/',
+  },
+}
+```
 
 :::
 
-> 关于 `manualChunks` 配置策略与两层机制的完整实现，参见 [Vite 构建拆包策略](../optimization/vite-code-splitting)。
+这种方式的问题：
 
-### CSS 内联后的相对路径
+- 开发、测试、生产环境的域名不同，需要构建时区分
+- 子应用部署域名变更时必须重新构建
+- <span style="color: var(--vp-c-danger-1); font-weight: bold;">同一份构建产物无法在不同主应用环境下复用</span>
+
+![静态 base 将子应用域名写死在构建产物中](./imgs/asset-path-figure-03.png)
+
+![HTML 渲染结果](./imgs/asset-path-figure-05.png)
+
+![url() 固定 base](./imgs/asset-path-figure-04.png)
+
+## 运行时动态路径
+
+为了让灰度和生产复用同一份产物，资源的最终 URL 在加载时根据子应用 `entry` 或资源所属文件的 URL 确定。Vite 通过构建时配置相对 `base` 实现这一点，运行时按实际文件地址解析资源，无需动态修改 `base` 配置值。
+
+::: details Webpack 的运行时 publicPath
+Webpack 子应用可以通过 `__webpack_public_path__` 在运行时设置资源 URL 前缀。**开启 Proxy 沙箱时，qiankun 实际将 `__INJECTED_PUBLIC_PATH_BY_QIANKUN__` 注入子应用的沙箱代理对象**，详见 [qiankun 的注入实现](https://github.com/umijs/qiankun/blob/v2.10.16/src/addons/runtimePublicPath.ts)。执行子应用脚本时，该代理会被暴露为原生 `window` 上的 `proxy`，因此从原生 `window` 上下文访问时，对应的是 `window.proxy.__INJECTED_PUBLIC_PATH_BY_QIANKUN__`。
+
+经过沙箱包装的 Webpack 代码中，`window` 已指向该代理对象，所以仍通过 `window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__` 读取；本项目 Vite 的原生 ESM 代码中的 `window` 则是浏览器原生对象，需要通过 `window.proxy` 访问沙箱属性。两种读取方式的区别在于代码执行上下文，详见 [import-html-entry 的脚本执行包装](https://github.com/kuitos/import-html-entry/blob/master/src/index.js)。下面是沙箱内 Webpack 子应用的写法，**同时适用于开发环境和生产环境**：
+
+```js [src/public-path.js]
+if (window.__POWERED_BY_QIANKUN__) {
+  __webpack_public_path__ = window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__
+}
+```
+
+路径初始化必须早于业务模块执行。不能只把赋值语句写在入口文件的静态 `import` 前面：静态导入的依赖模块仍可能先执行，提前计算出错误的资源 URL。将赋值放到独立模块，并首先导入该模块，才能保证正常业务依赖执行前完成初始化。详见 [Webpack 运行时 publicPath](https://webpack.js.org/guides/public-path/#on-the-fly)。
+:::
+
+### 主应用：HTML 模板补丁
+
+主应用通过 qiankun 的 `getTemplate` 钩子，在加载子应用 HTML 时，将模板中 `./` 开头的资源路径按子应用入口 `entry` 补全为完整 URL。
+
+改写效果示例：
+
+![改写前：HTML 模板中的相对路径](image-3.png)
+
+![改写后：HTML 中的资源地址已补全为子应用的完整 URL](./imgs/asset-path-figure-11.png)
+
+### 子应用：配置 base
+
+子应用通过 `base: './'` 生成相对资源路径，开发时通过 `server.origin` 指定资源来源：
+
+```ts [packages/vite-config/src/qiankun.ts]
+return {
+  base: './',
+  server: {
+    origin: `http://localhost:${port}`,
+  },
+}
+```
+
+`base: './'` 使 Vite 在生产构建时，将经其处理的资源引用生成为相对于所属文件的 URL，详见 [Vite 相对基础路径](https://vite.dev/guide/build#relative-base)。同一份产物部署到不同域名或子目录后，只要目录结构保持一致，就可以按实际文件地址加载资源。
+
+生产构建的入口模块从正确的子应用 URL 加载后，模块内部的相对静态导入和动态 `import()` 都以该模块 URL 为基准。对于异步 chunk 的预加载依赖，Vite 在相对 base 下会把导入模块的 `import.meta.url` 作为基准，使用 `new URL(dep, importerUrl).href` 计算地址，详见 [Vite build.modulePreload](https://vite.dev/config/build-options#build-modulepreload)。
+
+例如，入口模块位于 `http://localhost:8101/assets/index.js` 时：
+
+| 资源加载方式  | 相对地址                    | 最终请求地址                                  |
+| ------------- | --------------------------- | --------------------------------------------- |
+| 实际动态导入  | `import('./LazyDetail.js')` | `http://localhost:8101/assets/LazyDetail.js`  |
+| JS 预加载依赖 | `./LazyDetail.js`           | `http://localhost:8101/assets/LazyDetail.js`  |
+| 异步 CSS 加载 | `./LazyDetail.css`          | `http://localhost:8101/assets/LazyDetail.css` |
+
+实际导入与预加载都使用模块 URL 解析，不会再因为链接插入主应用 `document.head` 而转向主应用 origin。主应用只需补全入口 HTML，不必为每个 JS chunk 计算资源域名。
+
+::: tip 开发模式仍需 server.origin
+开发模式下，Vite 会将 `base: './'` 按 `/` 处理，不会让开发资源也变成 `./` 路径。`server.origin` 用于给开发时生成的资源 URL 添加子应用来源地址，避免注入主应用的 CSS 中 `/src/...` 被请求到主应用端口；它不影响生产构建产物。
+:::
+
+### 入口 CSS 文件中的 url()
+
+#### CSS 内联后的相对路径
 
 Vite 默认开启 [`build.cssCodeSplit`](https://cn.vitejs.dev/config/build-options#build-csscodesplit)，异步 chunk 关联的 CSS 会被单独提取，由 Vite 运行时（`__vitePreload`）在懒加载触发时动态创建 `<link rel="stylesheet">` 元素插入 `document.head`。**这类 CSS 始终以外链 `<link>` 形式加载，不经过 qiankun 的 fetch 钩子**。
 
-::: tip 前瞻提示：`renderBuiltUrl` 与 `window.__assetsPath` 详见后文章节
-`<link>` 的 `href` 之所以能指向子应用 origin，靠的是两层配置共同计算：子应用通过 [`renderBuiltUrl`](#子应用配置-vite-renderbuilturl) 把 chunk 路径输出为 `window.__assetsPath(...)` 运行时表达式；主应用在加载子应用前注入 [`window.__assetsPath`](#主应用window__assetspath) 的实现。二者配合后，`__vitePreload` 动态插入 `<link>` 时解析出的 `href` 才是子应用绝对 URL，路径天然正确：
+::: tip 相对 base 保留异步 CSS 的资源来源
+在 [运行时动态路径方案](#运行时动态路径) 中，Vite 根据发起导入的 JS 模块的 `import.meta.url` 计算异步 CSS 的完整 URL。CSS 以 `<link>` 形式从子应用加载，其中的相对 `url()` 再由浏览器按 CSS 文件 URL 解析，无需入口 CSS 拦截器介入。
 :::
 
 ![async chunk CSS 以外链 link 形式挂在 document.head，href 指向子应用 origin](./imgs/asset-path-figure-21.png)
 
 ![Network 面板显示该外链 CSS 请求](./imgs/asset-path-figure-22.png)
 
-问题出在另一条路径——子应用初始 HTML 中**静态声明的** `<link rel="stylesheet">`（通常是全局样式、CSS 变量、字体等入口 CSS）由 `import-html-entry` 在解析 HTML 时主动 fetch，并将 CSS 文本**内联为 `<style>` 标签**注入主应用 `document`，这是 qiankun 实现 CSS 沙箱的工作方式：
+问题出在另一条路径——子应用初始 HTML 中**静态声明的** `<link rel="stylesheet">`（通常是全局样式、CSS 变量、字体等入口 CSS）由 `import-html-entry` 在解析 HTML 时主动 fetch，并将 CSS 文本**内联为 `<style>` 标签**注入主应用 `document`，这是 `import-html-entry` 加载入口样式的处理方式：
 
 ![qiankun-head 中原入口 link rel=stylesheet 被 import-html-entry 替换为内联 style 标签](./imgs/asset-path-figure-23.png)
 
@@ -101,356 +221,27 @@ Vite 默认开启 [`build.cssCodeSplit`](https://cn.vitejs.dev/config/build-opti
 
 ![qiankun 将入口 CSS 内联为 style 后，url() 相对于主应用页面解析](./imgs/asset-path-figure-09.png)
 
-## 方案选型：为什么不用静态 base
+#### 解决方案：通过 qiankun fetch 拦截改写
 
-将子应用 `vite.config.ts` 的 `base` 配置为绝对地址可以解决路径问题：
-
-```ts [apps/vue3-history/vite.config.ts]
-export default defineConfig({
-  base: 'http://localhost:8101', // 简单，但有局限
-})
-```
-
-这种方式的问题：
-
-- 开发、测试、生产环境的域名不同，需要构建时区分
-- 子应用部署域名变更时必须重新构建
-- <span style="color: var(--vp-c-danger-1); font-weight: bold;">同一份构建产物无法在不同主应用环境下复用</span>
-
-![静态 base 将子应用域名写死在构建产物中](./imgs/asset-path-figure-03.png)
-
-![HTML 渲染结果](./imgs/asset-path-figure-05.png)
-
-![url() 固定 base](./imgs/asset-path-figure-04.png)
-
-## 运行时动态路径协议
-
-本项目通过 Vite `experimental.renderBuiltUrl` API 与 `window.__assetsPath` 全局协议解决这一问题：**构建产物中不包含具体域名**，资源路径在运行时由主应用动态计算。
-
-协议约定：
-
-- **子应用**：构建时将资源路径替换为 `window.__assetsPath(appName, filename)` 调用表达式
-- **主应用**：在加载子应用前注入 `window.__assetsPath` 的具体实现，根据注册的子应用 entry 计算完整 URL
-
-### 目录结构与分工
-
-```
-apps/
-├── main-app/src/assets/scss/
-│   ├── fonts.scss        ← 声明 @font-face，验证字体资源路径
-│   └── index.scss        ← 引入全局字体样式入口
-├── main-app/src/utils/microApp/
-│   ├── registry.ts        ← 注册表，组装 frameworkConfiguration
-│   ├── entryBase.ts       ← 统一格式化子应用 entry base
-│   ├── assetsPath.ts      ← 注入 window.__assetsPath
-│   ├── cssProcessor.ts    ← 拦截 CSS fetch，改写 url() 路径
-│   └── htmlProcessor.ts   ← 改写 HTML 模板中的根路径资源 URL
-└── vue3-history/
-    ├── src/views/AssetPathTest/index.vue ← 资源路径验证页（含字体示例）
-    └── vite.config.ts     ← renderBuiltUrl：构建时输出运行时路径表达式
-```
-
-各层分工如下：
-
-| 层             | 文件               | 职责                                          |
-| -------------- | ------------------ | --------------------------------------------- |
-| 子应用构建     | `vite.config.ts`   | `renderBuiltUrl`：JS/CSS 路径输出运行时表达式 |
-| 主应用运行时   | `assetsPath.ts`    | 注入 `window.__assetsPath` 的实现             |
-| HTML 模板处理  | `htmlProcessor.ts` | 改写 HTML 中 Vite 构建生成的根路径资源 URL    |
-| CSS fetch 拦截 | `cssProcessor.ts`  | 改写 CSS 文本中的图片 / 字体相对路径          |
-
-### 子应用：配置 Vite renderBuiltUrl
-
-`renderBuiltUrl` 是 Vite 的实验性 API，**只在构建（`vite build`）阶段生效**，在开发模式（`vite dev`）下完全不触发。它介入每个资源 URL 的生成，可以返回一个**运行时表达式字符串**（`runtime`）代替静态路径。
-
-::: tip base / server.origin / renderBuiltUrl 的区别
-
-| 配置项           | 作用时机      | 影响范围                                          |
-| ---------------- | ------------- | ------------------------------------------------- |
-| `base`           | dev + build   | 所有资源路径，构建时写死为静态前缀                |
-| `server.origin`  | 仅 dev server | 开发时资源 URL 前缀，不影响构建产物               |
-| `renderBuiltUrl` | 仅 build      | 构建产物中资源 URL 的生成方式，可输出运行时表达式 |
-
-- 本项目是使用 `renderBuiltUrl` 处理生产构建的资源路径；
-- `server.origin: 'http://localhost:8101'` 只负责开发时让资源路径带上正确的子应用域名。
-
-两者互为补充，覆盖不同阶段。
-:::
-
-以下为公共子应用配置的片段，`appName` 取自 `process.env.npm_package_name`，与注入客户端的 `import.meta.env.VITE_APP_NAME` 使用同一来源，详见 [子应用名称与构建常量](../packages/vite-config/index.md#子应用名称与构建常量)。
-
-```ts [packages/vite-config/src/micro.ts]
-experimental: {
-  renderBuiltUrl(filename, { hostType }) {
-    // CSS 中引用的图片保持相对路径
-    // async chunk CSS 以 <link> 加载，url() 相对 CSS 文件自身 URL 解析，无需改写
-    if (
-      hostType === 'css' &&
-      /\.(png|jpe?g|gif|svg|webp|woff2?|ttf|otf|eot)$/i.test(filename)
-    ) {
-      return { relative: true }
-    }
-    // JS/CSS 运行时动态路径
-    if (hostType === 'js' || hostType === 'css') {
-      return {
-        runtime: `window.__assetsPath(
-          ${JSON.stringify(appName)},
-          ${JSON.stringify(filename)}
-        )`,
-      }
-    }
-    return { relative: true }
-  },
-},
-```
-
-::: warning hostType === 'html' 不支持 runtime 返回值
-`hostType === 'html'` 分支不能返回 `{ runtime: ... }`，否则构建报错：
-
-```
-[vite:build-html] { runtime: "..." } is not supported for assets in html files: assets/index-D_vxc5dN.js
-```
-
-**必须返回 `{ relative: true }`。** 根因是 `<link href>` 等 HTML 属性不执行 JS——浏览器把属性值当字面量 URL 解析，`window.__assetsPath(...)` 写进去也不会被调用，Vite 插件同理无法解决。HTML 模板的根路径资源只能在运行时由 [`htmlProcessor.ts`](#主应用html-模板补丁) 通过 `getTemplate` 钩子改写。
-:::
-
-CSS 中的图片和字体都保持相对路径，有两层原因：
-
-1. **技术限制**：`renderBuiltUrl` 输出的 runtime 表达式只能嵌入 JS 中执行，CSS 文本里无法运行 JS。
-2. **无需改写**：`cssCodeSplit` 启用后，每个异步 chunk 的 CSS 以独立 `<link>` 加载，`href` 由 `renderBuiltUrl` 保证是绝对 URL。根据[背景章节](#css-内联后的相对路径)的 url() 解析规则，`<link>` 样式表内的 `url()` 相对于 CSS 文件自身 URL 解析，路径天然正确。
-
-### 主应用：window.\_\_assetsPath
-
-`assetsPath.ts` 负责在主应用侧实现 `window.__assetsPath`，并在加载子应用前注入到全局。
-
-```ts [apps/main-app/src/utils/microApp/assetsPath.ts]
-import { normalizeMicroAppEntryBase } from './entryBase'
-import { microApps } from './registry'
-
-const microAppAssetBaseMap = microApps.reduce<Record<string, string>>(
-  (map, app) => {
-    map[app.name] = normalizeMicroAppEntryBase(app.entry)
-    return map
-  },
-  {},
-)
-
-export const resolveMicroAppAssetUrl = (appName: string, filename: string) => {
-  const base = microAppAssetBaseMap[appName]
-  if (!base) return filename
-
-  // 避免出现 // 路径导致 Vite 的 modulepreload 机制失效
-  return `${base}/${filename.replace(/^\//, '')}`
-}
-
-/**
- * 全局注入（子应用）资源路径解析函数。
- *
- * - 子应用 `renderBuiltUrl` 会在构建阶段产出 `window.__assetsPath(...)`
- * - 主应用在加载子应用前提供具体解析逻辑
- */
-export const installMicroAppAssetRuntime = () => {
-  window.__assetsPath = resolveMicroAppAssetUrl
-}
-```
-
-**为什么需要 `filename.replace(/^\//, '')`**
-
-`window.__assetsPath` 可能收到两种形态的 `filename`：
-
-| 调用来源                            | `filename` 形态             | 示例                        |
-| ----------------------------------- | --------------------------- | --------------------------- |
-| 构建产物中 `__vite__mapDeps` 调用   | `assets/...`（无前导 `/`）  | `assets/index-DiEL3xZ7.js`  |
-| `getTemplate` 改写 HTML 入口 import | `/assets/...`（有前导 `/`） | `/assets/index-DzBdh9QA.js` |
-
-第二种情况来自 `index.html` 入口模板中 `vite-plugin-qiankun` 注入的脚本：
-
-![vite-plugin-qiankun 注入的入口模板 import 调用](./imgs/asset-path-figure-14.png)
-
-`processDynamicImport` 将其改写为：
-
-![processDynamicImport 将根路径 import 替换为 window.__assetsPath](./imgs/asset-path-figure-12.png)
-
-若 `window.__assetsPath` 直接拼接，就会产生双斜杠地址：
-
-![拼接未去除前导斜杠导致双斜杠地址](./imgs/asset-path-figure-13.png)
-
-**这会污染入口模块 `index-DzBdh9QA.js` 的 `import.meta.url`，进而引发后续 chunk 的重复请求。**
-
-![双斜杠污染后，后续 chunk 被浏览器重复请求](./imgs/asset-path-figure-15.png)
-
-![Network 面板中同一 chunk 出现单斜杠与双斜杠两条请求](./imgs/asset-path-figure-16.png)
-
-::: warning 双斜杠如何传播并导致两次请求
-
-`index-DzBdh9QA.js` 加载自 `http://localhost:8101//assets/index-DzBdh9QA.js`，它的 `import.meta.url` 也是这个双斜杠地址。该文件内部对 `index-DiEL3xZ7.js` 存在**两条独立的加载路径**，URL 计算基准不同：
-
-**路径一：`__vite__mapDeps` 预加载（单斜杠）**
-
-```js
-// __vite__mapDeps 中存的是 window.__assetsPath 的调用结果
-window.__assetsPath("vue3-history", "assets/index-DiEL3xZ7.js")
-//                                   ↑ 无前导 /，拼接后单斜杠
-→ "http://localhost:8101/assets/index-DiEL3xZ7.js"
-```
-
-`Hfe` 函数（`function(e,t){ return new URL(e,t).href }`）接收到的已经是绝对 URL，`new URL(绝对URL, base)` 原样返回，`<link rel="modulepreload">` 最终是**单斜杠**地址。
-
-**路径二：动态 `import()` 执行（双斜杠）**
-
-```js
-// 构建产物中的相对路径 import
-import("./index-DiEL3xZ7.js")
-// 浏览器以 import.meta.url 为基准解析
-new URL("./index-DiEL3xZ7.js", "http://localhost:8101//assets/index-DzBdh9QA.js")
-→ "http://localhost:8101//assets/index-DiEL3xZ7.js"  // 继承了双斜杠
-```
-
-两个 URL 字符串不同，浏览器视为不同请求，**无法复用预加载缓存**：
-
-| 请求   | 来源                            | URL                                               |
-| ------ | ------------------------------- | ------------------------------------------------- |
-| 请求 1 | `__vite__mapDeps` modulepreload | `http://localhost:8101/assets/index-DiEL3xZ7.js`  |
-| 请求 2 | 动态 `import("./...")` 执行     | `http://localhost:8101//assets/index-DiEL3xZ7.js` |
-
-`filename.replace(/^\//, '')` 在拼接前去掉前导 `/`，入口模块加载地址变为单斜杠，`import.meta.url` 恢复正常，双斜杠不再传播：
-
-![去除前导斜杠后入口模块加载地址恢复单斜杠](./imgs/asset-path-figure-10.png)
-
-:::
-
-### 主应用：HTML 模板补丁
-
-`htmlProcessor.ts` 负责处理 `renderBuiltUrl` 覆盖不到的 HTML 模板内容。当前策略只改写**根路径** URL，通过 `isRewritableUrl` 做三条判断：
-
-```ts [apps/main-app/src/utils/microApp/htmlProcessor.ts]
-/** 判断 URL 是否需要改写为子应用绝对路径（仅处理根路径，排除 protocol-relative） */
-const isRewritableUrl = (url: string) =>
-  Boolean(url) && url.startsWith('/') && !url.startsWith('//')
-
-/** 将根路径 URL 拼接为子应用绝对地址（调用方需确保 URL 通过 isRewritableUrl 检查） */
-const toAbsoluteUrl = (entry: string, url: string) =>
-  `${normalizeMicroAppEntryBase(entry)}${url}`
-```
-
-`isRewritableUrl` 三个条件的含义：
-
-| 条件                | 排除的 URL                                                                          |
-| ------------------- | ----------------------------------------------------------------------------------- |
-| `Boolean(url)`      | 空字符串                                                                            |
-| `startsWith('/')`   | `http://`、`https://`、`data:`、`blob:`、`./chunk.js`、`assets/index.js` 等非根路径 |
-| `!startsWith('//')` | `//cdn.xxx.com/a.js` 这类 protocol-relative URL                                     |
-
-因此，只有 `/assets/index.js`、`/assets/vue-vendor.js` 这类**根路径**才会被改写，其他所有形式的 URL 原样保留。
-
-改写覆盖两类场景，各自由独立函数处理：
-
-```ts [apps/main-app/src/utils/microApp/htmlProcessor.ts]
-/** HTML 标签属性中的静态资源路径，如 <link href="/assets/vendor.js"> */
-const rewriteStaticAssetUrls = (tpl: string, entry: string) =>
-  tpl.replace(/\b(href|src)=(["'])([^"']+)\2/g, (match, attr, quote, url) => {
-    if (!isRewritableUrl(url)) return match
-    return `${attr}=${quote}${toAbsoluteUrl(entry, url)}${quote}`
-  })
-
-/** inline script 中的动态 import()，如 import('/assets/index.js') */
-const rewriteDynamicImportUrls = (tpl: string, entry: string) =>
-  tpl.replace(
-    /import\((["'])([^"']+)(["'])\)/g,
-    (match, quote1, url, quote2) => {
-      if (!isRewritableUrl(url)) return match
-      return `import(${quote1}${toAbsoluteUrl(entry, url)}${quote2})`
-    },
-  )
-
-export const processDynamicImport = (tpl: string, entry: string): string => {
-  const rewriters = [rewriteStaticAssetUrls, rewriteDynamicImportUrls]
-  return rewriters.reduce((result, rewrite) => rewrite(result, entry), tpl)
-}
-```
-
-`registry.ts` 再通过 qiankun 的 `getTemplate` 钩子接入这一层：
-
-```ts [apps/main-app/src/utils/microApp/registry.ts]
-configuration: {
-  getTemplate: (tpl: string) => processDynamicImport(tpl, entry),
-  fetch: cssFetchInterceptor,
-}
-```
-
-::: details ❓ `htmlProcessor.ts` 能不能改用运行时 `window.proxy.__INJECTED_PUBLIC_PATH_BY_QIANKUN__`？
-
-**不能整体替换。** 根因是 Vite 打包产出的 `index.html` 同时包含两类需要改写的目标，它们的执行机制完全不同：
-
-```html [apps/vue3-history/dist/index.html]
-<!-- ① inline script：是 JS 代码，可执行运行时表达式 -->
-<script crossorigin="">
-  import('/assets/index-LQMfwYAD.js').finally(() => {
-    /* 回填 qiankun 生命周期 */
-  })
-</script>
-
-<!-- ② 静态 HTML 属性：浏览器按 URL 字符串解析，不执行 JS -->
-<link rel="modulepreload" href="/assets/vendor-CDg3j5Yc.js" />
-<link rel="modulepreload" href="/assets/vue-vendor-DM2I66EO.js" />
-<link rel="stylesheet" href="/assets/index-BBVUIMF_.css" />
-```
-
-| 目标                              | 性质      | 能否使用运行时变量                             |
-| --------------------------------- | --------- | ---------------------------------------------- |
-| inline `import('/assets/...')`    | JS 代码   | ✅ 可改写为 `window.proxy.__INJECTED_...` 拼接 |
-| `<link rel="modulepreload" href>` | HTML 属性 | ❌ `href` 只接受静态 URL，不会执行 JS 表达式   |
-| `<link rel="stylesheet" href>`    | HTML 属性 | ❌ 同上                                        |
-
-下面这种写法在浏览器里完全不成立 —— `href` 会被当作字面量字符串解析：
-
-```html
-<link
-  rel="stylesheet"
-  href="(window.proxy.__INJECTED_... ?? '') + '/assets/index.css'"
-/>
-```
-
-因此 `<link>` 类标签**只能**在 `getTemplate` 阶段用主应用已知的 `entry` 静态改写为绝对地址。
-
-:::
-
-改写效果示例：
-
-![改写前：HTML 模板中的根路径 import()](./imgs/asset-path-figure-08.png)
-
-![改写后：import() 转为 window.__assetsPath 调用](./imgs/asset-path-figure-11.png)
-
-![HTML 渲染结果](./imgs/asset-path-figure-23.png)
-
-### 主应用：cssFetchInterceptor CSS 路径拦截
-
-通过配置 qiankun 的 `fetch` 钩子，拦截子应用初始 HTML 中静态 `<link rel="stylesheet">` 对应的 CSS 文件请求。qiankun 会将这些 CSS fetch 后内联为 `<style>` 标签，内联后 `url()` / `@import` 中的相对路径会相对主应用页面 URL 解析，导致资源 404。拦截器在 CSS 文本返回前将相对路径改写为绝对路径。
+通过配置 qiankun 的 `fetch` 钩子，拦截子应用初始 HTML 中静态 `<link rel="stylesheet">` 对应的 CSS 文件请求。拦截器在 CSS 文本被内联前，将 `url()` / `@import` 中 `./` 开头的地址按原 CSS 文件 URL 补全，保留样式表原有的资源解析基准。以下实现与提交 `3903107` 一致；主应用处于开发模式、请求不是字符串或地址不以 `.css` 结尾时，直接透传。
 
 ```ts [apps/main-app/src/utils/microApp/cssProcessor.ts]
 export const cssFetchInterceptor: typeof window.fetch = (url, ...args) => {
-  if (typeof url !== 'string' || !url.endsWith('.css')) {
-    return window.fetch(url, ...args) // 非 CSS 请求直接透传
+  if (import.meta.env.DEV || typeof url !== 'string' || !url.endsWith('.css')) {
+    return window.fetch(url, ...args)
   }
-
-  // 从 CSS 文件 URL 推导资源基路径，无需额外配置
-  const base = url.substring(0, url.lastIndexOf('/') + 1)
 
   return Promise.resolve({
     async text() {
       const res = await window.fetch(url, ...(args as [RequestInit?]))
-      let css = await res.text()
-      css = replacePathInCSS(css, (path) => {
-        if (path.startsWith('data:')) return path // base64 不处理
-        return base + path
-      })
-      return css
+      const css = await res.text()
+      return replacePathInCSS(css, (path) => new URL(path, url).href)
     },
   } as unknown as Response)
 }
 ```
 
-`replacePathInCSS` 覆盖 CSS 中所有引用资源的语法形式：
+`replacePathInCSS` 仅匹配以下语法中以 `./` 开头的资源地址：
 
 | 模式                              | 示例                   |
 | --------------------------------- | ---------------------- |
@@ -458,41 +249,24 @@ export const cssFetchInterceptor: typeof window.fetch = (url, ...args) => {
 | `url('...')` / `url("...")`       | `url('./image.png')`   |
 | `url(...)` 无引号                 | `url(./icon.svg)`      |
 
+例如，CSS 文件地址为 `http://localhost:8101/assets/index.css` 时，`new URL('./add.png', url).href` 得到 `http://localhost:8101/assets/add.png`。`data:` URL、完整的 HTTP(S) URL、以 `/` 开头的绝对 URL 路径名及 `../` 等不以 `./` 开头的地址不参与替换，base64 图片因而可以保持原样。
+
 ::: tip 仅拦截 qiankun fetch 的 CSS，不影响异步 chunk
 `configuration.fetch` 替换的是 `import-html-entry` 内部调用的 `fetch`，**只作用于 qiankun 主动拉取的资源**（初始 HTML 中静态声明的 `<link>`）。运行时由 `__vitePreload` 通过 DOM API 插入的异步 chunk CSS 不经过此钩子，不受影响。
 :::
 
-**为什么"理论上"入口 CSS 不会出现 `url()`（但子应用有例外）**
+**为什么当前实现仍保留入口 CSS 拦截？**
 
-Vue 组件的样式通过 `<style scoped>` 或 `<style module>` 编写，Vite 在构建时将其提取为 async chunk CSS，与组件代码一同按需加载，**不会进入入口 CSS**。
+CSS 是否进入入口文件取决于模块依赖和加载时机，不能仅凭 Vue 的 `scoped` 或 `module` 判断。首屏组件样式、全局背景图和字体样式都可能进入入口 CSS；只有归属于异步 chunk 的样式才随异步模块加载。
 
-真正会进入入口 CSS（即被 qiankun fetch 内联的部分）只有全局样式文件，例如：
+提交 `3903107` 在 `apps/vue3-history/src/assets/scss/index.scss` 中加入了两个入口 CSS 验证场景：
 
-```ts
-// main.ts
-import './assets/main.css'
-import 'some-ui-library/dist/style.css'
-```
+| 样式选择器                 | 资源形式                                             | 预期处理                       |
+| -------------------------- | ---------------------------------------------------- | ------------------------------ |
+| `.asset-path-test::before` | 外部图片 `add.png`，构建后为 `url(./add-<hash>.png)` | 内联前按入口 CSS 文件 URL 补全 |
+| `.asset-path-test::after`  | base64 SVG 的 `data:` URL                            | 保持原样                       |
 
-在"纯 Vite + 新项目规范"下，这类全局样式通常只包含 CSS 变量、排版重置、主题色等规则，`url()` 出现概率较低。
-
-但在**子应用接入场景**里，下面两类情况很常见，不能按"入口 CSS 无 `url()`"处理：
-
-- 子应用自定义 `iconfont`：例如在全局样式中引入 `iconfont.css`，其中 `@font-face` 通常包含 `url('./iconfont.woff2')`。这会进入入口 CSS，若被 qiankun 内联后不改写路径，字体请求可能相对主应用地址解析。
-- 兼容旧系统 webpack 样式：历史项目常见 `style-loader` 或运行时注入 `<style>` 文本（内联 CSS）。这类 CSS 里的 `url()` 同样可能引用相对路径资源，且不一定经过 qiankun 的 `fetch` 钩子。
-
-因此，"理论上不会出现 `url()`"只适用于理想化的新项目默认链路；在微前端落地中应默认按"可能存在 `url()`"做防御。
-
-::: info 为什么仍然保留 cssFetchInterceptor
-即便当前项目入口 CSS 不含 `url()`，`cssFetchInterceptor` 作为**低成本兜底**仍然有保留价值：
-
-- 未来引入第三方 UI 库时，其入口 CSS 可能包含字体文件的 `url()` 引用（如 `@font-face`）
-- 子应用自定义 `iconfont`、全局背景图等资源路径在 qiankun 内联后可能失去原始解析基准
-- 旧 webpack 项目的样式迁移阶段，常出现"部分 CSS 外链、部分 CSS 内联"的混合状态，风险更高
-
-拦截器已有完整实现，注册成本极低（一行配置），可以覆盖"qiankun 通过 `fetch` 拉取并内联"的 CSS 场景，防止新增依赖后出现难以排查的样式 404。
-对于旧 webpack 的运行时内联 `<style>`（不走 `fetch`）场景，则需要在子应用侧额外治理（如统一静态资源前缀、尽量抽离为外链 CSS、或在注入前做文本改写）。
-:::
+这些全局样式进入初始 HTML 引用的入口 CSS，图片路径确实需要在内联前处理。`base: './'` 保证构建产物使用相对路径，`cssFetchInterceptor` 则恢复内联前的解析基准，两者覆盖不同环节。
 
 ## ❓为什么不需要禁用 build.cssCodeSplit
 
@@ -516,7 +290,7 @@ import 'some-ui-library/dist/style.css'
 
 **无法劫持，也不需要处理**，原因在于两点：
 
-1. **正确解析 url() 路径**：async chunk CSS 以 `<link href="绝对URL">` 加载（`href` 由 `renderBuiltUrl` 保证），浏览器对 `<link>` 样式表内 `url()` 相对于 CSS 文件自身 URL 解析，与主应用页面 URL 无关。
+1. **正确解析 url() 路径**：async chunk CSS 以 `<link href="绝对URL">` 加载（相对 base 下，`href` 由 Vite 按导入模块的 `import.meta.url` 解析），浏览器对 `<link>` 样式表内 `url()` 相对于 CSS 文件自身 URL 解析，与主应用页面 URL 无关。
 2. **样式不会污染**：Vue `<style scoped>` 在编译期为每条规则附加唯一的 `[data-v-xxxxxxxx]` 属性选择器，作用域锁定在组件内部，即使 `<link>` 插入主应用 `head`，规则也不会泄漏到其他组件或子应用。
 
 ::: warning 禁用 cssCodeSplit 的实际代价
@@ -557,7 +331,7 @@ qiankun 沙箱的职责范围是 **JS 全局变量隔离**（window proxy）和 
 当前项目不需要对该现象做额外处理，原因是：
 
 1. **仅发生在开发环境**：生产构建不会走这套 HMR 注入机制，线上行为由构建产物的 `<link>` / `chunk` 加载机制决定。
-2. **路径不受影响**：开发环境已通过 `server.origin` 提供正确资源来源；生产环境由 `renderBuiltUrl + window.__assetsPath` 兜底，关注点是资源 URL 正确性，而不是 style 节点位于哪个 `head`。
+2. **路径不受影响**：开发环境通过 `server.origin` 提供正确资源来源；生产环境通过 `base: './'`、入口 HTML 补全和入口 CSS 拦截处理资源路径，关注点是资源 URL 正确性，而不是 style 节点位于哪个 `head`。
 3. **样式污染风险可控**：业务样式以 Vue `scoped` 为主，规则带 `[data-v-xxxx]` 作用域；即使 style 节点位于主应用 `head`，也不会无边界扩散到其他子应用。
 
 ::: tip 什么时候才需要处理
@@ -566,7 +340,7 @@ qiankun 沙箱的职责范围是 **JS 全局变量隔离**（window proxy）和 
 
 ## 相关链接
 
-- [Vite renderBuiltUrl](https://cn.vitejs.dev/guide/build#advanced-base-options)
+- [Vite 相对基础路径](https://vite.dev/guide/build#relative-base)
 - [Vite build.modulePreload](https://cn.vitejs.dev/config/build-options#build-modulepreload)
 - [qiankun loadMicroApp — FrameworkConfiguration](https://qiankun.umijs.org/zh/api#loadmicroappapp-configuration)
 - [import-html-entry fetch 钩子](https://github.com/kuitos/import-html-entry)
