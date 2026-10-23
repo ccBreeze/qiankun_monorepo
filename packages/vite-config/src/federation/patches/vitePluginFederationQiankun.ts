@@ -1,5 +1,15 @@
 import type { Plugin } from 'vite'
 
+/** 1.23.0 开发模式会为 import:false 提前加载本地依赖，应交给远程初始化提供。 */
+function skipConsumeOnlyLocalSeeds(code: string): string {
+  const seedStart = code.indexOf(
+    'if (__mfReadSharedCache(__mfModuleCache.share, ',
+  )
+  const remoteInitStart = code.indexOf('const remoteEntry = await import(')
+  if (seedStart < 0 || remoteInitStart <= seedStart) return code
+  return code.slice(0, seedStart) + code.slice(remoteInitStart)
+}
+
 /** 1.23.0 的入口代理启动异步任务后立即返回，qiankun 则依赖 import 完成来读取生命周期。 */
 export function awaitFederationBootstrap(code: string): string {
   return code.replace(
@@ -12,7 +22,12 @@ export function federationQiankunPlugin(): Plugin {
   return {
     name: 'vite-plugin-breeze-federation-qiankun',
     enforce: 'post',
-    transform(code) {
+    transform(code, id) {
+      if (id.includes('__H_A_I__')) {
+        const patched = skipConsumeOnlyLocalSeeds(code)
+        if (patched !== code) return { code: patched, map: null }
+        return
+      }
       if (!code.includes('const __mfHostInit =')) return
       return { code: awaitFederationBootstrap(code), map: null }
     },

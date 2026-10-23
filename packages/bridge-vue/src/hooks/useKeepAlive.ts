@@ -8,7 +8,7 @@ type KeepAliveWrapper = {
   render: () => VNode | null | undefined
 }
 
-type KeepAliveContext = Pick<MicroAppHostProps, 'activeRule'>
+type KeepAliveContext = Partial<Pick<MicroAppHostProps, 'activeRule'>>
 
 export const useKeepAlive = (microAppContext?: KeepAliveContext) => {
   const route = useRoute()

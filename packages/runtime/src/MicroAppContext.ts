@@ -32,14 +32,14 @@ export type QiankunLifecycleProps<
  * 管理生命周期。子应用可继承此类并重写 getter/方法以实现自定义处理逻辑。
  */
 export class MicroAppContext<T extends MicroAppHostProps = MicroAppHostProps> {
-  protected _props = {} as QiankunLifecycleProps<T>
+  protected _props: Partial<QiankunLifecycleProps<T>> = {}
 
   setProps(p: QiankunLifecycleProps<T>) {
     this._props = p
   }
 
   reset() {
-    this._props = {} as QiankunLifecycleProps<T>
+    this._props = {}
   }
 
   get activeRule() {
@@ -47,7 +47,8 @@ export class MicroAppContext<T extends MicroAppHostProps = MicroAppHostProps> {
   }
 
   get authorizedRoutes() {
-    return this._props.authorizedRoutes
+    // 独立运行时没有主应用注入的授权路由。
+    return this._props.authorizedRoutes ?? []
   }
 
   get container() {

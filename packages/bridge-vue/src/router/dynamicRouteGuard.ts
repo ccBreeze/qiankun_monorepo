@@ -7,9 +7,11 @@ export type GlobPages = Record<string, () => Promise<unknown>>
 
 export interface DynamicRouteGuardOptions extends Pick<
   MicroAppHostProps,
-  'authorizedRoutes' | 'activeRule'
+  'authorizedRoutes'
 > {
   router: Router
+  /** 独立运行时可不传主应用的激活路径 */
+  activeRule?: MicroAppHostProps['activeRule']
   /** 子应用通过 import.meta.glob 获取的页面组件映射表 */
   pages: GlobPages
 }
@@ -35,21 +37,23 @@ const resolveComponent = (
 /** 注册动态路由 */
 const registerDynamicRoutes = (options: DynamicRouteGuardOptions) => {
   const { router, pages, authorizedRoutes, activeRule } = options
+  let firstRoutePath: string | undefined
 
   for (const route of authorizedRoutes) {
     const component = resolveComponent(pages, route.meta.filePath)
     if (!component) continue
 
+    const path = stripActiveRule(route.path, activeRule)
     router.addRoute({
-      path: stripActiveRule(route.path, activeRule),
+      path,
       name: route.name,
       meta: route.meta as unknown as RouteMeta,
       component,
     })
+    firstRoutePath ??= path
   }
 
-  // 根路径重定向到第一个有效路由
-  const firstRoutePath = router.getRoutes()[0]?.path
+  // 只使用成功注册的动态路由，避免将静态兜底路由作为首页。
   if (firstRoutePath) {
     router.addRoute({
       path: '/',

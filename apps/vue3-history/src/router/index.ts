@@ -5,7 +5,17 @@ import { setupDynamicRoute } from './guard/dynamicRouteGuard'
 export const generateRouter = (base?: string) => {
   const router = createRouter({
     history: createWebHistory(base),
-    routes: [],
+    routes: [
+      {
+        path: '/:pathMatch(.*)*',
+        name: 'NotFound',
+        props: (route) => ({
+          appName: import.meta.env.VITE_APP_NAME,
+          path: route.fullPath,
+        }),
+        component: () => import('shell/NotFound'),
+      },
+    ],
   })
 
   setupDynamicRoute(router)

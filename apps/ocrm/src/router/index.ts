@@ -1,5 +1,4 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import { NotFound } from '@breeze/components'
 
 /**
  * 创建路由实例（hash 模式）
@@ -23,7 +22,7 @@ export const generateRouter = (activeRule?: string) => {
           appName: import.meta.env.VITE_APP_NAME,
           path: route.fullPath,
         }),
-        component: NotFound,
+        component: () => import('shell/NotFound'),
       },
     ],
   })
