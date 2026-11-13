@@ -71,7 +71,7 @@ docs/              # VitePress 文档站
 
 子应用的静态配置集中在 `apps/main-app/src/utils/microApp/registry.ts`，通过 `MICRO_APP_ACTIVE_RULE`（定义于 `packages/runtime/src/microApps.ts`）统一管理激活路径。
 
-主应用路由仅有 `/login` 和 `/microApp` 两个静态路由，子应用路径通过 `alias` 动态映射到 `/microApp`，由 `useMicroAppStore`（`apps/main-app/src/stores/microApp.ts`）在路由变化时调用 `loadMicroApp` / `unmount` 管理子应用生命周期。
+主应用路由仅有 `/login` 和 `/microApp` 两个静态路由，子应用路径通过 `alias` 动态映射到 `/microApp`，由 `apps/main-app/src/views/MicroApp/index.vue` 在路由变化时调用 `loadMicroApp` / `unmount` 管理子应用生命周期，并在页面卸载时回收实例和事件监听。
 
 ### 子应用接入模式（子应用侧）
 

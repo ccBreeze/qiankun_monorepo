@@ -21,7 +21,7 @@ export interface MicroAppDefinition {
  * 子应用静态解析结果
  *
  * - `activeRule` 收窄为 `string`
- * - `props` 由 `useMicroAppStore` 在运行时注入，不在此处定义
+ * - `props` 由 `MicroApp` 页面在运行时注入，不在此处定义
  *
  * @see https://qiankun.umijs.org/zh/api#registermicroappsapps-lifecycles
  */
