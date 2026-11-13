@@ -15,8 +15,8 @@ import { useRoute } from 'vue-router'
 import { loadMicroApp, type MicroApp } from 'qiankun'
 import { useMenuStore } from '@/stores/menu'
 import { useUserStore } from '@/stores/user'
-import { microApps, type ResolvedMicroApp } from '@/utils/microApp/registry'
-import { prefetchMicroApps } from '@/utils/microApp/prefetch'
+import { microApps, type ResolvedMicroApp } from './utils/registry'
+import { prefetchMicroApps } from './utils/prefetch'
 import {
   RUNTIME_EVENTS,
   qiankunRuntime,

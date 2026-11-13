@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import { NotFound } from '@breeze/components'
-import { microApps } from '@/utils/microApp/registry'
+import { microApps } from '@/views/MicroApp/utils/registry'
 import { createAuthGuard } from './guard/auth'
 
 /**
