@@ -8,7 +8,6 @@ import { MICRO_APP_ACTIVE_RULE } from '@breeze/runtime'
 import type { UserData } from '@/types/user'
 import { useRoute } from 'vue-router'
 import { microApps } from '@/views/MicroApp/utils/registry'
-import { getStaticMenuDataByMenuKey } from './staticMenus'
 
 interface MenuModule {
   title: string
@@ -83,12 +82,7 @@ export const useMenuStore = defineStore('menu', () => {
         continue
       }
 
-      // 仅用于 DEMO 演示，实际项目中请勿将静态菜单数据与后端返回的菜单数据混合在一起
-      // 合并静态菜单数据（如有）与后端返回的菜单数据
-      const staticMenuData = getStaticMenuDataByMenuKey(item.menuKey)
-      const mergedMenuData = staticMenuData.concat(menuData)
-
-      const dynamicRoute = DynamicRoute.create(mergedMenuData, {
+      const dynamicRoute = DynamicRoute.create(menuData, {
         menuKey: item.menuKey,
         fallbackActiveRule: item.fallbackActiveRule,
         registeredActiveRules,
